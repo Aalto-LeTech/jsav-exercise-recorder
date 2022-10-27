@@ -12,6 +12,9 @@ const clone = require('rfdc')()
 // state variable to keep track of last known state
 // used to compare & find what has been changed.
 var state = undefined;
+// priority queue is kept track of to determine if a click is a 
+// queue, dequeue, or update sub-type. 
+var prioqueueSize = 0;
 
 /**
  * Get the current data structure state, generate svg image, and then add
@@ -149,6 +152,27 @@ function addStepToSubmission(eventData, dataStructuresState, svgImage) {
     newState.object = getClickedObject(dataStructuresState);
   }
 
+  // If we have a priority queue interface (which is a binary tree)
+  // We record a subtype based on how the size of the priority queue
+  // changes. 
+  const tree = dataStructuresState.find(obj => obj.dsClass === "tree");
+  if (type === "click" && tree) {
+    var newSize = tree.node.length;
+    // If priority queue is size 1, check if the first entry is empty
+    // If it is, then the priority queue is empty. 
+    if (newSize === 1 && tree.node[0].key === "") {
+      newSize = 0;
+    }
+    if (newSize > prioqueueSize) {
+      newState.subtype = "enqueue";
+    } else if (newSize === prioqueueSize) {
+      newState.subtype = "update";
+    } else {
+      newState.subtype = "dequeue";
+    }
+    prioqueueSize = newSize;
+  }
+  
   try {
     submission.addAnimationStepSuccesfully.gradableStep(newState);
   } catch (error) {

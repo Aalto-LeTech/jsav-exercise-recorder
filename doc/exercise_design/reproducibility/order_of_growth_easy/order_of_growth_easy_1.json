@@ -1,0 +1,75 @@
+[{
+  "ind": [{
+    "v": "(n+1)!"
+  }, {
+    "v": "<strong>lg</strong>(n)"
+  }, {
+    "v": "5<sup>n+1</sup>",
+    "css": "transition: all 300ms linear 0s;"
+  }, {
+    "v": "1337",
+    "css": "transition: all 300ms linear 0s;"
+  }, {
+    "v": "7n"
+  }, {
+    "v": "2n<sup>2</sup>"
+  }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray", "jsavcenter"]
+}, {
+  "ind": [{
+    "v": "1337",
+    "css": "transition: all 300ms linear 0s;"
+  }, {
+    "v": "(n+1)!"
+  }, {
+    "v": "<strong>lg</strong>(n)"
+  }, {
+    "v": "5<sup>n+1</sup>",
+    "css": "transition: all 300ms linear 0s;"
+  }, {
+    "v": "7n"
+  }, {
+    "v": "2n<sup>2</sup>"
+  }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray", "jsavcenter"]
+}, {
+  "ind": [{
+    "v": "1337",
+    "css": "transition: all 300ms linear 0s;"
+  }, {
+    "v": "7n"
+  }, {
+    "v": "(n+1)!"
+  }, {
+    "v": "<strong>lg</strong>(n)"
+  }, {
+    "v": "5<sup>n+1</sup>",
+    "css": "transition: all 300ms linear 0s;"
+  }, {
+    "v": "2n<sup>2</sup>"
+  }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray", "jsavcenter"]
+}, {
+  "ind": [{
+    "v": "1337",
+    "cls": ["correct"],
+    "css": "transition: all 300ms linear 0s;"
+  }, {
+    "v": "7n"
+  }, {
+    "v": "(n+1)!"
+  }, {
+    "v": "<strong>lg</strong>(n)"
+  }, {
+    "v": "5<sup>n+1</sup>",
+    "cls": ["correct"],
+    "css": "transition: all 300ms linear 0s;"
+  }, {
+    "v": "2n<sup>2</sup>"
+  }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray", "jsavcenter"]
+}]

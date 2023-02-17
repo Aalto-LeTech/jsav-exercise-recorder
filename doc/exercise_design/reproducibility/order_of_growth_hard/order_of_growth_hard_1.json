@@ -1,0 +1,115 @@
+[{
+  "ind": [{
+      "v": "5n+5",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "10<sup>10</sup>",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "2n<sup>n</sup>"
+    },{
+      "v": "(n/2)!"
+    },{
+      "v": "<strong>lg</strong>(n<sup>n</sup>)"
+    },{
+      "v": "(n<sup>2</sup>)*(3<sup>n</sup>)"
+    },{
+      "v": "2<sup>n+1</sup>"
+    },{
+      "v": "5n<sup>3</sup>"
+    },{
+      "v": "2n<sup>2</sup>"
+    },{
+      "v": "<strong>ln</strong>(n)",
+      "css": "transition: all 300ms linear 0s;"
+    }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray", "jsavcenter"]
+},
+{
+  "ind": [{
+      "v": "10<sup>10</sup>",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "5n+5",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "2n<sup>n</sup>"
+    },{
+      "v": "(n/2)!"
+    },{
+      "v": "<strong>lg</strong>(n<sup>n</sup>)"
+    },{
+      "v": "(n<sup>2</sup>)*(3<sup>n</sup>)"
+    },{
+      "v": "2<sup>n+1</sup>"
+    },{
+      "v": "5n<sup>3</sup>"
+    },{
+      "v": "2n<sup>2</sup>"
+    },{
+      "v": "<strong>ln</strong>(n)",
+      "css": "transition: all 300ms linear 0s;"
+    }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray", "jsavcenter"]
+},
+{
+  "ind": [{
+      "v": "10<sup>10</sup>",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "<strong>ln</strong>(n)",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "5n+5",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "2n<sup>n</sup>"
+    },{
+      "v": "(n/2)!"
+    },{
+      "v": "<strong>lg</strong>(n<sup>n</sup>)"
+    },{
+      "v": "(n<sup>2</sup>)*(3<sup>n</sup>)"
+    },{
+      "v": "2<sup>n+1</sup>"
+    },{
+      "v": "5n<sup>3</sup>"
+    },{
+      "v": "2n<sup>2</sup>"
+    }],
+  "style": "width: 46px;",
+  "classes": [ "jsavsortablearray", "jsavcenter" ]
+},
+{
+  "ind": [{
+      "v": "10<sup>10</sup>",
+      "cls": ["correct"],
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "<strong>ln</strong>(n)",
+      "cls": ["correct"],
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "5n+5",
+      "cls": ["correct"],
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "2n<sup>n</sup>"
+    },{
+      "v": "(n/2)!"
+    },{
+      "v": "<strong>lg</strong>(n<sup>n</sup>)"
+    },{
+      "v": "(n<sup>2</sup>)*(3<sup>n</sup>)"
+    },{
+      "v": "2<sup>n+1</sup>"
+    },{
+      "v": "5n<sup>3</sup>"
+    },{
+      "v": "2n<sup>2</sup>"
+    }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray", "jsavcenter"]
+}]

@@ -1,0 +1,72 @@
+[{
+  "ind": [{
+      "v": "T(1) = 1,<br>T(N) = T(N/2) + 1",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = T(N-1) + 2N",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = 2T(N/2) + N",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = T(N/2) + 2N",
+      "css": "transition: all 300ms linear 0s;"
+    }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray","jsavcenter"]
+},
+{
+  "ind": [{
+      "v": "T(1) = 1,<br>T(N) = T(N/2) + 1",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = T(N/2) + 2N",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = T(N-1) + 2N",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = 2T(N/2) + N",
+      "css": "transition: all 300ms linear 0s;"
+    }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray","jsavcenter"]
+},
+{
+  "ind": [{
+      "v": "T(1) = 1,<br>T(N) = T(N/2) + 1",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = T(N/2) + 2N",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = 2T(N/2) + N",
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = T(N-1) + 2N",
+      "css": "transition: all 300ms linear 0s;"
+    }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray", "jsavcenter"]
+},
+{
+  "ind": [{
+      "v": "T(1) = 1,<br>T(N) = T(N/2) + 1",
+      "cls": ["correct"],
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = T(N/2) + 2N",
+      "cls": ["correct"],
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = 2T(N/2) + N",
+      "cls": ["correct"],
+      "css": "transition: all 300ms linear 0s;"
+    },{
+      "v": "T(1) = 1,<br>T(N) = T(N-1) + 2N",
+      "cls": ["correct"],
+      "css": "transition: all 300ms linear 0s;"
+    }],
+  "style": "width: 46px;",
+  "classes": ["jsavsortablearray","jsavcenter"]
+}]

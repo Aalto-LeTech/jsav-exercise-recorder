@@ -1,0 +1,56 @@
+[
+  {
+    "v": ["", "", ""],
+    "cls": ["jsavarraytreenode"],
+    "css": "left: 0px; top: 0px; transform: translate3d(0px, 0px, 1px);"
+  },
+  {
+    "v": [52, "", ""],
+    "cls": ["jsavarraytreenode"],
+    "css": "left: 0px; top: 0px; transform: translate3d(0px, 0px, 1px);"
+  },
+  {
+    "v": [47, 52, ""],
+    "cls": ["jsavarraytreenode"],
+    "css": "left: 0px; top: 0px; transform: translate3d(0px, 0px, 1px);"
+  },
+  {
+    "v": [47, 52, 98],
+    "cls": ["jsavarraytreenode"],
+    "css": "left: 0px; top: 0px; transform: translate3d(0px, 0px, 1px);"
+  },
+  {
+    "v": [52, "", ""],
+    "cls": ["jsavarraytreenode"],
+    "css": "left: 69.5px; top: 0px; display: block;",
+    "children": [
+      {
+        "v": [44, 47, ""],
+        "cls": ["jsavarraytreenode"],
+        "css": "left: 0px; top: 54px; transform: translate3d(0px, 0px, 1px);"
+      },
+      {
+        "v": [52, 98, ""],
+        "cls": ["jsavarraytreenode"],
+        "css": "top: 54px; left: 139px; transform: translate3d(0px, 0px, 1px); display: block;"
+      }
+    ]
+  },
+  {
+    "v": [52, "", ""],
+    "cls": ["jsavarraytreenode"],
+    "css": "left: 69.5px; top: 0px; display: block;",
+    "children": [
+      {
+        "v": [44, 47, ""],
+        "cls": ["jsavarraytreenode"],
+        "css": "left: 0px; top: 54px; transform: translate3d(0px, 0px, 1px);"
+      },
+      {
+        "v": [52, 98, ""],
+        "cls": ["jsavarraytreenode"],
+        "css": "top: 54px; left: 139px; transform: translate3d(0px, 0px, 1px); display: block;"
+      }
+    ]
+  }
+]

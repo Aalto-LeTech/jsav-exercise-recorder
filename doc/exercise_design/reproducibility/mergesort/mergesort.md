@@ -58,6 +58,27 @@ is changed.
 }]
 ```
 
-The end state is recorded. There is no indication of correctness, the end state is merely a repeat of the last state.
+The end state is recorded. There is no indication of correctness, the end state is merely a repeat of the last state. This is clearly visible in `mergesort_2.json`, where in the last merge-steps the two arrays are concatenated rather than merged: 
 
-RR2 satisfied.
+```json
+[
+  {
+    "ind": [
+      {"v": 14}, {"v": 16}, {"v": 23}, {"v": 66}, {"v": 71}, {"v": 4}, {"v": 16}, {"v": 46}, {"v": 49}, {"v": 78}
+    ],
+    "style": "height: 30px; display: none;",
+    "classes": ["jsavcenter", "jsavautoresize"]
+  },
+  {
+    "ind": [
+      {"v": 1}, {"v": 1}, {"v": 1}, {"v": 1}, {"v": 1}, {"v": 1}, {"v": 1}, {"v": 1}, {"v": 1}, {"v": 1}
+    ],
+    "style": "height: 30px; display: none;",
+    "classes": ["jsavcenter", "jsavautoresize"]
+  }
+]
+```
+
+Whilst it is possible to retrace the student steps, it is not possible to determine where the student diverges from the model answer nor to see what the exact model answer is. 
+
+RR2 not satisfied.

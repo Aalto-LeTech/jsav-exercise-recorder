@@ -16,7 +16,14 @@ This is the first object in the outermost JSON list. Example:
 }
 ```
 
-The key `v` contains the tree node with an array of size 3. 
+The key `v` contains the tree node with an array of size 3.
+
+As with [B+ Tree Insertion](../b_plus_insertion/b_plus_insert.md), the input
+is not explicitly recorded. The input can be reconstructed from student's steps,
+because the student can only insert new keys into the tree one by one.
+If a node is split, the split and key insertion are recorded in the same step.
+A systematic reconstruction of steps should be possible, because the split
+functionality is deterministic and defined in the exercise code.
 
 RR1 satisfied.
 

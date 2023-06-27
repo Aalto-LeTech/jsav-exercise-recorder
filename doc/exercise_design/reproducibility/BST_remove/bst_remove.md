@@ -93,7 +93,11 @@ This is the first object in the outermost JSON list. Example:
 
 Each object is the root node of the graph, and contains at least 3 fields: `v`, which stores the key, `css`, and information about the children: `"cls": ["emptynode"]` or `left` or `right`. `left` and `right` are made up the same manner, so that from the root node the full is tree is stored. Each object in the outmost JSON list is, therefore, the tree at that step.  
 
-RR1 satisfied.
+The data contains no stack that defines which keys should be removed and in
+which order. Therefore, although we can deduce from the intermediate states
+that a key has been removed, we cannot be sure whether it was the right one.
+
+RR1 not satisfied.
 
 ## Intermediate states
 
@@ -101,11 +105,11 @@ RR2. All the steps in the recording must have a unique, unambiguous inter-
 pretation on student’s choices such that it is clear on which step the student’s
 steps begin to differ from the execution path of the correct algorithm.
 
-Yes, a child node is removed in each step. If a node is empty with a move needing to occur, then the node has the key `"v": ""`. In the next step, the move happens & a child node is possibly pruned. 
+Yes, a child node is removed in each step. If a node is empty with a move needing to occur, then the node has the key `"v": ""`. In the next step, the move happens & a child node is possibly pruned.
 
 
 ## End state
 
-The end state is recorded. There is no indication of correctness, the end state is merely a repeat of the last state. Whilst it is possible to retrace the student steps, it is not possible to determine where the student diverges from the model answer nor to see what the exact model answer is. 
+The end state is recorded. There is no indication of correctness, the end state is merely a repeat of the last state. Whilst it is possible to retrace the student steps, it is not possible to determine where the student diverges from the model answer nor to see what the exact model answer is.
 
 RR2 not satisfied.

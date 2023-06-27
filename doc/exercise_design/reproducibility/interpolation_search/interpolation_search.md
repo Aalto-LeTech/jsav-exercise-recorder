@@ -60,9 +60,12 @@ This is the first object in the outermost JSON list. Example:
 ],
 ```
 
-The array contains four objects: The first object contains the sorted array on which the interpolation search is conducted. The second and third object contain the low and high index respectively. The fourth object contains the returned index. 
+The array contains four objects: The first object contains the sorted array on which the interpolation search is conducted. The second and third object contain the low and high index respectively. The fourth object contains the returned index.
 
-RR1 satisfied.
+The JSON data does not contain the key that should be found. Therefore it is
+impossible to determine whether the student found the correct key eventually.
+
+RR1 not satisfied.
 
 ## Intermediate states
 
@@ -70,7 +73,7 @@ RR2. All the steps in the recording must have a unique, unambiguous inter-
 pretation on student’s choices such that it is clear on which step the student’s
 steps begin to differ from the execution path of the correct algorithm.
 
-As the learner searches across the array, the value of the low and high pointer shifts. When the student returns an index, the fourth object gets its value changed. 
+As the learner searches across the array, the value of the low and high pointer shifts. When the student returns an index, the fourth object gets its value changed.
 
 
 ## End state

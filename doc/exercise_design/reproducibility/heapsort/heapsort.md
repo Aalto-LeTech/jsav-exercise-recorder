@@ -27,7 +27,7 @@ This is the first object in the outermost JSON list. Example:
 }
 ```
 
-It is an array representation of the heap, with the array containing 10 objects that contain the stored values. 
+It is an array representation of the heap, with the array containing 10 objects that contain the stored values.
 
 RR1 satisfied.
 
@@ -37,12 +37,15 @@ RR2. All the steps in the recording must have a unique, unambiguous inter-
 pretation on student’s choices such that it is clear on which step the student’s
 steps begin to differ from the execution path of the correct algorithm.
 
-Yes, the contents of the array are included in the JSON every time the array is changed. The values that are inserted into the heap appear in the first empty array index, and then get sorted by swapping them around. A swap step can be seen as it will first list a step by adding a `cls = ["enlarge"]` to the first-clicked object. Then in the next step, the values are swapped. 
+Yes, the contents of the array are included in the JSON every time the array is changed. The values that are inserted into the heap appear in the first empty array index, and then get sorted by swapping them around. A swap step can be seen as it will first list a step by adding a `cls = ["enlarge"]` to the first-clicked object. Then in the next step, the values are swapped.
 
-When the heap-size is decremented by the click of the button, this can be seen in the data by the entry gaining a `cls = ["unused"]`. This happens to the last itemof the array that does not yet have the `cls = ["unused"]` tag. 
+When the heap-size is decremented by the click of the button, this can be seen in the data by the entry gaining a `cls = ["unused"]`. This happens to the last itemof the array that does not yet have the `cls = ["unused"]` tag.
 
 ## End state
 
-The end state is recorded. There is no indication of correctness, the end state is merely a repeat of the last state. Whilst it is possible to retrace the student steps, it is not possible to determine where the student diverges from the model answer nor to see what the exact model answer is. 
+Because RR1 is satisfied, it is possible to reconstruct the correct solution:
+we know that the exercise requires the student to perform three adjacent
+remove operations with Min-Heapify. Therefore, it is possible to determine
+where the student diverges from the model answer.
 
-RR2 not satisfied.
+RR2 satisfied.

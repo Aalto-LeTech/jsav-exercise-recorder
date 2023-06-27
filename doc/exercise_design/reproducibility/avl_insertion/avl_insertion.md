@@ -26,11 +26,13 @@ RR2. All the steps in the recording must have a unique, unambiguous inter-
 pretation on student’s choices such that it is clear on which step the student’s
 steps begin to differ from the execution path of the correct algorithm.
 
-As the learner inserts new nodes into the tree, they appear in the traces. As such, we can reconstruct the learner's trace. 
-
+As the learner inserts new nodes into the tree, they appear in the states.
+When the learner performs a tree rotation, the state of the tree is recorded
+again. Therefore, we can reconstruct both inserts and rotations, and thus,
+the entire trace.
 
 ## End state
 
-The end state is recorded. There is no indication of correctness, the end state is merely a repeat of the last state. Whilst it is possible to retrace the student steps, it is not possible to determine where the student diverges from the model answer nor to see what the exact model answer is.
+Based on the detected inserts, the model solution can be reconstructed.
 
-RR2 not satisfied.
+RR2 satisfied.

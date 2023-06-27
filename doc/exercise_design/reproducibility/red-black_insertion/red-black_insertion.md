@@ -22,7 +22,8 @@ This is the first object in the outermost JSON list. Example:
 
 Each step is a single object containing the tree at that step. The tree is built up from the root node. Each node contains several fields: `v` holds the key;  `cls` holds the colouration of the node: if it has `rednode`, then it is red, otherwise it is black; a `css` field. Additionally, non-leaf node always contain a `left` and `right` field.
 
-RR1 satisfied.
+There are always ten (10) values to be inserted into the red-black tree.
+RR1 is satisfied by reconstruction from intermediate states.
 
 ## Intermediate states
 
@@ -36,5 +37,9 @@ Each step is either an insert, a colour change, or a rotation. At each step, we 
 ## End state
 
 The end state is recorded. There is no indication of correctness, the end state is merely a repeat of the last state. Whilst it is possible to retrace the student steps, it is not possible to determine where the student diverges from the model answer nor to see what the exact model answer is.
+
+The model answer can be reconstructed to the extent that the student has
+inserted values into the tree. The exercise always has ten values to be
+inserted.
 
 RR2 not satisfied.

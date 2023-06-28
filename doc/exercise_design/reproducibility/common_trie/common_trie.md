@@ -32,9 +32,18 @@ This is the first object in the outermost JSON list. Example:
 },
 ```
 
-Each step is a single object containing the tree at that step. The tree is built up from the root node. Each node contains several fields: `v` holds the key; `cls` has the value `"emptynode"` for an empty node, and `greenbg` for nodes with the label true; and a `css` field. Additionally, non-leaf node always contain an array with three fields, which are a, b, and c, respectively.
+Each step is a single object containing the tree at that step. The tree is built
+up from the root node. Each node contains several fields: `v` holds the key;
+`cls` has the value `"emptynode"` for an empty node, and `greenbg` for nodes
+with the label true; and a `css` field. Additionally, non-leaf node always
+contain an array with three fields, which are a, b, and c, respectively.
 
-RR1 satisfied.
+The input, which is a stack of keys to be inserted into the tree, is not
+available. When a student inserts a key into the tree, it is not possible to
+know whether the key represented by the path in the tree matches to the key
+on the top of the input stack.
+
+RR1 not satisfied.
 
 ## Intermediate states
 
@@ -42,7 +51,10 @@ RR2. All the steps in the recording must have a unique, unambiguous inter-
 pretation on student’s choices such that it is clear on which step the student’s
 steps begin to differ from the execution path of the correct algorithm.
 
-Each step, either a new node appears or a node has the key switch to true and gains the `cls: ["greenbg"]`.At each step, we can see the full tree at that point. We do not see the student clicking the `Next` button, so if the same value appears twice in the stack, we do not see that. As such, we can fully reconstruct the learner's trace if the stack has no repeat values, but only partially reconstruct it if there are repeats. 
+Each step, either a new node appears or a node has the key switch to true and
+gains the `cls: ["greenbg"]`. At each step, we can see the full tree at that
+point. We do not see the student clicking the `Next` button, so if the same
+value appears twice in the stack, we do not see that.
 
 
 ## End state

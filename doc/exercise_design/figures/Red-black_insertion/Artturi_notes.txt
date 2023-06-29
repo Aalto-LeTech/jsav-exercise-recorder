@@ -1,0 +1,23 @@
+Artturi would like to edit the pseudocode:
+
+2.1 If u is root, make it black and the algorithm ends.
+2.2 If u's parent t is black, the algorithm ends.
+2.3 If both u and its parent t are red:
+2.3.1 [change colors] If t and its sibling v are red:
+Color t and v black and their parent p red.
+Continue color change with p and its sibling, if necessary.
+2.3.2 [rotation] If t is red and its sibling v is black:
+Perform a rotation at t's parent p.
+p and its new parent exchange their colors.
+
+Step 2.3 should be explicit in the model answer.
+Nodes u and t should be in italics or bolded.
+
+Puzzling narration: chain of two red nodes under a black node.
+First, line 1 talks about u as the new node.
+Then, line 2.3.2 talk about t and v without reminding that t is u's parent and v is t's sibling. The student also has to remember that an empty node is always black.
+The model answer would benefit from highlighting u, t, v, and p when possible.
+Can JSAV position text along the nodes? Yes! http://jsav.io/otherapis/label/
+
+On a full HD screen (1920x1080), the model answer is so wide that it partially hides the
+pseudocode.

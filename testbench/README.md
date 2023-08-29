@@ -61,3 +61,20 @@ The JSAV-based visual algorithm simulation exercises are bound to the
    jquery.transit and raphael.
 - `OpenDSA/lib` contains JS libraries common to OpenDSA, and JS libraries
    jQuery and jQuery-UI.
+
+## Testing Finnish translations
+
+One can test the Finnish translation of a JSAV exercise by adding the following
+string at the end of the exercise URL: `?JOP-lang=fi&JXOP-code=finnish`
+
+Example:
+
+- [English Red-black tree](http://localhost:8000/OpenDSA/AV/Development/redBlackTreePRO.html)
+- [Finnish Red-black tree](http://localhost:8000/OpenDSA/AV/Development/redBlackTreePRO.html?JOP-lang=fi&JXOP-code=finnish)
+
+The URL parameter `JOP-lang` controls the language of the exercise interface.
+Its value should correspond to a key under key `translations` in the exercise
+translation JSON file, e.g. redBlackTreePRO.json.
+
+The URL parameter `JXOP-code`controls the language of the pseudocode,
+corresponding to a key under key `code`in the exercise translation JSON file.

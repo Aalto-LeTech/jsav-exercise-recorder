@@ -36,38 +36,43 @@ Input: s1: *operation sequence* (student's solution)
        s2: *opeartion sequence* (model solution)
 Output: (student_grade, max_grade) (two natural numbers)
 
-student_grade <- 0
-max_grade     <- |s2|
 i <- 0
 j <- 0
 s1_op_set = {}
 s2_op_set = {}
 
-while j < max_grade:
+while i < |s1| and j < |s2|:
     model_op = s2[j]
-    if model_op[i] == 'deq'
+    if s2[[j][0] == 'deq'
         if s1[i][0] == 'deq' and s1[i][1] == s2[j][1]
             i <- i + 1
             j <- j + 1
         else
-            student_grade <- i
             break
         end if
     else
         s1_op_set = {}
-        while i < |s1| and s1[i][0] != 'deq'
-            s1_op_set = s1_op_set U s1[i]
+        k <- i
+        while k < |s1| and s1[k][0] != 'deq'
+            s1_op_set = s1_op_set union s1[k]
+            k <- k + 1
         end while
         s2_op_set = {}
-        while j < [s2] and s2[j][0] != 'deq'
-            s2_op_set = s2_op_set union s2[j]
+        k <- j
+        while k < [s2] and s2[j][0] != 'deq'
+            s2_op_set = s2_op_set union s2[k]
+            k <- k + 1
         end while
-        common_set = s1_op_set intersection s2_op_set
-        student_grade <- student_grade + |common_set|
-        if |s1_op_set union s2_op_set| > |common_set|
+        shared_set = s1_op_set intersection s2_op_set
+        union_set = s1_op_set union s2_op_set
+        i <- i + |shared_set|
+        j <- j + |shared_set|
+        if |shared_set| > |common_set|
             break
         end if
     end if
 end while
+student_grade <- i
+max_grade <- |s2|
 return (student_grade, max_grade)
 ---------------------------------------------------------------------------

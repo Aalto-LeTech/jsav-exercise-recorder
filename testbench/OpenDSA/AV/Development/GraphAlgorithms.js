@@ -61,3 +61,66 @@ function createLegend(av, x, y, interpret) {
             {left: x + hpos[2], top: y + 166})
         .addClass("legendtext");
 }
+
+/**
+ * Creates a legend box which explains the edge colors.
+ * This is used for both the student's view and the model answer.
+ * 
+ * @param {JSAV} av A JSAV algorithm visualization template
+ * @param {function(string)} interpret A JSAV interpreter function
+ * @param {number} x Location: pixels from left in *av*
+ * @param {number} y Location: pixels from top in *av*
+ * @param {*} legendSpec: list [] of objects.
+ *        A vertical line is described with an object like:
+ *        {
+ *            "type": "line", "class": {string}, "text": {string}
+ *        }
+ *        where "class" denotes the CSS class and "text" is the text to be
+ *        displayed to the right of the line.
+ *
+ *        A circle with a text can be produced with an object like:
+ *        {
+ *            "type": "node", "innerText": {string}, "text": {string}
+ *        }
+ *        where "innerText" denotes the text inside the circle and "text" is
+ *        the text to be displayed to the right of the circle.
+ * @param {number} width (optional): width of the legend box in pixels
+ * @param {number} height (optional): height of the legend box in pixels
+ */
+function createLegendGeneric(av, interpret, x, y, legendSpec, width = 250,
+    height = 250) {
+    // Center on a pixel to produce crisp edges
+    x = Math.floor(x) + 0.5;
+    y = Math.floor(y) + 0.5;
+    av.g.rect(x, y, width, height, {
+        "stroke-width": 1,
+        fill: "white",
+    }).addClass("legendbox");
+    av.label(interpret("legend"), {left: x + 0.5 * (width - 50), top: y - 35});
+
+    const lineStartX = 26, lineEndX = 76, textStartX = 90;
+    const textAdjustY = -22;
+    const circleX = 51, circleY = 0, circleRadius = 22;
+    const circleInnerX = 35, circleInnerY = 31;
+    const legendRowHeight = 50;
+    y += 25;
+    for (item of legendSpec) {
+        if (item["type"] === "line") {
+            av.g.line(x + lineStartX, y, x + lineEndX, y).addClass(edgeClass[i]);
+            av.label(item["text"], {left: x + textStartX,
+                top: y + textAdjustY, "text-align": "center"})
+            .addClass("legendtext")            
+        }
+        if (item["type"] === "node") {
+            av.g.circle(x + circleX, y + circleY, circleRadius);    
+            av.label("5<br>C (B)", {left: x + circleInnerX,
+                top: y + circleInnerY})
+                .addClass("legendtext")
+                .addClass("textcentering");
+            av.label(interpret("node_explanation"),
+                    {left: x + textStartX, top: y + circleInnerY})
+                .addClass("legendtext");
+        }
+        y += legendRowHeight;
+    }
+}

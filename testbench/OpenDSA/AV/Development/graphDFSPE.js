@@ -8,6 +8,9 @@
       settings = config.getSettings(),
       jsav = new JSAV($('.avcontainer'), {settings: settings});
 
+  // Legend box in the exercise view;
+  var exerciseLegendCreated = false;
+
   jsav.recorded();
 
   var config = ODSA.UTILS.loadConfig({'av_container': 'jsavcontainer'}),
@@ -70,7 +73,7 @@
     });
     graphUtils.nlToJsav(nlGraph, graph);
     graph.layout();
-    graph.nodes()[0].addClass("visited"); // mark the 'A' node
+    graph.nodes()[0].addClass("visited"); // mark the 'A' node   
     jsav.displayInit();
     // Remove the initially calculated size so that the graph sits next 
     // to the code. 

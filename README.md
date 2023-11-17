@@ -1,12 +1,24 @@
-# JSAV Exercise Recorder
+# JSAV Exercise Recorder with New Exercises
 
-The JSAV Exercise Recorder is a JavaScript software for creating recordings of
-Visual Algorithm Simulation exercises. It is based on
-[JSAV](http://jsav.io) and [OpenDSA](https://github.com/OpenDSA/OpenDSA).
-For extensive background information, see
-[Giacomo Mariani's MSc thesis](https://aaltodoc.aalto.fi/handle/123456789/44448).
+## Summary
+
+**JSAV Exercise Recorder** is a JavaScript software for creating recordings of
+[JSAV](http://jsav.io)/[OpenDSA](https://github.com/OpenDSA/OpenDSA)
+algorithm visualization exercises. The data format for recording the exercises
+is [JSON-based Algorithm Animation Language](https://github.com/Aalto-LeTech/JAAL/).
+
+This repository also contains **New JSAV Exercises** which were developed for
+teaching and research on Aalto University course *CS-A1141/-43 Data Structures
+and Algorithm Y*. This repository has a testbench which allows running each
+exercise independently, without OpenDSA or any learning management system, to
+develop the exercises and the JSAV Exercise Recorder.
+
+For an easy introduction to the exercises and the Recorder, see the section
+*Introduction with testbench*.
 
 ## git branches
+
+This repository has the following branches.
 
 `jaal2.0` is the 2022 development branch based on
 [JAAL 2.0 rc2 specification](https://github.com/Aalto-LeTech/JAAL/releases/tag/2.0rc1).
@@ -27,9 +39,44 @@ The main differences in the JSAV Exercise Recorder between the `master` and
 3. Exercise recording is accessible globally:
    `global.JSAVrecorder.getRecording()`
 
-## Installation for development
+## Introduction with testbench
 
-To compile and run the software, you will need:
+To test the exercises and the Recorder manually, you will need
+[https://www.python.org](Python 3) and a web browser. Once you have those,
+start the *test bench server* in the directory `testbench`. E.g. in a UNIX
+environment:
+
+```bash
+cd testbench
+./start-server.py
+```
+
+Next, open [http://localhost:8000/OpenDSA/AV/Development/](http://localhost:8000/OpenDSA/AV/Development/) at your web browser.
+(If needed, you can specify another HTTP port as a parameter, e.g.
+`./start-server.py 8001`.) You should see a web page with title
+*Directory listing for /OpenDSA/AV/Development/*.
+
+This directory contains the exercise files. Try clicking *graphDFSPE.html*.
+That should show a web page like this:
+
+![Screenshot of the Depth-first search exercise](figures/graphDFSPE.png)
+
+This is just a regular JSAV/OpenDSA exercise.
+- You can simulate the algoritm by clicking edges (the lines) in the graph
+  view. See the exercise instructions on the top of the exercise.
+- *Undo* button undoes your recent action.
+- *New Exercise* button gives a new exercise instance.
+- *Model Answer* button opens a dialog which shows the model answer as
+  a series of pictures and text.
+- *Grade* button grades your solution.
+
+
+You can stop the web server at command line by Ctrl+C.
+
+
+## Developing JSAV Exercise Recorder 
+
+To compile the software, you will need:
 
 - [Node.js](https://nodejs.org/en/)
 - [Python 3](https://www.python.org/)
@@ -129,3 +176,13 @@ To bundle all the required modules in one file use [Browserify](http://browserif
 
 The DSA Y course repository, branch `traky`, should have a script called
 `compile-jaal.sh` which does the rest.
+
+## Literature
+
+The initial version of the software ("JAAL 1.0") was introduced in
+[Giacomo Mariani's MSc thesis](https://aaltodoc.aalto.fi/handle/123456789/44448).
+
+For shorter reading, there is a conference article which describes the
+
+
+

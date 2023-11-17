@@ -56,23 +56,128 @@ Next, open [http://localhost:8000/OpenDSA/AV/Development/](http://localhost:8000
 `./start-server.py 8001`.) You should see a web page with title
 *Directory listing for /OpenDSA/AV/Development/*.
 
-This directory contains the exercise files. Try clicking *graphDFSPE.html*.
+This directory contains the exercise files. Try clicking [PrimAVPE-scaffolded.html](http://localhost:8000/OpenDSA/AV/Development/PrimAVPE-scaffolded.html).
 That should show a web page like this:
 
-![Screenshot of the Depth-first search exercise](figures/graphDFSPE.png)
+![Screenshot of a Prim's algorithm exercise](figures/PrimAVPE-scaffolded-gui.png)
 
-This is just a regular JSAV/OpenDSA exercise.
-- You can simulate the algoritm by clicking edges (the lines) in the graph
-  view. See the exercise instructions on the top of the exercise.
+This is just a regular JSAV/OpenDSA exercise. The exercise is about
+[Prim's algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm) which
+produces a minimum spanning tree. It is assumed that the reader is familiar
+with the algorithm, as well as the concepts of graph, priority queue, and
+binary heap; these are quite standard material for an introductory data
+structures and algorithms course in university education.
+
+The components in the exercise interface from top to bottom are the following:
+
+1. Control buttons: *Undo*, *New Exercise*, *Model Answer*, and *Grade*.
+2. Exercise instructions: "Reproduce the behavior..."
+3. Node-link diagram: nodes (vertices) are circles and edges are lines.
+4. Priority Queue view. It displays a
+   [https://en.wikipedia.org/wiki/Binary_heap](Binary heap) and a *Dequeue*
+   button.
+   
+
+Try a few steps of the exercise. Click any edge, then select *Enqueue* 
+in the pop-up dialog, repeat. You should see the edges changing their color to
+orange-brown and also appearing in the Priority Queue view. Example:
+
+![Screenshot of a Prim's algorithm exercise in progress](figures/PrimAVPE-scaffolded-gui2.png)
+
+As with regular JSAV/OpenDSA exercises, the control buttons have the following
+purposes:
 - *Undo* button undoes your recent action.
 - *New Exercise* button gives a new exercise instance.
 - *Model Answer* button opens a dialog which shows the model answer as
   a series of pictures and text.
 - *Grade* button grades your solution.
 
+Moreover, this exercise also has the JSAV Exercise Recorder enabled. To see
+what it produces:
 
-You can stop the web server at command line by Ctrl+C.
+1. Open the JavaScript console in your web browser.
+   - Firefox: Press the F12 key to open Developer Tools, then click the
+     *Console* tab.
+   - Chrome and Edge: the same as Firefox.
+2. Click the *Grade* button in the exercise.
+3. The exercise shows the message "Recording model answer steps" for a moment.
+4. The exercise shows a dialog with the text: "Your score: X/22. Your score
+   was successfully recorded." Click OK in the dialog.
+4. There should be new text printed to the console. The text should be similar
+   to the next text snippet.
 
+```
+Data conforms to JAAL 2.0.
+Final JAAL data: 
+Object { metadata: {…}, definitions: {…}, initialState: {…}, animation: (3)
+[…] }
+Data to be sent A+: 
+{"description":"JAAL 2.0 recording","generator":"JSAV Exercise Recorder 2.0.1",
+"encoding":"JSON string -> HTML escape -> zlib compress -> Base64 encode",
+"data":"eJzt3X2Pm0i6NvCv…" }
+```
+![Screenshot of a Prim's algorithm exercise with console output](figures/PrimAVPE-scaffolded-console.png)
+
+In the console, the line `Final JAAL data:` shows JSON data recorded from
+the exercise. This is a JavaScript object. The line `Data conforms to JAAL 2.0`
+indicates that the structure of the object is according to the rules of the
+*JSON-based Algorithm Animation Language*, JAAL.
+
+You can expand the JavaScript object it by clicking the small grey triangle
+that begins the line
+`Object { metadata: {…}, definitions: {…},`. You should see more lines
+appearing as follows:
+
+```
+  animation: Array(3) [ {…}, {…}, {…} ]
+​  definitions: Object { style: {}, score: {…}, options: {}, … }
+​  initialState: Object { dataStructures: (2) […], svg: '<svg height="883" ...
+```
+
+![Screenshot of a Prim's algorithm exercise with console
+output](figures/PrimAVPE-scaffolded-console2.png)
+
+There are JavaScript objects `animation`, `definitions`, and `initialState`
+shown briefly in blue. Notice that the `initialState` object has a subobject
+`svg` which is a string containing the code of an SVG image:
+`<svg height="883" version="1.1" width="900" ...`
+
+Scroll to the bottom of the console. The main object should also have a
+`metadata` sub-object at the end. Expand it similarly. It should show data
+like this:
+
+```
+metadata: Object { uid: 0, ordinal_number: 0, browser: "Mozilla/5.0 (X11;
+Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0", … }
+​​    browser: "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 
+    Firefox/120.0"
+​​    exercise: Object { name: "PrimAVPE-scaffolded.html", collection: "CS-A1141/
+    CS-A1143", "running location": "http://localhost:8000/OpenDSA/AV/
+    Development/PrimAVPE-scaffolded.html" }
+​​    jaalGenerator: "JSAV Exercise Recorder 2.0.1"
+​​    jaalVersion: "2.0"
+​​    max_points: null
+​​    ordinal_number: 0
+​​    recordingStarted: "2023-11-17T08:19:53.654Z"
+​​    recordingTimezone: 2
+​​    uid: 0
+```
+
+This is the *Metadata section* of the recording showing information of
+student's web browser, recording software, recording time, and the exercise
+configuration.
+
+If you want to examine this JSON data in your favorite IDE or text editor,
+click the line `Object { metadata: {…}, definitions: {…},` with the right
+mouse button and select *Copy Object*. This should work with Firefox, Chrome
+and Edge. Then create a new file in your text editor and paste the data from
+the clipboard with Ctrl+V.
+
+This is the end of the technical demonstration of the test bench. You can stop
+the web server at command line by Ctrl+C.
+
+For a proper introduction to the JAAL structure itself, see the 
+[examples at the JAAL repository](https://github.com/Aalto-LeTech/JAAL/tree/main/examples).
 
 ## Developing JSAV Exercise Recorder 
 

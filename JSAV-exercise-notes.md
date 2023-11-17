@@ -1,4 +1,6 @@
-# Johanna's notes on how JSAV exercises work
+# Developer notes for JSAV exercises
+
+Johanna Sänger, 2023
 
 The full JSAV documentation can be found at https://jsav.io/ . 
 
@@ -12,7 +14,13 @@ Creating JSAV exercises requires several files:
 
 ## HTML & CSS: 
 
-The structure of the HTML is explained based on `commonTriePRO.html`
+The structure of the HTML is explained based on the
+Common Trie exercise whose source code is at
+[commonTriePRO.html](testbench/OpenDSA/AV/Development/commonTriePRO.html).
+See [the main README > Introduction with testbench](README.md) on how to run
+the exercise in the testbench.
+
+
 
 OpenDSA and JSAV have two style sheets that are typically linked in the header: 
 

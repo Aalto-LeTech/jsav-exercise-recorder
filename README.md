@@ -87,7 +87,7 @@ orange-brown and also appearing in the Priority Queue view. Example:
 As with regular JSAV/OpenDSA exercises, the control buttons have the following
 purposes:
 - *Undo* button undoes your recent action.
-- *New Exercise* button gives a new exercise instance.
+- *New Exercise* button gives a new exercise insOpen [the  ]tance.
 - *Model Answer* button opens a dialog which shows the model answer as
   a series of pictures and text.
 - *Grade* button grades your solution.
@@ -163,7 +163,7 @@ Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0", … }
 ​​    uid: 0
 ```
 
-This is the *Metadata section* of the recording showing information of
+-This is the *Metadata section* of the recording showing information of
 student's web browser, recording software, recording time, and the exercise
 configuration.
 
@@ -178,6 +178,20 @@ the web server at command line by Ctrl+C.
 
 For a proper introduction to the JAAL structure itself, see the 
 [examples at the JAAL repository](https://github.com/Aalto-LeTech/JAAL/tree/main/examples).
+
+## New designs of JSAV exercises
+
+This repository contains new designs of JSAV exercises.
+
+The exercise code itself is at [testbench/OpenDSA/AV/Development](testbench/OpenDSA/AV/Development).
+See `testbench/README.md` for how to start the test bench.
+
+The design documentation of the exercises is at `doc/exercise_design`.
+
+## Developing JSAV Exercises
+
+The testbench is this repository is useful for developing JSAV exercises
+standalone. For more information, see the [exercise development document](JSAV-exercise-development.md).
 
 ## Developing JSAV Exercise Recorder 
 
@@ -219,14 +233,7 @@ is the following.
 JAAL specification and documentation is included as a git submodule in the
 directory `validation/JAAL`.
 
-## New designs of JSAV exercises
 
-This repository contains new designs of JSAV exercises.
-
-The exercise code itself is at `Testbench/OpenDSA/AV/Development`.
-See `testbench/README.md` for how to start the test bench.
-
-The design documentation of the exercises is at `doc/exercise_design`.
 
 ## Source code organisation
 

@@ -242,8 +242,10 @@
       }
       node.removeClass("focusnode"); // remove highlighting of recently dequeued node
     }
+    av.umsg(interpret("av_ms_queue_empty"));
+    av.step();
   }
-
+  
   // Process About button: Pop up a message with an Alert
   function about() {
     window.alert(ODSA.AV.aboutstring(interpret(".avTitle"), interpret("av_Authors")));

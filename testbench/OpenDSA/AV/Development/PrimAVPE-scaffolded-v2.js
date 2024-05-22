@@ -19,7 +19,8 @@
 
   // JSAV Binary Tree  for the student's solution, to display the priority
   // queue as a binary heap
-  var minheap;
+  /** @type {MinHeapInterface} */
+  let minHeapInterface;
 
   // Legend box in the exercise view;
   var exerciseLegendCreated = false;
@@ -28,7 +29,6 @@
   var jsav = new JSAV($('.avcontainer'), {settings: settings});
 
   // Number of elements in the binary heap
-  var heapsize = jsav.variable(0);
 
   // A list of JSAV graph nodes to keeps track of what node has been focused
   // after a dequeue operation. This is make sure that the class can be removed
@@ -145,7 +145,7 @@
     addEdgeClickListeners();
     addMinheap(100, 530);
     if (!exerciseLegendCreated) {
-      const minheapBox = minheap.bounds();
+      const minheapBox = minHeapInterface.heap.bounds();
       createLegend(jsav, minheapBox.left + minheapBox.width + 20,
                          minheapBox.top + 1, interpret);
       exerciseLegendCreated = true;
@@ -155,7 +155,7 @@
     graph.layout();
     graph.nodes()[0].addClass("spanning"); // mark the 'A' node
     jsav.displayInit();
-    return [graph, minheap];
+    return [graph, minHeapInterface.heap];
   }
 
   /**
@@ -541,7 +541,7 @@
         mintree.root().remove();
       }
       mintree.layout();
-      return ret
+      return ret;
     }
 
     /**
@@ -1040,7 +1040,8 @@
 
     updateStudentTable(srcLabel, dstLabel, dist);
     modifyStyleOfStudentTable(dstLabel, "fringe", true);
-    insertMinheap(srcLabel, dstLabel, dist);
+    // insertMinheap(srcLabel, dstLabel, dist);
+    minHeapInterface.insert(srcLabel, dstLabel, dist);
     debugPrint("Exercise gradeable step: enqueue edge " + srcLabel + "-" +
       dstLabel + " distance " + dist);
     storePqOperationStep('enq', event.data.edge)
@@ -1063,34 +1064,30 @@
     const dist = event.data.dist;
     const popup = event.data.popup;
 
-    const nodeArr = getTreeNodeList(minheap.root());
-    // Grab first node with the correct destination.
-    const updatedNode = nodeArr.filter(node =>
-            node.value().charAt(node.value().length - 5) === dstLabel)[0];
-
+    const nodeToUpdate = minHeapInterface.findNodeWithCharAtRelativeIndex(dstLabel, 5);
     // If no node with the correct label exists, do nothing.
-    if (!updatedNode) {
+    if (!nodeToUpdate) {
       popup.close();
       window.alert(interpret("av_update_not_possible"));
       return;
     }
-
-    updateStudentTable(srcLabel, dstLabel, dist);
-    // Add class to the new edge
-    event.data.edge.addClass("fringe")
-    // Remove class from the old edge
     // Have old label, find previous source node label
-    const oldLabel = updatedNode.value();
+    const oldLabel = nodeToUpdate.value();
     const oldSrcLabel = oldLabel.charAt(oldLabel.length - 2);
+
     // Find node objects to grab the egde
-    const oldNode = graph.nodes().filter(node =>
-        node.element[0].getAttribute("data-value") === oldSrcLabel)[0];
-    const dstNode = graph.nodes().filter(node =>
-        node.element[0].getAttribute("data-value") === dstLabel)[0];
+    const oldNode = graph.nodes().find(node =>
+      node.element[0].getAttribute("data-value") === oldSrcLabel);
+
+    const dstNode = graph.nodes().find(node =>
+      node.element[0].getAttribute("data-value") === dstLabel);
+
     const oldEdge = graph.getEdge(oldNode, dstNode)
-              ?? graph.getEdge(dstNode, oldNode);
+      ?? graph.getEdge(dstNode, oldNode);
+
     // Remove the queued class.
     oldEdge.removeClass("fringe");
+
     if (window.JSAVrecorder) {
       window.JSAVrecorder.appendAnimationEventFields(
         {
@@ -1102,28 +1099,18 @@
     }
 
     const oldDist = oldLabel.match(/\d+/)[0];
-    const label = dist + "<br>" + dstLabel + " (" + srcLabel + ")";
-    updatedNode.value(label);
+    const newLabel = dist + "<br>" + dstLabel + " (" + srcLabel + ")";
+    nodeToUpdate.value(newLabel);
+   
+    updateStudentTable(srcLabel, dstLabel, dist);
+    // Add class to the new edge
+    event.data.edge.addClass("fringe")
+    // Remove class from the old edge
 
     if (dist > oldDist) {
-      minHeapify(updatedNode)
+      minHeapInterface.downheap(nodeToUpdate);
     } else {
-      var node = updatedNode;
-      while (node != minheap.root() &&
-             extractDistance(node) <= extractDistance(node.parent())) {
-        // If the distance is the same as the parent node, we only want to
-        // swap them around if the node's destination comes earlier in the
-        // alphabet than its parent's.
-        if (extractDistance(node) === extractDistance(node.parent()) &&
-            extractDestination(node) > extractDestination(node.parent())) {
-          // Alphabetically later, so break the while loop.
-          break;
-        }
-        const temp = node.parent().value();
-        node.parent().value(node.value());
-        node.value(temp);
-        node = node.parent();
-      }
+      minHeapInterface.upheap(nodeToUpdate, extractDistance(nodeToUpdate), extractDestination(nodeToUpdate));
     }
     debugPrint("Exercise gradeable step: update edge " + srcLabel + "-" +
       dstLabel + " distance " + dist);
@@ -1136,7 +1123,7 @@
    * Dequeue button click of the priority queue.
    */
   function dequeueClicked() {
-    const deleted = minheapDelete(0);
+    const deleted = minHeapInterface.removeMin();
     if (!deleted) {
       return;
     }
@@ -1177,7 +1164,6 @@
     }
     debugPrint(s);
 
-    minheap.layout();
     // Call markEdge last, because it will also store the JSAV animation step
     if (!edge.hasClass("spanning")) {
       markEdge(edge);
@@ -1193,6 +1179,7 @@
    * an empty array is initialised if none is supplied.
    * @returns an array containing the nodes of the tree.
    */
+  
   function getTreeNodeList (node, arr) {
     var nodeArr = arr || [];
 
@@ -1203,7 +1190,7 @@
     }
     return nodeArr;
   }
-
+  
   /**
    * Update the table: dstLabel's distance is set to newDist,
    * with parent set to srcLabel
@@ -1225,31 +1212,26 @@
    */
     function addMinheap(x, y) {
       let previouslyExistingMinheap = false;
-      if (minheap) {
+      if (minHeapInterface) {
         previouslyExistingMinheap = true;
-        minheap.clear();
+        minHeapInterface.clearHeap();
         $('.flexcontainer').remove();
         $('#dequeueButton').remove();
       }
   
       $(".jsavcanvas").append("<div class='flexcontainer'></div>");
-      minheap = jsav.ds.binarytree({relativeTo: $(".flexcontainer"),
-        left: -180, top: 140});
+      minHeapInterface = new MinHeapInterface(jsav, {relativeTo: $(".flexcontainer"), left: -180, top: 140});
   
       if (!previouslyExistingMinheap) {
-        jsav.label(interpret("priority_queue"), {relativeTo: minheap,
+        jsav.label(interpret("priority_queue"), {relativeTo: minHeapInterface.heap,
           top: -135});
-        }
+      }
   
       // Add a Dequeue button
       const html = "<button type='button' id='dequeueButton'>" +
       interpret("#dequeue") +"</button>";
       $(".jsavtree").append(html);
       $("#dequeueButton").click(dequeueClicked);
-      
-      heapsize = heapsize.value(0);
-  
-      minheap.layout() 
     }
 
   /**

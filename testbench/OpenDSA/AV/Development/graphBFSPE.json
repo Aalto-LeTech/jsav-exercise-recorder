@@ -18,7 +18,7 @@
       ".avTitle": "Leveyssuuntainen haku",
       "av_Authors": "Mohammed Fawzi, Kasper Hellström, Johanna Sänger, Artturi Tilanterä",
       ".instructLabel": "Ohjeet:",
-      ".instructions": "Käy läpi verkko BFS-järjestyksessä. Aloita läpikäynti solmusta A. Klikkaa <strong>särmiä</strong> samassa järjestyksessä kuin BFS-algoritmi käy niiden kohdesolmut läpi. Operaatiota vastaava koodirivi on korostettu. Solmun naapurit käydään läpi aakkosjärjestyksessä.",
+      ".instructions": "Käy läpi verkko BFS-järjestyksessä. Klikkaa <strong>särmiä</strong> samassa järjestyksessä kuin BFS-algoritmi käy niiden kohdesolmut läpi. Operaatiota vastaava koodirivi on korostettu. Aloita läpikäynti solmusta A, joka on jo merkitty läpi käydyksi. Solmun naapurit käydään läpi aakkosjärjestyksessä.",
       "av_ms_final": "Lopullinen leveyshaun tuottama puu",
       "av_ms_dequeue": "Poistetaan {node} jonosta.",
       "av_ms_process_edge": "Käsitellään särmä ({from}, {to}).",

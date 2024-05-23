@@ -1,25 +1,24 @@
 class MinHeapInterface {
   constructor(jsav, jsavProps) {
-    this._heap = jsav.ds.binarytree(jsavProps);
+    this._btree = jsav.ds.binarytree(jsavProps);
     this._heapSize = jsav.variable(0);
-    this._heap.layout();
+    this._btree.layout();
   }
-
+  get btree() {
+    return this._btree;
+  }
   get rootNode() {
-    console.log("get root", this._heap.root());
-    return this._heap.root();
+    console.log("get root", this._btree.root());
+    return this._btree.root();
   }
   set rootNode(newRootNode) {
     console.log("set new root:", newRootNode);
-    this._heap.root(newRootNode);
-    this._heap.layout();
+    this._btree.root(newRootNode);
+    this._btree.layout();
   }
   get heapSize() {
     console.log("get heap size:", this._heapSize.value());
     return this._heapSize.value();
-  }
-  get heap() {
-    return this._heap;
   }
 
   _incrementHeapSize() {
@@ -39,12 +38,12 @@ class MinHeapInterface {
     node2.value(val1);
     // No layout update here!
   }
-  
+
   clearHeap() {
     console.log("clear heap");
-    this._heap.clear();
+    this._btree.clear();
     this._heapSize.value(0);
-    this._heap.layout();
+    this._btree.layout();
   }
 
   extractDist(node) {
@@ -64,6 +63,7 @@ class MinHeapInterface {
    * @param {number} currentIdx 
    * @param {number} distance
    * @param {string} dstLabel
+   * @returns {undefined}
   */
   upheap(currentNode, distance, dstLabel) { 
     const currentParent = currentNode.parent();
@@ -141,7 +141,7 @@ class MinHeapInterface {
     this._incrementHeapSize();
 
     const nodeLabel = `${distance}<br>${dstLabel} (${srcLabel})`;
-    const newNode = this._heap.newNode(nodeLabel);
+    const newNode = this._btree.newNode(nodeLabel);
 
     if (newNodeIdx === 0) {
       this.rootNode = newNode;
@@ -158,7 +158,7 @@ class MinHeapInterface {
     // Restore min-heap property.
     this.upheap(newNode, distance, dstLabel);
   
-    this._heap.layout();
+    this._btree.layout();
   }
 
   removeMin() {
@@ -185,7 +185,7 @@ class MinHeapInterface {
     } else {
       this.rootNode.remove();
     }
-    this._heap.layout();
+    this._btree.layout();
     return rootVal;
   }
 

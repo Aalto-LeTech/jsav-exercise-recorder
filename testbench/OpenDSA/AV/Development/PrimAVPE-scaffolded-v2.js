@@ -6,7 +6,7 @@
  * 25 August 2023
  */
 
-/* global ODSA, graphUtils */
+/* global ODSA, graphUtils JSAV, MinHeapInterface*/
 (function ($) {
   "use strict";
 
@@ -143,9 +143,12 @@
     })
     graphUtils.nlToJsav(nlGraph, graph);
     addEdgeClickListeners();
-    addMinheap(100, 530);
+
+    // Creates instance of MinHeapInterface, which adds visible
+    addPriorityQueue(); 
+
     if (!exerciseLegendCreated) {
-      const minheapBox = minHeapInterface.heap.bounds();
+      const minheapBox = minHeapInterface.btree.bounds();
       createLegend(jsav, minheapBox.left + minheapBox.width + 20,
                          minheapBox.top + 1, interpret);
       exerciseLegendCreated = true;
@@ -155,7 +158,7 @@
     graph.layout();
     graph.nodes()[0].addClass("spanning"); // mark the 'A' node
     jsav.displayInit();
-    return [graph, minHeapInterface.heap];
+    return [graph, minHeapInterface.btree];
   }
 
   /**
@@ -307,13 +310,14 @@
     // Mark the 'A' node
     modelNodes[0].addClass("spanning");
 
-    const mintree = modeljsav.ds.binarytree();
-    mintree.layout();
+    // const mintree = modeljsav.ds.binarytree();
+    // mintree.layout();
+    const modelMinHeapInterface = new MinHeapInterface(modeljsav);
 
     modeljsav.displayInit();
 
     // start the algorithm
-    prim(modelNodes, distances, modeljsav, mintree);
+    prim(modelNodes, distances, modeljsav, modelMinHeapInterface); // left here
 
     modeljsav.umsg(interpret("av_ms_mst"));
     // hide all edges that are not part of the spanning tree
@@ -1205,12 +1209,12 @@
   }
 
   /**
-   * Add the minheap to the student's JSAV instance.
-   *
-   * @param {int} x: position: pixels from left
-   * @param {int} y: position: pixels from top
+   * Add the priority queue to the student's JSAV instance.
+   * Achieves this by creating an instance of MinHeapInterface, which 
+   * encapsulates JSAV binary tree and JSAV variable for heapsize.
+   * Also adds the dequeue button.
    */
-    function addMinheap(x, y) {
+    function addPriorityQueue() {
       let previouslyExistingMinheap = false;
       if (minHeapInterface) {
         previouslyExistingMinheap = true;
@@ -1218,15 +1222,15 @@
         $('.flexcontainer').remove();
         $('#dequeueButton').remove();
       }
-  
+
       $(".jsavcanvas").append("<div class='flexcontainer'></div>");
+      
       minHeapInterface = new MinHeapInterface(jsav, {relativeTo: $(".flexcontainer"), left: -180, top: 140});
   
       if (!previouslyExistingMinheap) {
-        jsav.label(interpret("priority_queue"), {relativeTo: minHeapInterface.heap,
+        jsav.label(interpret("priority_queue"), {relativeTo: minHeapInterface.btree,
           top: -135});
       }
-  
       // Add a Dequeue button
       const html = "<button type='button' id='dequeueButton'>" +
       interpret("#dequeue") +"</button>";

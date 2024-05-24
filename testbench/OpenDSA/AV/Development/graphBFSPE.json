@@ -2,7 +2,7 @@
   "translations" :{
     "en": {
       ".avTitle": "Breadth-First Search Proficiency Exercise",
-      "av_Authors": "Mohammed Fawzi, Kasper Hellström, Johanna Sänger, Artturi Tilanterä",
+      "av_Authors": "Mohammed Fawzi, Kasper Hellström, Johanna Sänger, Artturi Tilanterä, Teemu Taivainen",
       ".instructLabel": "Instructions:",
       ".instructions": "Reproduce the behavior of the BFS algorithm for the graph below. Click on the <strong>edges</strong> in the order that their target nodes are visited by the BFS algorithm. The corresponding code line is highlighted. Start from Node A, which is already marked visited. If there is more than one node that could be visited next, choose the one that comes first in alphabetical order.",
       "av_ms_final": "Final BFS tree",
@@ -16,7 +16,7 @@
     },
     "fi": {
       ".avTitle": "Leveyssuuntainen haku",
-      "av_Authors": "Mohammed Fawzi, Kasper Hellström, Johanna Sänger, Artturi Tilanterä",
+      "av_Authors": "Mohammed Fawzi, Kasper Hellström, Johanna Sänger, Artturi Tilanterä, Teemu Taivainen",
       ".instructLabel": "Ohjeet:",
       ".instructions": "Käy läpi verkko BFS-järjestyksessä. Klikkaa <strong>särmiä</strong> samassa järjestyksessä kuin BFS-algoritmi käy niiden kohdesolmut läpi. Operaatiota vastaava koodirivi on korostettu. Aloita läpikäynti solmusta A, joka on jo merkitty läpi käydyksi. Solmun naapurit käydään läpi aakkosjärjestyksessä.",
       "av_ms_final": "Lopullinen leveyshaun tuottama puu",

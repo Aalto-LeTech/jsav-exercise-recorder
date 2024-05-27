@@ -12,6 +12,7 @@
 
   // Add the code block to the exercise. 
   const code = ODSA.UTILS.loadConfig({'av_container': 'jsavcontainer'}).code; // fetch code
+
   if (code) {
     jsav.code($.extend({after: {element: $(".code")}}, code)) // add pseudocode to exercise
       .highlight(12); // highlight row that marks node visited
@@ -75,7 +76,7 @@
 
     // Remove the initially calculated size so that the graph sits next 
     // to the code. 
-    $(".jsavcanvas").css("min-width", "")
+    $(".jsavcanvas").css("min-width", "");
     return graph;
   }
 
@@ -134,7 +135,7 @@
     });
     const modelQueue = modeljsav.ds.list({
       left: 150,
-    })
+    });
     
     // copy the graph and its weights
     graphUtils.copy(graph, modelGraph, {weights: true});
@@ -142,7 +143,7 @@
 
     // Mark the "A" node and add it to visible queue.
     modelNodes[0].addClass("visited");
-    modelQueue.addFirst(modelNodes[0].value())
+    modelQueue.addFirst(modelNodes[0].value());
 
     modeljsav.displayInit();
 
@@ -199,9 +200,9 @@
     while (queue.length) {
       // dequeue node
       node = queue.pop();
-      node.addClass("focusnode") // add highlighting to recently dequeued node
-      modelQueue.removeLast()
-      modelQueue.layout()
+      node.addClass("focusnode"); // add highlighting to recently dequeued node
+      modelQueue.removeLast();
+      modelQueue.layout();
 
       // get neighbors and sort them in alphabetical order
       adjacent = node.neighbors();
@@ -221,8 +222,8 @@
           if (!neighbor.hasClass("visited")) {
             // enqueue node
             queue.unshift(neighbor);
-            modelQueue.addFirst(neighbor.value())
-            modelQueue.layout()
+            modelQueue.addFirst(neighbor.value());
+            modelQueue.layout();
             // visit node
             markEdge(node.edgeTo(neighbor), av);
           } else {
@@ -239,10 +240,12 @@
         av.umsg(interpret("av_ms_all_neighbors_visited"), {fill: {node: node.value()}});
         av.step();
       }
-      node.removeClass("focusnode") // remove highlighting of recently dequeued node
+      node.removeClass("focusnode"); // remove highlighting of recently dequeued node
     }
+    av.umsg(interpret("av_ms_queue_empty"));
+    av.step();
   }
-
+  
   // Process About button: Pop up a message with an Alert
   function about() {
     window.alert(ODSA.AV.aboutstring(interpret(".avTitle"), interpret("av_Authors")));

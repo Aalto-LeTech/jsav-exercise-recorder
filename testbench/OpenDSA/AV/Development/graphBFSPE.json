@@ -10,6 +10,7 @@
       "av_ms_process_edge": "Process edge ({from}, {to}).",
       "av_ms_already_visited": " Node {node} already visited",
       "av_ms_all_neighbors_visited": "All the neighbors of {node} have already been visited.\n",
+      "av_ms_queue_empty": "The queue is empty and there are no unvisited neighbors. The algorithm finishes execution.",
       "#help": "Help",
       "#about": "About",
       "reset": "New Exercise"
@@ -24,6 +25,7 @@
       "av_ms_process_edge": "Käsitellään särmä ({from}, {to}).",
       "av_ms_already_visited": " Solmussa {node} on jo käyty.",
       "av_ms_all_neighbors_visited": "Kaikki {node}:n naapurit on käyty läpi.\n",
+      "av_ms_queue_empty": "Jono on tyhjä ja kaikki naapurit on käyty läpi. Algoritmin suoritus päättyy.",
       "#help": "Ohje",
       "#about": "Lisätietoa",
       "reset": "Uusi tehtävä"

@@ -144,7 +144,7 @@
     graphUtils.nlToJsav(nlGraph, graph);
     addEdgeClickListeners();
 
-    // Creates instance of MinHeapInterface, which adds visible
+    // Creates instance of MinHeapInterface and adds visible priority queue with deque button.
     addPriorityQueue(); 
 
     if (!exerciseLegendCreated) {
@@ -158,7 +158,7 @@
     graph.layout();
     graph.nodes()[0].addClass("spanning"); // mark the 'A' node
     jsav.displayInit();
-    return [graph, minHeapInterface.btree];
+    return [graph, minHeapInterface.btree]; // Don't know if btree is really used to grading.
   }
 
   /**
@@ -277,10 +277,9 @@
   }
 
   function model(modeljsav) {
-    var i,
-        graphNodes = graph.nodes();
+    const graphNodes = graph.nodes();
     // create the model
-    var modelGraph = modeljsav.ds.graph({
+    const modelGraph = modeljsav.ds.graph({
       width: 500,
       height: 400,
       layout: "automatic",
@@ -289,9 +288,9 @@
 
     // copy the graph and its weights
     graphUtils.copy(graph, modelGraph, {weights: true});
-    var modelNodes = modelGraph.nodes();
+    const modelNodes = modelGraph.nodes();
 
-    var distanceMatrixValues = [];
+    const distanceMatrixValues = [];
     for (i = 0; i < graphNodes.length; i++) {
       distanceMatrixValues.push([graphNodes[i].value(), "∞", "-"]);
     }
@@ -310,14 +309,13 @@
     // Mark the 'A' node
     modelNodes[0].addClass("spanning");
 
-    // const mintree = modeljsav.ds.binarytree();
-    // mintree.layout();
+    // Create model solution min-heap
     const modelMinHeapInterface = new MinHeapInterface(modeljsav);
 
     modeljsav.displayInit();
 
     // start the algorithm
-    prim(modelNodes, distances, modeljsav, modelMinHeapInterface); // left here
+    prim(modelNodes, distances, modeljsav, modelMinHeapInterface);
 
     modeljsav.umsg(interpret("av_ms_mst"));
     // hide all edges that are not part of the spanning tree
@@ -330,7 +328,7 @@
 
     modeljsav.step();
 
-    return [modelGraph, mintree];
+    return [modelGraph, modelMinHeapInterface.btree];
   }
 
  /**
@@ -388,10 +386,10 @@
    * @param {*} nodes is an array of JSAV nodes
    * @param {*} distances is the JSAV matrix of the distances
    * @param {*} av is the model answer AV
-   * @param mintree is the priority queue.
-   */
-  function prim(nodes, distances, av, mintree) {
-    var modelheapsize = 0;
+   * @param {MinHeapInterface} modelMinHeapInterface
+   * */
+  function prim(nodes, distances, av, modelMinHeapInterface) {
+    // var modelheapsize = 0;
     const aNode = nodes.find(node => node.value() === "A");
     aNode.addClass("focusnode");
 
@@ -405,10 +403,20 @@
     // this variable is not an array but just a single JSAV node.)
     var previousFocusedNode = aNode;
 
-    while (modelheapsize > 0) {
-      const rootVal = deleteRoot();
-      const label = rootVal.charAt(rootVal.length - 5);
-      const dstNode = nodes.find(node => node.value() === label);
+    while (modelMinHeapInterface.heapSize > 0) {
+      const removedLabel = modelMinHeapInterface.removeMin();
+      // Destination of removed node
+      const removedDest = removedLabel.charAt(removedLabel.length - 5);
+
+      // Mark table row as "unused" (grey background)
+      // Then set selected message, and step the av.
+      distances.addClass(removedDest.charCodeAt(0) - "A".charCodeAt(0), true, "unused");
+      av.umsg(interpret("av_ms_select_node"),
+              {fill: {node: removedDest}});
+      av.step();
+
+      // Find corresponding node from the graph nodes and update view.
+      const dstNode = nodes.find(node => node.value() === removedDest);
       const dstIndex =  dstNode.value().charCodeAt(0) - "A".charCodeAt(0);
       const srcNode = nodes.find(node => node.value() === distances.value(dstIndex, 2))
       const edge = dstNode.edgeFrom(srcNode) ?? dstNode.edgeTo(srcNode);
@@ -422,15 +430,15 @@
       
       av.umsg(interpret("av_ms_add_edge"),
               {fill: {from: srcNode.value(), to: dstNode.value()}});
-      modifyStyleOfModelTable(label, "fringe", false);
-      modifyStyleOfModelTable(label, "spanning", true);
+      modifyStyleOfModelTable(removedDest, "fringe", false);
+      modifyStyleOfModelTable(removedDest, "spanning", true);
       edge.removeClass("fringe");
       if (!edge.hasClass("spanning")) {
         markEdge(edge, av);
       }
       const neighbours = dstNode.neighbors().filter(node =>
         !node.hasClass("spanning"));
-      debugPrint("Neighbours of " + dstNode.value() + " before sorting");
+      debugPrint("Neighbours of " + dstNode.value() + " before sorting", neighbours);
       sortNeighbours(neighbours);
       neighbours.forEach(node => visitNeighbour(dstNode, node))
     }
@@ -466,10 +474,12 @@
         av.umsg(interpret("av_ms_visit_neighbor_add"),
         {fill: {node: src.value(), neighbor: neighbour.value()}});
         highlight(edge, neighbour);
-        av.step()
+        av.step();
 
         // Second step: highlight the update
         addNode(src.value(), neighbour.value(), dist);
+        
+
         updateModelTable(neighbour, src, dist);
         debugPrint("Model solution gradeable step: ADD ROUTE WITH DIST:",
         dist + neighbour.value());
@@ -488,6 +498,7 @@
 
         // Second step: highlight the update
         updateNode(src.value(), neighbour.value(), dist);
+        
         updateModelTable(neighbour, src, dist);
         debugPrint("Model solution gradeable step:  UPDATE DISTANCE TO:",
         dist + neighbour.value());
@@ -508,46 +519,8 @@
       removeHighlight(edge, neighbour);
     }
 
-    /**
-     * Helper function that deletes the root node and does a step
-     * to display the text which node is deleted.
-     * @returns the value of the deleted node.
-     */
-    function deleteRoot () {
-      if (!mintree.root() || modelheapsize <= 0) {
-        return;
-      }
-      modelheapsize -= 1;
 
-      const ret = mintree.root().value();
-
-      // Mark table row as "unused" (grey background)
-      // Then set selected message, and step the av.
-      const nodeLabel = ret.charAt(ret.length - 5)
-      distances.addClass(nodeLabel.charCodeAt(0) - "A".charCodeAt(0), true, "unused")
-      av.umsg(interpret("av_ms_select_node"),
-              {fill: {node: nodeLabel}});
-      av.step();
-
-      // Parent node of last node in the heap
-      const parentLast = findParent(modelheapsize, mintree);
-
-      // Last node in the heap
-      const lastNode = ((modelheapsize)%2 === 1) ? parentLast.left()
-                                                 : parentLast.right();
-
-      if (lastNode) {
-        mintree.root().value(lastNode.value());
-        lastNode.value(ret);
-        lastNode.remove();
-        minHeapify(mintree.root());
-      } else {
-        mintree.root().remove();
-      }
-      mintree.layout();
-      return ret;
-    }
-
+    // ?????
     /**
      * Helper function to add a new node.
      * @param srcLabel label of the source node
@@ -555,33 +528,7 @@
      * @param distance distance to the node
      */
     function addNode (srcLabel, dstLabel, distance) {
-      var i = modelheapsize;
-      modelheapsize += 1;
-      const label = distance + "<br>" + dstLabel + " (" + srcLabel + ")"
-      const newNode = mintree.newNode(label);
-      if (i === 0) {
-        mintree.root(newNode);
-      } else {
-        const parent = findParent(i, mintree);
-        (i % 2 === 1) ? parent.left(newNode) : parent.right(newNode);
-      }
-
-      var node = newNode;
-      while (i > 0 && node.parent()
-            && extractDistance(node.parent()) >= distance) {
-        // If the distance is the same as the parent, we only want to swap them
-        // if the destination node alphabetically comes first compared to the
-        // parent. If parent is alphabetically first, we break from the while
-        // loop.
-        if (extractDistance(node.parent()) === distance
-            && extractDestination (node.parent()) < extractDestination (node)) {
-          break;
-        }
-        node.value(node.parent().value());
-        i = Math.floor((i-1)/2);
-        node.parent().value(label);
-        node = node.parent();
-      }
+      modelMinHeapInterface.insert(srcLabel, dstLabel, distance);
 
       // Add queued class to the edge
       const srcNode = nodes.filter(node =>
@@ -594,8 +541,6 @@
 
       // Add fringe class to the corresponding column in the distance matrix
       modifyStyleOfModelTable(dstLabel, "fringe", true);
-
-      mintree.layout();
     }
 
     /**
@@ -605,17 +550,14 @@
      * @param distance distance to the node
      */
     function updateNode(srcLabel, dstLabel, distance) {
-      const label = distance + "<br>" + dstLabel + " (" + srcLabel + ")"
-      const nodeArr = getTreeNodeList(mintree.root())
-      // Grab first node with the correct destination.
-      const updatedNode = nodeArr.filter(node =>
-              node.value().charAt(node.value().length - 5) === dstLabel)[0];
+      const newLabel = `${distance}<br>${dstLabel} (${srcLabel})`;
 
+      const oldLabel = modelMinHeapInterface.updateNodeWithDest(dstLabel, newLabel);
       // If no node with the correct label exists, do nothing.
-      if (!updatedNode) {
+      if (!oldLabel) {
         return;
       }
-      debugPrint("UPDATE:", updatedNode.value(), "TO:", distance + label);
+      debugPrint("UPDATE:", oldLabel, "TO:", distance + newLabel);
 
       // Add queued class to the edge
       const srcNode = nodes.filter(node =>
@@ -625,13 +567,12 @@
       const edge = dstNode.edgeFrom(srcNode) ?? dstNode.edgeTo(srcNode)
       edge.addClass("fringe")
       // Remove queued class from the old edge
-      const oldLabel = updatedNode.value();
       const oldSrcLabel = oldLabel.charAt(oldLabel.length - 2);
       const oldSrcNode = nodes.filter(node =>
           node.element[0].getAttribute("data-value") === oldSrcLabel)[0];
       const oldEdge = dstNode.edgeFrom(oldSrcNode) ?? dstNode.edgeTo(oldSrcNode)
       oldEdge.removeClass("fringe");
-      updatedNode.value(label);
+      /*
       // Inline while loop to move the value up if needed.
       // Because if you pass a node along as a parameter, it does not like
       // being asked about its parent... Grading will break in ODSA part.
@@ -644,6 +585,7 @@
         node = node.parent();
       }
       mintree.layout();
+      */
     }
 
     /* Sorts neighbours of a node by alphabetic order of their node values.
@@ -679,10 +621,7 @@
       distances.addClass(node.value().charCodeAt(0) - "A".charCodeAt(0),
                          true, "compare");
       // Mark current node being visited in the mintree
-      const treeNodeList = getTreeNodeList(mintree.root());
-      const treeNode = treeNodeList.filter(treeNode =>
-          treeNode.value().charAt(treeNode.value().length - 5)
-          === node.value())[0];
+      const treeNode = minHeapInterface.getNodeByDest(node.value());
       if (treeNode) {
         treeNode.addClass("compare")
       }
@@ -694,13 +633,10 @@
       distances.removeClass(tableRow, true, "compare");
       distances.addClass(tableRow, true, "updated");
       // Mark current node being visited in the mintree
-      const treeNodeList = getTreeNodeList(mintree.root());
-      const treeNode = treeNodeList.filter(treeNode =>
-          treeNode.value().charAt(treeNode.value().length - 5)
-          === node.value())[0];
+      const treeNode = minHeapInterface.getNodeByDest(node.value());
       if (treeNode) {
-        treeNode.removeClass("compare")
-        treeNode.addClass("updated")
+        treeNode.removeClass("compare");
+        treeNode.addClass("updated");
       }
     }
       
@@ -711,10 +647,7 @@
       const tableIndex = node.value().charCodeAt(0) - "A".charCodeAt(0);
       distances.removeClass(tableIndex, true, "compare");
       distances.removeClass(tableIndex, true, "updated");      
-      const treeNodeList = getTreeNodeList(mintree.root());
-      const treeNode = treeNodeList.filter(treeNode =>
-        treeNode.value().charAt(treeNode.value().length - 5)
-        === node.value())[0];
+      const treeNode = minHeapInterface.getNodeByDest(node.value());
       if (treeNode) {
         treeNode.removeClass("compare");
         treeNode.removeClass("updated");
@@ -768,7 +701,7 @@
     }
 
     /*****************************************************
-     * End of function dijkstra() and its inner functions 
+     * End of function prim() and its inner functions 
      *****************************************************/   
   }
 
@@ -1044,7 +977,7 @@
 
     updateStudentTable(srcLabel, dstLabel, dist);
     modifyStyleOfStudentTable(dstLabel, "fringe", true);
-    // insertMinheap(srcLabel, dstLabel, dist);
+
     minHeapInterface.insert(srcLabel, dstLabel, dist);
     debugPrint("Exercise gradeable step: enqueue edge " + srcLabel + "-" +
       dstLabel + " distance " + dist);
@@ -1068,7 +1001,7 @@
     const dist = event.data.dist;
     const popup = event.data.popup;
 
-    const nodeToUpdate = minHeapInterface.findNodeWithCharAtRelativeIndex(dstLabel, 5);
+    const nodeToUpdate = minHeapInterface.getNodeByDest(dstLabel);
     // If no node with the correct label exists, do nothing.
     if (!nodeToUpdate) {
       popup.close();
@@ -1104,18 +1037,14 @@
 
     const oldDist = oldLabel.match(/\d+/)[0];
     const newLabel = dist + "<br>" + dstLabel + " (" + srcLabel + ")";
-    nodeToUpdate.value(newLabel);
+
+    minHeapInterface.updateNodeWithDest(dstLabel, newLabel); // takes care of upheap/downheap
    
     updateStudentTable(srcLabel, dstLabel, dist);
     // Add class to the new edge
     event.data.edge.addClass("fringe")
     // Remove class from the old edge
 
-    if (dist > oldDist) {
-      minHeapInterface.downheap(nodeToUpdate);
-    } else {
-      minHeapInterface.upheap(nodeToUpdate, extractDistance(nodeToUpdate), extractDestination(nodeToUpdate));
-    }
     debugPrint("Exercise gradeable step: update edge " + srcLabel + "-" +
       dstLabel + " distance " + dist);
     storePqOperationStep('upd', event.data.edge);
@@ -1175,26 +1104,6 @@
 
   }
 
-  /**
-   * Preorder traversal to get node list of the tree
-   * Since there is no function for this in the JSAV library
-   * @param node the root node to start the traversal at
-   * @param arr array to store the nodes in. Optional parameterl
-   * an empty array is initialised if none is supplied.
-   * @returns an array containing the nodes of the tree.
-   */
-  
-  function getTreeNodeList (node, arr) {
-    var nodeArr = arr || [];
-
-    if (node) {
-      nodeArr.push(node);
-      nodeArr = getTreeNodeList(node.left(), nodeArr);
-      nodeArr = getTreeNodeList(node.right(), nodeArr);
-    }
-    return nodeArr;
-  }
-  
   /**
    * Update the table: dstLabel's distance is set to newDist,
    * with parent set to srcLabel
@@ -1260,158 +1169,6 @@
                            left: 150,
                            top: 780});
   }
-
-  /**
-   * Insert the new node into the minheap according to the
-   * insertMinheap algorithm.
-   * @param srcLabel label of the source node
-   * @param dstLabel label of the destination node
-   * @param distance distance to be inserted.
-   */
-  function insertMinheap (srcLabel, dstLabel, distance) {
-    var i = heapsize.value();
-
-    heapsize.value(heapsize.value() + 1);
-
-    const label = distance + "<br>" + dstLabel + " (" + srcLabel + ")"
-    const newNode = minheap.newNode(label);
-    if (i === 0) {
-      minheap.root(newNode);
-    } else {
-      const parent = findParent(i, minheap);
-      (i % 2 === 1) ? parent.left(newNode) : parent.right(newNode);
-    }
-
-    // Heapify up
-    var node = newNode;
-    while (i > 0 && extractDistance(node.parent()) >= distance) {
-      //If the distance is the same as the parent, we only want to swap them if
-      //the destination node alphabetically comes first compared to the parent.
-      //If parent is alphabetically first,
-      //we break from the while loop.
-      if (extractDistance(node.parent()) === distance && extractDestination (node.parent()) < extractDestination (node)) {
-        break;
-      }
-      node.value(node.parent().value());
-      i = Math.floor((i-1)/2);
-      node.parent().value(label);
-      node = node.parent();
-    }
-
-    minheap.layout();
-  }
-
-  /**
-   * minHeapify algorithm from a node.
-   * @param {*} root The node from which to min-heapify.
-   */
-  function minHeapify(root) {
-    const left = root.left();
-    const right = root.right();
-    var smallest = root;
-    if (left) extractDestination(left)
-    if (left && extractDistance(left) < extractDistance(smallest)) {
-      smallest = left;
-    }
-    if (left && extractDistance(left) === extractDistance(smallest) &&
-    extractDestination(left) < extractDestination(smallest)) {
-      smallest = left;
-    }
-    // if (left && extra)
-    if (right && extractDistance(right) < extractDistance(smallest)) {
-      smallest = right;
-    }
-    if (right && extractDistance(right) === extractDistance(smallest) &&
-    extractDestination(right) < extractDestination(smallest)) {
-      smallest = right;
-    }
-    if (smallest != root) {
-      const temp = smallest.value();
-      smallest.value(root.value());
-      root.value(temp);
-      minHeapify(smallest);
-    }
-
-  }
-
-  /**
-   * minheapDelete function, delete node at index.
-   * @returns value of the deleted node.
-   */
-  function minheapDelete() {
-    if (heapsize.value() === 0) {
-      return
-    }
-
-    heapsize.value(heapsize.value() - 1);
-
-    // PLACEHOLDER: be able to remove other than min
-    const ret = minheap.root().value();
-
-    // Parent of the last node in the heap
-    const parentLast = findParent(heapsize.value(), minheap);
-
-    // The last node in the heap (the one to be deleted)
-    const lastNode = (heapsize.value() % 2 === 1) ? parentLast.left()
-                                                  : parentLast.right();
-
-    if (lastNode) {
-      // Swap the values of the root and the last node
-      minheap.root().value(lastNode.value());
-      lastNode.value(ret);
-
-      lastNode.remove();
-
-      minHeapify(minheap.root());
-    } else {
-      minheap.root().remove();
-    }
-    return ret
-  }
-
-  /**
-   * Return the parent node of node at index.
-   * @param {*} index the index of the node whose parent we want.
-   * @returns parent of node at index.
-   */
-  function findParent (index, heap) {
-    const chain = [];
-    while (index > 0) {
-      index = Math.floor((index - 1) / 2);
-      chain.unshift(index);
-    }
-    var parent_node = heap.root();
-    for (var i = 1; i < chain.length; i++) {
-      var prev_index = chain[i-1];
-      var curr_index = chain[i];
-      if (prev_index * 2 + 1 === curr_index) {
-        parent_node = parent_node.left();
-      } else {
-        parent_node = parent_node.right();
-      }
-    }
-
-    return parent_node;
-  }
-
-  /**
-   * Helper function to extract the distance from the minheap tree.
-   * @param {*} node node whose distance is being extracted
-   * @returns the distance.
-   */
-  function extractDistance (node) {
-    return Number(node.value().match(/\d+/)[0])
-  }
-
-  /**
-   * Helper function to extract the destination node from the minheap tree.
-   * @param {*} node node whose destination is being extracted
-   * @returns the distance.
-   */
-   function extractDestination (node) {
-    return node.value().match(/[A-Z]/)[0];
-  }
-
 
   function debugPrint(x) {
     if (debug) {

@@ -28,7 +28,6 @@ class MinHeapInterface {
    * @returns {JSAV binary tree node} The current root node of the binary tree.
   */
   get rootNode() {
-    console.log("get root", this._btree.root());
     return this._btree.root();
   }
   /**
@@ -67,7 +66,8 @@ class MinHeapInterface {
     node2.value(val1);
   }
   /**
-   * Clears the binary tree and sets the heap size to 0.
+   * Clears the binary tree and sets the heap size to 0. 
+   * Should only be called when the current min-heap is no longer needed.
    */
   clearHeap() {
     this._btree.clear();
@@ -113,10 +113,10 @@ class MinHeapInterface {
    * @param {JSAV binary tree node} currentNode - The node that is being compared to its parent.
    * @param {Number} distance - The distance of the current node, 
    *  which corresponds to the inserted/updated distance before applying upheap.
-   * @param {String} dstLabel - The destination label of the current node,
+   * @param {String} destination - The destination of the current node (single character describing graph node),
    *  which corresponds to the inserted/updated destination before applying upheap.
   */
-  upheap(currentNode, distance, dstLabel) { 
+  upheap(currentNode, distance, destination) { 
     const currentParent = currentNode.parent();
     if (!currentParent) {
       return; // reached root
@@ -124,10 +124,10 @@ class MinHeapInterface {
     const parentDist = this.extractDistFromNode(currentParent);
     const parentDest = this.extractDest(currentParent);
     // Swap also if nodes have equal distances but new node's destination comes first in alphabets.
-    if (parentDist > distance || (parentDist === distance && dstLabel < parentDest)) {
+    if (parentDist > distance || (parentDist === distance && destination < parentDest)) {
       this._swapNodeValues(currentNode, currentParent);
       // Upheap again so that parent is the currentNode.
-      this.upheap(currentParent, distance, dstLabel);
+      this.upheap(currentParent, distance, destination);
     }
   }
   /**
@@ -135,6 +135,9 @@ class MinHeapInterface {
    * @param {JSAV binary tree node} subtreeRootNode - The node that is being compared to its children.
    */
   downheap(subtreeRootNode) {
+    if (!subtreeRootNode) {
+      return;
+    }
     const left = subtreeRootNode.left();
     const right = subtreeRootNode.right();
     let smallest = subtreeRootNode;
@@ -160,9 +163,12 @@ class MinHeapInterface {
     }
   }
   /**
-   * 
+   * Finds the parent node of the node at the given index.
+   * Traverses the binary tree up and down to find the parent node as 
+   * JSAV does not allow accessing nodes by index.
+   * (If nodes could be accessed by index, result would be node at index (nodeIdx - 1) / 2.)
    * @param {Number} nodeIdx - index of the node whose parent will be found 
-   * @returns the parent node of the node at the given index.
+   * @returns {JSAV binary tree node} the parent node of the node at the given index or null if nodeIdx is 0 (root)
    */
   findParent(nodeIdx) {
     if (nodeIdx === 0) {
@@ -177,7 +183,6 @@ class MinHeapInterface {
     }
 
     let parentNode = this.rootNode;
-    console.log(parentNode);
     for (let j = 1; j < ancestorChain.length; j++) {
       const parentIdx = ancestorChain[j - 1];
       const childIdx = ancestorChain[j];
@@ -188,9 +193,22 @@ class MinHeapInterface {
         parentNode = parentNode.right();
       }
     }
-
     return parentNode;
   }
+  getLastNode() {
+    const lastNodeIdx = this.heapSize - 1;
+    if (lastNodeIdx < 0) {
+      return null;
+    }
+    if (lastNodeIdx === 0) {
+      return this.rootNode;
+    }
+    const lastNodeParent = this.findParent(lastNodeIdx);
+    return (lastNodeIdx % 2 === 1)
+      ? lastNodeParent.left() : lastNodeParent.right();
+  }
+
+
     /**
    * Insert the new node into the min-heap and restore the min-heap property.
    * Parameters are used to create the label of the new node.
@@ -227,66 +245,61 @@ class MinHeapInterface {
    * @returns the label of the minimum node that was removed.
    */
   removeMin() {
-    const heapSize = this.heapSize;
-    console.log(heapSize);
-    if (heapSize === 0) {
-      return;
-    } 
-    const lastNodeIdx = heapSize - 1;
+    if (this._heapSize === 0) { // empty heap
+      return; 
+    }
+    const minNode = this.rootNode; // to be removed
+    const minLabel = minNode.value(); // to be returned
+
+    const lastNode = this.getLastNode();
+
+    this._swapNodeValues(minNode, lastNode);
+
+    lastNode.remove();
     this._decrementHeapSize();
 
-    const lastNodeParent = this.findParent(lastNodeIdx);
-    const rootVal = this.rootNode.value();
-
-    if (lastNodeParent) { // is the last node root or not?
-      const lastNode = (lastNodeIdx % 2 === 1)
-        ? lastNodeParent.left() : lastNodeParent.right();
-
-      console.log("last node:", lastNode);
-
-      this._swapNodeValues(this.rootNode, lastNode);
-      lastNode.remove();
-      this.downheap(this.rootNode);
-    } else {
-      this.rootNode.remove();
+    // Restore min-heap property.
+    if (this.heapSize > 1) {
+      this.downheap(this.rootNode); // last node is now root
     }
+
     this._btree.layout();
-    return rootVal;
+
+    return minLabel;
   }
 
-    /**
-   * Preorder traversal to get node list of the tree
-   * Since there is no function for this in the JSAV library
-   * @param node the root node to start the traversal at
-   * @param arr array to store the nodes in. Optional parameter
-   * an empty array is initialized if none is supplied.
-   * @returns an array containing the nodes of the tree.
+  /**
+   * Preorder traversal the JSAV binary tree to get an array of JSAV binary tree nodes.
+   * There is no function for this in the JSAV library.
+   * @returns an array containing the nodes of the JSAV binary tree
    */
-  getPartialTreeNodeList(node, arr) {
-    let nodeArr = arr || [];
+  getTreeNodeArr() {
 
-    if (node) {
-      nodeArr.push(node);
-      nodeArr = this.getPartialTreeNodeList(node.left(), nodeArr);
-      nodeArr = this.getPartialTreeNodeList(node.right(), nodeArr);
+    // Inner recursive function to get all children of a node.
+    const getChildren = (node) => {
+      if (!node) {
+        return []; // No more children.
+      }
+      const leftChildren = getChildren(node.left());
+      const rightChildren = getChildren(node.right());
+      const nodeAndChildren = [node, ...leftChildren, ...rightChildren];
+
+      return nodeAndChildren;
     }
-    return nodeArr;
+    // Start with the root node.
+    const treeNodes = getChildren(this.rootNode, []);
+    console.log("Built list of treenodes:", treeNodes);
+    return treeNodes;
   }
+
   /**
-   * 
-   * @returns {Array}
-   */
-  getWholeTreeNodeList() {
-    return this.getPartialTreeNodeList(this.rootNode);
-  }
-  /**
-   * 
-   * @param {string} oldLabel 
-   * @param {string} newLabel 
-   * @returns 
+   * Updates the label of a node with the given old label to the new label.
+   * @param {String} oldLabel 
+   * @param {String} newLabel 
+   * @returns true if the node was found and updated, false otherwise.
    */
   updateNodeWithLabel(oldLabel, newLabel) {
-    const allNodesArr = this.getWholeTreeNodeList();
+    const allNodesArr = this.getTreeNodeArr();
     // Grab first node with the correct destination.
     const nodeToUpdate = allNodesArr.find(node => node.value() === oldLabel);
 
@@ -304,7 +317,6 @@ class MinHeapInterface {
    * @returns the old label of the node that was updated.
    */
   updateNodeWithDest(dest, newLabel) {
-    console.log("now we should update ")
     const nodeToUpdate = this.getNodeByDest(dest);
     if (!nodeToUpdate) {
       return;
@@ -330,12 +342,10 @@ class MinHeapInterface {
    * @returns {JSAV binary tree node} the node with the given destination label
    */
   getNodeByDest(dest) {
-    const allNodesArr = this.getWholeTreeNodeList();
+    const allNodesArr = this.getTreeNodeArr();
     // Grab first node with the correct destination.
     const node = allNodesArr.find(node => 
       node.value().charAt(node.value().length - 5) === dest);
-
-    console.log("got node", node);
     
     return node;
   }

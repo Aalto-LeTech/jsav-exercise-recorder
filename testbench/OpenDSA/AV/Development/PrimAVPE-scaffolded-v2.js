@@ -17,8 +17,7 @@
   // -parent table
   var table;
 
-  // JSAV Binary Tree  for the student's solution, to display the priority
-  // queue as a binary heap
+  // Implements the priority queue as min-heap and displays it as a binary tree.
   /** @type {MinHeapInterface} */
   let minHeapInterface;
 
@@ -119,7 +118,7 @@
     // Print statistics of exercise instance generation
     let statsText = "Trials: " + trials + "\n";
     for (let k of Object.keys(sumStats)) {
-     statsText += k + ": " + sumStats[k] + "\n";
+      statsText += k + ": " + sumStats[k] + "\n";
     }
     debugPrint(statsText);
 
@@ -140,7 +139,7 @@
     nlGraph.vertices.forEach(vertex => {
       vertex.x = vertex.x - 30;
       vertex.y = vertex.y - 30;
-    })
+    });
     graphUtils.nlToJsav(nlGraph, graph);
     addEdgeClickListeners();
 
@@ -181,7 +180,7 @@
       total: grade.maxGrade,
       // Continuous grading mode not used, therefore `undo` is zero
       undo: 0
-    }
+    };
     this.score = score;
   }
 
@@ -418,7 +417,7 @@
       // Find corresponding node from the graph nodes and update view.
       const dstNode = nodes.find(node => node.value() === removedDest);
       const dstIndex =  dstNode.value().charCodeAt(0) - "A".charCodeAt(0);
-      const srcNode = nodes.find(node => node.value() === distances.value(dstIndex, 2))
+      const srcNode = nodes.find(node => node.value() === distances.value(dstIndex, 2));
       const edge = dstNode.edgeFrom(srcNode) ?? dstNode.edgeTo(srcNode);
       
       // Give the last removed node a wider border (2px instead of 1) to 
@@ -440,7 +439,7 @@
         !node.hasClass("spanning"));
       debugPrint("Neighbours of " + dstNode.value() + " before sorting", neighbours);
       sortNeighbours(neighbours);
-      neighbours.forEach(node => visitNeighbour(dstNode, node))
+      neighbours.forEach(node => visitNeighbour(dstNode, node));
     }
     av.umsg(interpret("av_ms_unreachable"));
     previousFocusedNode.removeClass("focusnode");
@@ -509,7 +508,7 @@
         // Case 3: neighbour's distance is equal or longer through node `src`.
         // Do not update the priority queue.
         debugPrint("KEEP DISTANCE THE SAME:",
-                        currNeighbourDist + neighbour.value())
+                        currNeighbourDist + neighbour.value());
 
         av.umsg(interpret("av_ms_visit_neighbor_no_action"),
                 {fill: {node: src.value(), neighbor: neighbour.value()}});
@@ -520,7 +519,6 @@
     }
 
 
-    // ?????
     /**
      * Helper function to add a new node.
      * @param srcLabel label of the source node
@@ -536,8 +534,8 @@
       const dstNode = nodes.filter(node =>
           node.element[0].getAttribute("data-value") === dstLabel)[0];
       const edge = dstNode.edgeFrom(srcNode) ?? dstNode.edgeTo(srcNode);
-      edge.addClass("fringe")
-      dstNode.addClass("fringe")
+      edge.addClass("fringe");
+      dstNode.addClass("fringe");
 
       // Add fringe class to the corresponding column in the distance matrix
       modifyStyleOfModelTable(dstLabel, "fringe", true);
@@ -564,18 +562,21 @@
           node.element[0].getAttribute("data-value") === srcLabel)[0];
       const dstNode = nodes.filter(node =>
           node.element[0].getAttribute("data-value") === dstLabel)[0];
-      const edge = dstNode.edgeFrom(srcNode) ?? dstNode.edgeTo(srcNode)
-      edge.addClass("fringe")
+      const edge = dstNode.edgeFrom(srcNode) ?? dstNode.edgeTo(srcNode);
+      edge.addClass("fringe");
       // Remove queued class from the old edge
       const oldSrcLabel = oldLabel.charAt(oldLabel.length - 2);
       const oldSrcNode = nodes.filter(node =>
           node.element[0].getAttribute("data-value") === oldSrcLabel)[0];
-      const oldEdge = dstNode.edgeFrom(oldSrcNode) ?? dstNode.edgeTo(oldSrcNode)
+      const oldEdge = dstNode.edgeFrom(oldSrcNode) ?? dstNode.edgeTo(oldSrcNode);
       oldEdge.removeClass("fringe");
       /*
       // Inline while loop to move the value up if needed.
       // Because if you pass a node along as a parameter, it does not like
       // being asked about its parent... Grading will break in ODSA part.
+
+      // Hopefully this is not a problem anymore, now we have minHeapInterface
+
       var node = updatedNode;
       while (node != mintree.root() &&
              extractDistance(node) < extractDistance(node.parent())) {
@@ -623,7 +624,7 @@
       // Mark current node being visited in the mintree
       const treeNode = minHeapInterface.getNodeByDest(node.value());
       if (treeNode) {
-        treeNode.addClass("compare")
+        treeNode.addClass("compare");
       }
     }
 
@@ -664,10 +665,10 @@
     function modifyStyleOfModelTable(dstLabel, cssClass, setClass) {
       const col = findColByNode(dstLabel) - 1;
       if (setClass) {
-        distances.addClass(col, true, cssClass)
+        distances.addClass(col, true, cssClass);
       }
       else {
-        distances.removeClass(col, true, cssClass)
+        distances.removeClass(col, true, cssClass);
       }
     }
 
@@ -774,7 +775,7 @@
     //    is not updated to a shorter value during the algorithm.
     score += (stats.longerPath > 0) ? 1 : 0;
 
-    return { score: score, stats: stats }
+    return { score: score, stats: stats };
   }
 
   /*
@@ -850,7 +851,7 @@
     $(".jsavmatrix").css("margin-top", "34px");
     $(".jsavcanvas").css("min-height", "910px");
     $(".jsavmodelanswer .jsavcanvas").css("min-height", "700px");
-  })
+  });
 
   $("#about").click(about);
 
@@ -877,7 +878,7 @@
     if (!src || !dst) {
       console.warn("Either start or end is not defined. Start: ",
                    src, "\tEnd:", dst);
-      return
+      return;
     }
     const srcLabel = src.element[0].getAttribute("data-value");
     const dstLabel = dst.element[0].getAttribute("data-value");
@@ -891,7 +892,7 @@
                                           ? (srcLabel + dstLabel)
                                           : (dstLabel + srcLabel)),
       "width": "200px",
-    }
+    };
 
     const html = "<button type='button' id='enqueueButton'>"
                  + interpret("#enqueue") + ": " + label
@@ -913,7 +914,7 @@
    * @returns true when node contains class 'marked', else false
    */
   function isMarked (node) {
-    return node.element[0].classList.contains("spanning")
+    return node.element[0].classList.contains("spanning");
   }
 
   function findColByNode (nodeLabel) {
@@ -964,7 +965,7 @@
     const dstLabel = event.data.dstLabel;
     const dist = event.data.dist;
     const popup = event.data.popup;
-    debugPrint(event.data.edge)
+    debugPrint(event.data.edge);
     event.data.edge.addClass("fringe");
     if (window.JSAVrecorder) {
       window.JSAVrecorder.appendAnimationEventFields(
@@ -981,7 +982,7 @@
     minHeapInterface.insert(srcLabel, dstLabel, dist);
     debugPrint("Exercise gradeable step: enqueue edge " + srcLabel + "-" +
       dstLabel + " distance " + dist);
-    storePqOperationStep('enq', event.data.edge)
+    storePqOperationStep('enq', event.data.edge);
     popup.close();
   }
 
@@ -1042,7 +1043,7 @@
    
     updateStudentTable(srcLabel, dstLabel, dist);
     // Add class to the new edge
-    event.data.edge.addClass("fringe")
+    event.data.edge.addClass("fringe");
     // Remove class from the old edge
 
     debugPrint("Exercise gradeable step: update edge " + srcLabel + "-" +
@@ -1113,8 +1114,8 @@
    */
   function updateStudentTable (srcLabel, dstLabel, newDist) {
     const dstIndex = findColByNode(dstLabel);
-    table.value(1, dstIndex, newDist)
-    table.value(2, dstIndex, srcLabel)
+    table.value(1, dstIndex, newDist);
+    table.value(2, dstIndex, srcLabel);
   }
 
   /**
@@ -1154,9 +1155,9 @@
    */
    function addTable () {
     if (table) {
-      table.clear()
+      table.clear();
     }
-    const labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"]
+    const labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"];
     const labelArr = [interpret("node"), ...labels];
     const distanceArr = Array.from('∞'.repeat(labels.length - 1));
     distanceArr.unshift(interpret("distance"), 0);

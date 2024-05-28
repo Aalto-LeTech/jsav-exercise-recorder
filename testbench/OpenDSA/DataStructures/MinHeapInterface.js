@@ -209,7 +209,7 @@ class MinHeapInterface {
   }
 
 
-    /**
+  /**
    * Insert the new node into the min-heap and restore the min-heap property.
    * Parameters are used to create the label of the new node.
    * @param srcLabel label of the source node
@@ -285,7 +285,7 @@ class MinHeapInterface {
       const nodeAndChildren = [node, ...leftChildren, ...rightChildren];
 
       return nodeAndChildren;
-    }
+    };
     // Start with the root node.
     const treeNodes = getChildren(this.rootNode, []);
     console.log("Built list of treenodes:", treeNodes);

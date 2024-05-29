@@ -9,29 +9,28 @@
 class MinHeapInterface {
   /**
    * @constructor
-   * @param {JSAV object} jsav - The jsav instance that this min-heap will belong to.
+   * @param {JSAV_object} jsav - The jsav instance that this min-heap will belong to.
    * @param {Object} jsavProps - The parameters that are passed to jsav binary tree when creating it.
   */
   constructor(jsav, jsavProps) {
     this._btree = jsav.ds.binarytree(jsavProps);
     this._heapSizeJsav = jsav.variable(0); // is JSAV object!
-    this._btree.layout();
   }
 
   /**
-   * @returns {JSAV binarytree} The jsav binary tree object.
+   * @returns {JSAV_binary_tree} The jsav binary tree object.
   */
   get btree() {
     return this._btree;
   }
   /**
-   * @returns {JSAV binary tree node} The current root node of the binary tree.
+   * @returns {JSAV_binary_tree_node} The current root node of the binary tree.
   */
   get _rootNode() {
     return this._btree.root();
   }
   /**
-   * @param {JSAV binary tree node} newRootNode - The new root node of the binary tree.
+   * @param {JSAV_binary_tree_node} newRootNode - The new root node of the binary tree.
    */
   set _rootNode(newRootNode) {
     this._btree.root(newRootNode);
@@ -56,8 +55,8 @@ class MinHeapInterface {
   }
   /**
    * Swaps the values of two binary tree nodes.
-   * @param {JSAV binary tree node} node1 
-   * @param {JSAV binary tree node} node2 
+   * @param {JSAV_tree_node} node1 
+   * @param {JSAV_tree_node} node2 
    */
   _swapNodeValues(node1, node2) {
     const val1 = node1.value();
@@ -79,7 +78,7 @@ class MinHeapInterface {
    * Helper function to extract the distance from a binary tree node that has label 
    * of format: "x<br>D (S)", where x is the distance, D is the destination node label 
    * and S is the source node label
-   * @param {JSAV binary tree node} node - node whose distance is being extracted
+   * @param {JSAV_binary_tree_node} node - node whose distance is being extracted
    * @returns {Number} the distance
   */
   extractDistFromNode(node) {
@@ -100,7 +99,7 @@ class MinHeapInterface {
    * Helper function to extract the destination from a binary tree node that has label 
    * of format: "x<br>D (S)", where x is the distance, D is the destination node label 
    * and S is the source node label
-   * @param {JSAV binary tree node} node - node whose destination is being extracted
+   * @param {JSAV_binary_tree_node} node - node whose destination is being extracted
    * @returns {String} the destination, a single character
   */
   extractDestFromNode(node) {
@@ -119,7 +118,7 @@ class MinHeapInterface {
   }
   /**
    * Restores min-heap property after node insert or update. Calls itself recursively.
-   * @param {JSAV binary tree node} currentNode - The node that is being compared to its parent.
+   * @param {JSAV_binary_tree_node} currentNode - The node that is being compared to its parent.
    * @param {Number} distance - The distance of the current node, 
    *  which corresponds to the inserted/updated distance before applying upheap.
    * @param {String} destination - The destination of the current node (single character describing graph node),
@@ -141,7 +140,7 @@ class MinHeapInterface {
   }
   /**
    * Restores min-heap property after node removal or update. Calls itself recursively.
-   * @param {JSAV binary tree node} subtreeRootNode - The node that is being compared to its children.
+   * @param {JSAV_binary_tree_node} subtreeRootNode - The node that is being compared to its children.
    */
   _downheap(subtreeRootNode) {
     if (!subtreeRootNode) {
@@ -165,7 +164,7 @@ class MinHeapInterface {
       this.extractDestFromNode(right) < this.extractDestFromNode(smallest)) {
       smallest = right;
     }
-    if (smallest != subtreeRootNode) {
+    if (smallest !== subtreeRootNode) {
       this._swapNodeValues(smallest, subtreeRootNode);
       // Make recursive call.
       this._downheap(smallest);
@@ -177,7 +176,7 @@ class MinHeapInterface {
    * JSAV does not allow accessing nodes by index.
    * (If nodes could be accessed by index, result would be node at index (nodeIdx - 1) / 2.)
    * @param {Number} nodeIdx - index of the node whose parent will be found 
-   * @returns {JSAV binary tree node} the parent node of the node at the given index or null if nodeIdx is 0 (root)
+   * @returns {JSAV_binary_tree_node} the parent node of the node at the given index or null if nodeIdx is 0 (root)
    */
   _findParent(nodeIdx) {
     if (nodeIdx === 0) {
@@ -204,6 +203,11 @@ class MinHeapInterface {
     }
     return parentNode;
   }
+  /**
+   * 
+   * @returns {JSAV_binary_tree_node} the last node in the binary tree (bottom rightmost node)
+   */
+
   _getLastNode() {
     const lastNodeIdx = this.heapSize - 1;
     if (lastNodeIdx < 0) {
@@ -216,7 +220,6 @@ class MinHeapInterface {
     return (lastNodeIdx % 2 === 1)
       ? lastNodeParent.left() : lastNodeParent.right();
   }
-
 
   /**
    * Insert the new node into the min-heap and restore the min-heap property.
@@ -280,7 +283,7 @@ class MinHeapInterface {
   /**
    * Preorder traversal the JSAV binary tree to get an array of JSAV binary tree nodes.
    * There is no function for this in the JSAV library.
-   * @returns an array containing the nodes of the JSAV binary tree
+   * @returns {Array} an array containing the nodes of the JSAV binary tree
    */
   _getTreeNodeArr() {
 
@@ -348,7 +351,7 @@ class MinHeapInterface {
   /**
    * 
    * @param {String} dest - the destination label of the node that will be returned
-   * @returns {JSAV binary tree node} the node with the given destination label
+   * @returns {JSAV_binary_tree_node} the node with the given destination label
    */
   getNodeByDest(dest) {
     const allNodesArr = this._getTreeNodeArr();
@@ -359,13 +362,22 @@ class MinHeapInterface {
     return node;
   }
 
+  /**
+   * Adds a css class to the node with the given destination label if it exists.
+   * @param {String} dest - the destination label of the node that will be given the css class 
+   * @param {String} className - the css class that will be added to the node  
+   */
   addCssClassToNodeWitDest(dest, className) {
     const node = this.getNodeByDest(dest);
     if (node) {
       node.addClass(className);
     }
   }
-
+  /**
+   * Removes a css class from the node with the given destination label if it exists.
+   * @param {String} dest - the destination label of the node that will have the css class removed 
+   * @param {String} className - the css class that will be removed from the node  
+   */
   removeCssClassFromNodeWithDest(dest, className) {
     const node = this.getNodeByDest(dest);
     if (node) {

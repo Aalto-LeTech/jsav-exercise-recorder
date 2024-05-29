@@ -290,7 +290,7 @@
     const modelNodes = modelGraph.nodes();
 
     const distanceMatrixValues = [];
-    for (i = 0; i < graphNodes.length; i++) {
+    for (let i = 0; i < graphNodes.length; i++) {
       distanceMatrixValues.push([graphNodes[i].value(), "∞", "-"]);
     }
     distanceMatrixValues[0][1] = 0;
@@ -319,7 +319,7 @@
     modeljsav.umsg(interpret("av_ms_mst"));
     // hide all edges that are not part of the spanning tree
     var modelEdges = modelGraph.edges();
-    for (i = 0; i < modelGraph.edges().length; i++) {
+    for (let i = 0; i < modelGraph.edges().length; i++) {
       if (!modelEdges[i].hasClass("spanning")) {
         modelEdges[i].hide();
       }
@@ -330,7 +330,7 @@
     return [modelGraph, modelMinHeapInterface.btree];
   }
 
- /**
+  /**
    * 1. Marks an edge as dequeued in the visualization (both student's and
    *    model solutions).
    * 2. Adds a dequeue operation into the operation sequence of either
@@ -385,15 +385,14 @@
    * @param {*} nodes is an array of JSAV nodes
    * @param {*} distances is the JSAV matrix of the distances
    * @param {*} av is the model answer AV
-   * @param {MinHeapInterface} modelMinHeapInterface
+   * @param {MinHeapInterface} modelMinHeapInterface - min-heap instance for the model solution
+   * Take care to modify modelMinHeapInterface and not minHeapInterface!
    * */
   function prim(nodes, distances, av, modelMinHeapInterface) {
-    // var modelheapsize = 0;
     const aNode = nodes.find(node => node.value() === "A");
     aNode.addClass("focusnode");
 
     aNode.neighbors().forEach(node => visitNeighbour(aNode, node));
-    // debugPrint(aNode);
 
     // A JSAV node which was dequeued before the current node and therefore
     // was given a wider border to "focus" it (grab the student's attention).
@@ -459,7 +458,8 @@
      */
     function visitNeighbour (src, neighbour) {
       debugPrint("visitNeighbour: src = " + src.value() + ", neighbour = " +
-      neighbour.value());
+        neighbour.value());
+
       const edge = src.edgeTo(neighbour) ?? src.edgeFrom(neighbour);
       const neighbourIndex = neighbour.value().charCodeAt(0) - "A".charCodeAt(0);
       const currNeighbourDist = getDistance(neighbourIndex);
@@ -471,7 +471,7 @@
         
         // First step: highlight the comparison
         av.umsg(interpret("av_ms_visit_neighbor_add"),
-        {fill: {node: src.value(), neighbor: neighbour.value()}});
+          {fill: {node: src.value(), neighbor: neighbour.value()}});
         highlight(edge, neighbour);
         av.step();
 

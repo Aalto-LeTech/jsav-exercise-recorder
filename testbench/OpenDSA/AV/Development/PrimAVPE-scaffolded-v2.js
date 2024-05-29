@@ -25,7 +25,7 @@
   var exerciseLegendCreated = false;
 
   // JSAV Visualization
-  var jsav = new JSAV($('.avcontainer'), {settings: settings});
+  var jsav = new JSAV($(".avcontainer"), {settings: settings});
 
   // Number of elements in the binary heap
 
@@ -52,7 +52,7 @@
   // JSAV Exercise
   var exercise = jsav.exercise(model, init, {
     compare: [{ class: "spanning" }],
-    controls: $('.jsavexercisecontrols'),
+    controls: $(".jsavexercisecontrols"),
     resetButtonTitle: interpret("reset"),
     modelDialog: {width: "960px"},
     grader: scaffoldedGrader,
@@ -164,9 +164,9 @@
    * Custom grading function for the exercise.
    */
   function scaffoldedGrader() {
-    debugPrint('scaffoldedGrader():\n' +
-      'student: ' + studentPqOperations.toString() + '\n' +
-      'model  : ' + modelPqOperations.toString());
+    debugPrint("scaffoldedGrader():\n" +
+      "student: " + studentPqOperations.toString() + "\n" +
+      "model  : " + modelPqOperations.toString());
     let grade = studentPqOperations.gradeAgainst(modelPqOperations);
 
     let score = {
@@ -217,9 +217,9 @@
     // End of modified JSAV undo code
 
     const undoneOperation = studentPqOperations.undo();
-    debugPrint('studentPqOperations: ' + studentPqOperations.toString());
+    debugPrint("studentPqOperations: " + studentPqOperations.toString());
     
-    if (undoneOperation && undoneOperation.operation === 'deq') {
+    if (undoneOperation && undoneOperation.operation === "deq") {
       // Remove the recently dequeued node from focusedNodes so that when the
       // student performs the next dequeue operation, the correct graph node
       // will lose its "focusedNode" CSS class.
@@ -230,7 +230,7 @@
       // Debug print focusedNodes
       let s = "focusedNodes after an undo:";
       for (const x of focusedNodes) {
-        s += ' ' + x.value();
+        s += " " + x.value();
       }
       debugPrint(s);
     }
@@ -344,7 +344,7 @@
     edge.addClass("spanning");
     edge.start().addClass("spanning");
     edge.end().addClass("spanning");
-    storePqOperationStep('deq', edge, av);
+    storePqOperationStep("deq", edge, av);
   }
 
   /**
@@ -370,13 +370,13 @@
       // Add the operation to the priority queue operation sequence for
       // custom grading.
       modelPqOperations.push(pqOperation);
-      debugPrint('modelPqOperations: ' + modelPqOperations.toString());
+      debugPrint("modelPqOperations: " + modelPqOperations.toString());
     }
     else {
       // Similar block but for student's solution
       exercise.gradeableStep();
       studentPqOperations.push(pqOperation);
-      debugPrint('studentPqOperations: ' + studentPqOperations.toString());
+      debugPrint("studentPqOperations: " + studentPqOperations.toString());
     }
   }
 
@@ -483,7 +483,7 @@
         debugPrint("Model solution gradeable step: ADD ROUTE WITH DIST:",
         dist + neighbour.value());
         highlightUpdate(edge, neighbour);    
-        storePqOperationStep('enq', edge, av);
+        storePqOperationStep("enq", edge, av);
       }
       else if (dist < currNeighbourDist) {
         // Case 2: neighbour's distance is shorter through node `src`.
@@ -502,7 +502,7 @@
         debugPrint("Model solution gradeable step:  UPDATE DISTANCE TO:",
         dist + neighbour.value());
         highlightUpdate(edge, neighbour);
-        storePqOperationStep('upd', edge, av);
+        storePqOperationStep("upd", edge, av);
       }
       else {
         // Case 3: neighbour's distance is equal or longer through node `src`.
@@ -973,7 +973,7 @@
     minHeapInterface.insert(srcLabel, dstLabel, dist);
     debugPrint("Exercise gradeable step: enqueue edge " + srcLabel + "-" +
       dstLabel + " distance " + dist);
-    storePqOperationStep('enq', event.data.edge);
+    storePqOperationStep("enq", event.data.edge);
     popup.close();
   }
 
@@ -1038,7 +1038,7 @@
 
     debugPrint("Exercise gradeable step: update edge " + srcLabel + "-" +
       dstLabel + " distance " + dist);
-    storePqOperationStep('upd', event.data.edge);
+    storePqOperationStep("upd", event.data.edge);
     popup.close();
   }
 
@@ -1085,7 +1085,7 @@
     // Debug print focusedNodes
     let s = "focusedNodes:";
     for (const x of focusedNodes) {
-      s += ' ' + x.value();
+      s += " " + x.value();
     }
     debugPrint(s);
 
@@ -1120,8 +1120,8 @@
       if (minHeapInterface) {
         previouslyExistingMinheap = true;
         minHeapInterface.clearHeap();
-        $('.flexcontainer').remove();
-        $('#dequeueButton').remove();
+        $(".flexcontainer").remove();
+        $("#dequeueButton").remove();
       }
 
       $(".jsavcanvas").append("<div class='flexcontainer'></div>");
@@ -1150,9 +1150,9 @@
     }
     const labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"];
     const labelArr = [interpret("node"), ...labels];
-    const distanceArr = Array.from('∞'.repeat(labels.length - 1));
+    const distanceArr = Array.from("∞".repeat(labels.length - 1));
     distanceArr.unshift(interpret("distance"), 0);
-    const parentArr = Array.from('-'.repeat(labels.length));
+    const parentArr = Array.from("-".repeat(labels.length));
     parentArr.unshift(interpret("parent"));
     const width = String((labels.length) * 30 + 100) + "px";
     table = jsav.ds.matrix([labelArr, distanceArr, parentArr],

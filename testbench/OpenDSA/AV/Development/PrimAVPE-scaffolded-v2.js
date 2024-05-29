@@ -645,7 +645,7 @@
 
       modelMinHeapInterface.removeCssClassFromNodeWithDest(node.value(), "compare");
       modelMinHeapInterface.removeCssClassFromNodeWithDest(node.value(), "updated");
-
+    }
     /**
      * Modifies the style of table in model solution.
      * 

@@ -300,7 +300,6 @@ class MinHeapInterface {
     };
     // Start with the root node.
     const treeNodes = getChildren(this._rootNode, []);
-    console.log("Built list of treenodes:", treeNodes);
     return treeNodes;
   }
 

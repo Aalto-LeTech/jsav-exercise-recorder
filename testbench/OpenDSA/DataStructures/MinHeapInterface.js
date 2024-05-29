@@ -27,13 +27,13 @@ class MinHeapInterface {
   /**
    * @returns {JSAV binary tree node} The current root node of the binary tree.
   */
-  get rootNode() {
+  get _rootNode() {
     return this._btree.root();
   }
   /**
    * @param {JSAV binary tree node} newRootNode - The new root node of the binary tree.
    */
-  set rootNode(newRootNode) {
+  set _rootNode(newRootNode) {
     this._btree.root(newRootNode);
   }
   /**
@@ -103,7 +103,7 @@ class MinHeapInterface {
    * @param {JSAV binary tree node} node - node whose destination is being extracted
    * @returns {String} the destination, a single character
   */
-  extractDest(node) {
+  extractDestFromNode(node) {
     const charMatches = node.value().match(/[A-Z]/);
     const destination = charMatches[0];
     return destination;
@@ -116,25 +116,25 @@ class MinHeapInterface {
    * @param {String} destination - The destination of the current node (single character describing graph node),
    *  which corresponds to the inserted/updated destination before applying upheap.
   */
-  upheap(currentNode, distance, destination) { 
+  _upheap(currentNode, distance, destination) { 
     const currentParent = currentNode.parent();
     if (!currentParent) {
       return; // reached root
     }
     const parentDist = this.extractDistFromNode(currentParent);
-    const parentDest = this.extractDest(currentParent);
+    const parentDest = this.extractDestFromNode(currentParent);
     // Swap also if nodes have equal distances but new node's destination comes first in alphabets.
     if (parentDist > distance || (parentDist === distance && destination < parentDest)) {
       this._swapNodeValues(currentNode, currentParent);
       // Upheap again so that parent is the currentNode.
-      this.upheap(currentParent, distance, destination);
+      this._upheap(currentParent, distance, destination);
     }
   }
   /**
    * Restores min-heap property after node removal or update. Calls itself recursively.
    * @param {JSAV binary tree node} subtreeRootNode - The node that is being compared to its children.
    */
-  downheap(subtreeRootNode) {
+  _downheap(subtreeRootNode) {
     if (!subtreeRootNode) {
       return;
     }
@@ -146,20 +146,20 @@ class MinHeapInterface {
       smallest = left;
     }
     if (left && this.extractDistFromNode(left) === this.extractDistFromNode(smallest) &&
-      this.extractDest(left) < this.extractDest(smallest)) { // equal but left first in alphabets
+      this.extractDestFromNode(left) < this.extractDestFromNode(smallest)) { // equal but left first in alphabets
       smallest = left;
     }
     if (right && this.extractDistFromNode(right) < this.extractDistFromNode(smallest)) {
       smallest = right;
     }
     if (right && this.extractDistFromNode(right) === this.extractDistFromNode(smallest) &&
-      this.extractDest(right) < this.extractDest(smallest)) {
+      this.extractDestFromNode(right) < this.extractDestFromNode(smallest)) {
       smallest = right;
     }
     if (smallest != subtreeRootNode) {
       this._swapNodeValues(smallest, subtreeRootNode);
       // Make recursive call.
-      this.downheap(smallest);
+      this._downheap(smallest);
     }
   }
   /**
@@ -170,7 +170,7 @@ class MinHeapInterface {
    * @param {Number} nodeIdx - index of the node whose parent will be found 
    * @returns {JSAV binary tree node} the parent node of the node at the given index or null if nodeIdx is 0 (root)
    */
-  findParent(nodeIdx) {
+  _findParent(nodeIdx) {
     if (nodeIdx === 0) {
       return null;
     }
@@ -182,7 +182,7 @@ class MinHeapInterface {
       ancestorChain.unshift(i);
     }
 
-    let parentNode = this.rootNode;
+    let parentNode = this._rootNode;
     for (let j = 1; j < ancestorChain.length; j++) {
       const parentIdx = ancestorChain[j - 1];
       const childIdx = ancestorChain[j];
@@ -195,15 +195,15 @@ class MinHeapInterface {
     }
     return parentNode;
   }
-  getLastNode() {
+  _getLastNode() {
     const lastNodeIdx = this.heapSize - 1;
     if (lastNodeIdx < 0) {
       return null;
     }
     if (lastNodeIdx === 0) {
-      return this.rootNode;
+      return this._rootNode;
     }
-    const lastNodeParent = this.findParent(lastNodeIdx);
+    const lastNodeParent = this._findParent(lastNodeIdx);
     return (lastNodeIdx % 2 === 1)
       ? lastNodeParent.left() : lastNodeParent.right();
   }
@@ -224,9 +224,9 @@ class MinHeapInterface {
     const newNode = this._btree.newNode(nodeLabel);
 
     if (newNodeIdx === 0) {
-      this.rootNode = newNode;
+      this._rootNode = newNode;
     } else {
-      const parent = this.findParent(newNodeIdx);
+      const parent = this._findParent(newNodeIdx);
       if (newNodeIdx % 2 === 1) {
         parent.left(newNode);
         newNode.parent(parent);
@@ -236,7 +236,7 @@ class MinHeapInterface {
       }
     }
     // Restore min-heap property.
-    this.upheap(newNode, distance, dstLabel);
+    this._upheap(newNode, distance, dstLabel);
   
     this._btree.layout();
   }
@@ -248,10 +248,10 @@ class MinHeapInterface {
     if (this.heapSize === 0) { // empty heap
       return null;
     }
-    const minNode = this.rootNode; // to be removed
+    const minNode = this._rootNode; // to be removed
     const minLabel = minNode.value(); // to be returned
 
-    const lastNode = this.getLastNode();
+    const lastNode = this._getLastNode();
 
     this._swapNodeValues(minNode, lastNode);
 
@@ -260,7 +260,7 @@ class MinHeapInterface {
 
     // Restore min-heap property.
     if (this.heapSize > 1) {
-      this.downheap(this.rootNode); // last node is now root
+      this._downheap(this._rootNode); // last node is now root
     }
 
     this._btree.layout();
@@ -273,7 +273,7 @@ class MinHeapInterface {
    * There is no function for this in the JSAV library.
    * @returns an array containing the nodes of the JSAV binary tree
    */
-  getTreeNodeArr() {
+  _getTreeNodeArr() {
 
     // Inner recursive function to get all children of a node.
     const getChildren = (node) => {
@@ -287,7 +287,7 @@ class MinHeapInterface {
       return nodeAndChildren;
     };
     // Start with the root node.
-    const treeNodes = getChildren(this.rootNode, []);
+    const treeNodes = getChildren(this._rootNode, []);
     console.log("Built list of treenodes:", treeNodes);
     return treeNodes;
   }
@@ -299,7 +299,7 @@ class MinHeapInterface {
    * @returns true if the node was found and updated, false otherwise.
    */
   updateNodeWithLabel(oldLabel, newLabel) {
-    const allNodesArr = this.getTreeNodeArr();
+    const allNodesArr = this._getTreeNodeArr();
     // Grab first node with the correct destination.
     const nodeToUpdate = allNodesArr.find(node => node.value() === oldLabel);
 
@@ -328,9 +328,9 @@ class MinHeapInterface {
     nodeToUpdate.value(newLabel);
 
     if (newDist > oldDist) {
-      this.downheap(nodeToUpdate);
+      this._downheap(nodeToUpdate);
     } else {
-      this.upheap(nodeToUpdate, newDist, this.extractDest(nodeToUpdate));
+      this._upheap(nodeToUpdate, newDist, this.extractDestFromNode(nodeToUpdate));
     }
     this.btree.layout();
     return oldLabel;
@@ -342,7 +342,7 @@ class MinHeapInterface {
    * @returns {JSAV binary tree node} the node with the given destination label
    */
   getNodeByDest(dest) {
-    const allNodesArr = this.getTreeNodeArr();
+    const allNodesArr = this._getTreeNodeArr();
     // Grab first node with the correct destination.
     const node = allNodesArr.find(node => 
       node.value().charAt(node.value().length - 5) === dest);

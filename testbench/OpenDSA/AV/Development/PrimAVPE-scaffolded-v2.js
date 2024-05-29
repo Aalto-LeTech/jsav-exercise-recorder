@@ -575,7 +575,7 @@
       // Because if you pass a node along as a parameter, it does not like
       // being asked about its parent... Grading will break in ODSA part.
 
-      // Hopefully this is not a problem anymore, now we have minHeapInterface
+      // TODO: Make sure that the issue described above is fixed with MinHeapInterface.
 
       var node = updatedNode;
       while (node != mintree.root() &&

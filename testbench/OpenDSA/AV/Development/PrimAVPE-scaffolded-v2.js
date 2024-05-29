@@ -1059,6 +1059,7 @@
   function dequeueClicked() {
     const deleted = minHeapInterface.removeMin();
     if (!deleted) {
+      window.alert(interpret("av_dequeue_not_possible"));
       return;
     }
     // Format of node label: "x<br>D (S)", where x is the distance,

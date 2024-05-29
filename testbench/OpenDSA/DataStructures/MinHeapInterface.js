@@ -349,5 +349,19 @@ class MinHeapInterface {
     
     return node;
   }
+
+  addCssClassToNodeWitDest(dest, className) {
+    const node = this.getNodeByDest(dest);
+    if (node) {
+      node.addClass(className);
+    }
+  }
+
+  removeCssClassFromNodeWithDest(dest, className) {
+    const node = this.getNodeByDest(dest);
+    if (node) {
+      node.removeClass(className);
+    }
+  }
 }
 

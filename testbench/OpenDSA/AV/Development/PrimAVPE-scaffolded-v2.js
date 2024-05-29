@@ -622,10 +622,7 @@
       distances.addClass(node.value().charCodeAt(0) - "A".charCodeAt(0),
                          true, "compare");
       // Mark current node being visited in the mintree
-      const treeNode = minHeapInterface.getNodeByDest(node.value());
-      if (treeNode) {
-        treeNode.addClass("compare");
-      }
+      modelMinHeapInterface.addCssClassToNodeWitDest(node.value(), "compare");
     }
 
     function highlightUpdate(edge, node) {
@@ -634,13 +631,10 @@
       distances.removeClass(tableRow, true, "compare");
       distances.addClass(tableRow, true, "updated");
       // Mark current node being visited in the mintree
-      const treeNode = minHeapInterface.getNodeByDest(node.value());
-      if (treeNode) {
-        treeNode.removeClass("compare");
-        treeNode.addClass("updated");
-      }
+
+      modelMinHeapInterface.removeCssClassFromNodeWithDest(node.value(), "compare");
+      modelMinHeapInterface.addCssClassToNodeWitDest(node.value(), "updated");
     }
-      
 
     function removeHighlight(edge, node) {
       edge.removeClass("compare");
@@ -648,12 +642,9 @@
       const tableIndex = node.value().charCodeAt(0) - "A".charCodeAt(0);
       distances.removeClass(tableIndex, true, "compare");
       distances.removeClass(tableIndex, true, "updated");      
-      const treeNode = minHeapInterface.getNodeByDest(node.value());
-      if (treeNode) {
-        treeNode.removeClass("compare");
-        treeNode.removeClass("updated");
-      }
-    }
+
+      modelMinHeapInterface.removeCssClassFromNodeWithDest(node.value(), "compare");
+      modelMinHeapInterface.removeCssClassFromNodeWithDest(node.value(), "updated");
 
     /**
      * Modifies the style of table in model solution.
@@ -1010,8 +1001,8 @@
       return;
     }
     // Have old label, find previous source node label
-    const oldLabel = nodeToUpdate.value();
-    const oldSrcLabel = oldLabel.charAt(oldLabel.length - 2);
+    const oldNodeLabel = nodeToUpdate.value();
+    const oldSrcLabel = oldNodeLabel.charAt(oldNodeLabel.length - 2);
 
     // Find node objects to grab the egde
     const oldNode = graph.nodes().find(node =>
@@ -1036,7 +1027,6 @@
         });
     }
 
-    const oldDist = oldLabel.match(/\d+/)[0];
     const newLabel = dist + "<br>" + dstLabel + " (" + srcLabel + ")";
 
     minHeapInterface.updateNodeWithDest(dstLabel, newLabel); // takes care of upheap/downheap

@@ -14,7 +14,7 @@ class MinHeapInterface {
   */
   constructor(jsav, jsavProps) {
     this._btree = jsav.ds.binarytree(jsavProps);
-    this._heapSize = jsav.variable(0);
+    this._heapSizeJsav = jsav.variable(0); // is JSAV object!
     this._btree.layout();
   }
 
@@ -40,19 +40,19 @@ class MinHeapInterface {
    * @returns {number} The current heap size.
    */
   get heapSize() {
-    return this._heapSize.value();
+    return this._heapSizeJsav.value();
   }
   /**
    * Increments the heap size by 1.
    */
   _incrementHeapSize() {
-    this._heapSize.value(this._heapSize.value() + 1);
+    this._heapSizeJsav.value(this._heapSizeJsav.value() + 1);
   }
   /**
    * Decrements the heap size by 1.
    */
   _decrementHeapSize() {
-    this._heapSize.value(this._heapSize.value() - 1);
+    this._heapSizeJsav.value(this._heapSizeJsav.value() - 1);
   }
   /**
    * Swaps the values of two binary tree nodes.
@@ -71,7 +71,7 @@ class MinHeapInterface {
    */
   clearHeap() {
     this._btree.clear();
-    this._heapSize.value(0);
+    this._heapSizeJsav.value(0);
     this._btree.layout();
   }
 
@@ -242,11 +242,11 @@ class MinHeapInterface {
   }
   /**
    * Remove the minimum node from the min-heap and restore the min-heap property.
-   * @returns the label of the minimum node that was removed.
+   * @returns the label of the minimum node that was removed or null if the heap is empty.
    */
   removeMin() {
-    if (this._heapSize === 0) { // empty heap
-      return; 
+    if (this.heapSize === 0) { // empty heap
+      return null;
     }
     const minNode = this.rootNode; // to be removed
     const minLabel = minNode.value(); // to be returned

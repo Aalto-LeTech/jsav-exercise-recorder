@@ -405,7 +405,7 @@
     while (modelMinHeapInterface.heapSize > 0) {
       const removedLabel = modelMinHeapInterface.removeMin();
       // Destination of removed node
-      const removedDest = removedLabel.charAt(removedLabel.length - 5);
+      const removedDest = modelMinHeapInterface.extractDestFromLabel(removedLabel);
 
       // Mark table row as "unused" (grey background)
       // Then set selected message, and step the av.

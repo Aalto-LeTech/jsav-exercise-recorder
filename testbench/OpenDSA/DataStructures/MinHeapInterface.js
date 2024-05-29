@@ -104,7 +104,16 @@ class MinHeapInterface {
    * @returns {String} the destination, a single character
   */
   extractDestFromNode(node) {
-    const charMatches = node.value().match(/[A-Z]/);
+    return this.extractDestFromLabel(node.value());
+  }
+  /**
+   * Helper function to extract the destination from a string of format: "x<br>D (S)", 
+   * where x is the distance, D is the destination node label and S is the source node label
+   * @param {String} nodeLabel 
+   * @returns {String} the destination, a single character
+   */
+  extractDestFromLabel(nodeLabel) {
+    const charMatches = nodeLabel.match(/[A-Z]/);
     const destination = charMatches[0];
     return destination;
   }

@@ -18,9 +18,10 @@
   // -parent table
   var table;
 
-  // JSAV Binary Tree  for the student's solution, to display the priority
-  // queue as a binary heap
-  var minheap;
+  // Implements the priority queue as min-heap and displays it as a binary tree.
+  /** @type {MinHeapInterface} */
+  let minHeapInterface;
+
 
   // Legend box in the exercise view;
   var exerciseLegendCreated = false;
@@ -33,9 +34,6 @@
   // JSAV Visualization
   var jsav = new JSAV($('.avcontainer'), {settings: settings});
   var exerciseInstance;
-
-  // Number of elements in the binary heap
-  var heapsize = jsav.variable(0);
 
   // A list of JSAV graph nodes to keeps track of what node has been focused
   // after a dequeue operation. This is make sure that the class can be removed
@@ -114,7 +112,7 @@
     researchInstanceToJsav(exerciseInstance.graph, graph, layoutSettings);
     addEdgeClickListeners();
 
-    addMinheap(100, 530);
+    addPriorityQueue();
     if (!exerciseLegendCreated) {
       createLegend(jsav, 520, 530, interpret);
       exerciseLegendCreated = true;
@@ -130,7 +128,7 @@
     // mark the 'A' node
     graph.nodes()[exerciseInstance.startIndex].addClass("spanning");
     jsav.displayInit();
-    return [graph, minheap];
+    return [graph, minHeapInterface._btree]; // Don't know if btree is really used to grading.
   }
 
   // Process About button: Pop up a message with an Alert
@@ -172,33 +170,29 @@
    * @param {int} x: position: pixels from left
    * @param {int} y: position: pixels from top
    */
-  function addMinheap(x, y) {
+  function addPriorityQueue() {
     let previouslyExistingMinheap = false;
-    if (minheap) {
+    if (minHeapInterface) {
       previouslyExistingMinheap = true;
-      minheap.clear();
+      minHeapInterface.clear();
       $('.flexcontainer').remove();
       $('#dequeueButton').remove();
     }
 
     $(".jsavcanvas").append("<div class='flexcontainer'></div>");
-    minheap = jsav.ds.binarytree({relativeTo: $(".flexcontainer"),
-      left: -180, top: 140});
+    
+    minHeapInterface = new MinHeapInterface(jsav, {relativeTo: $(".flexcontainer"), left: -180, top: 140}, false);
 
     if (!previouslyExistingMinheap) {
-      jsav.label(interpret("priority_queue"), {relativeTo: minheap,
+      jsav.label(interpret("priority_queue"), {relativeTo: minHeapInterface._btree,
         top: -135});
-      }
+    }
 
     // Add Dequeue button
     const html = "<button type='button' id='dequeueButton'>" +
     interpret("#dequeue") +"</button>";
     $(".jsavtree").append(html);
     $("#dequeueButton").click(dequeueClicked);
-    
-    heapsize = heapsize.value(0);
-
-    minheap.layout() 
   }
 
   /**
@@ -251,38 +245,6 @@
     return isNaN(srcDist) ? pathWeight : (pathWeight + srcDist)
   }
 
-  /**
-   * Insert the new node into the minheap according to the
-   * insertMinheap algorithm.
-   * @param {string} srcLabel label of the source node
-   * @param {string} dstLabel label of the destination node
-   * @param {string} distance distance to be inserted.
-   */
-  function insertMinheap (srcLabel, dstLabel, distance) {
-    var i = heapsize.value();
-
-    heapsize.value(heapsize.value() + 1);
-
-    const label = distance + "<br>" + dstLabel + " (" + srcLabel + ")"
-    const newNode = minheap.newNode(label);
-    if (i === 0) {
-      minheap.root(newNode);
-    } else {
-      const parent = findParent(i, minheap);
-      (i % 2 === 1) ? parent.left(newNode) : parent.right(newNode);
-    }
-
-    // Heapify up
-    var node = newNode;
-    while (i > 0 && extractDistance(node.parent()) > distance) {
-      node.value(node.parent().value());
-      i = Math.floor((i-1)/2);
-      node.parent().value(label);
-      node = node.parent();
-    }
-
-    minheap.layout();
-  }
 
   /**
    * Checks whether the node is in the spanning tree.
@@ -365,7 +327,7 @@
 
     updateStudentTable(srcLabel, dstLabel, newDist);
     modifyStyleOfStudentTable(dstLabel, "fringe", true);
-    insertMinheap(srcLabel, dstLabel, newDist);
+    minHeapInterface.insert(srcLabel, dstLabel, newDist);
     debugPrint("Exercise gradeable step: enqueue edge " + srcLabel + "-" +
       dstLabel + " distance " + newDist);
     storePqOperationStep('enq', edge);
@@ -390,13 +352,10 @@
     const newDist = event.data.newDist;
     const popup = event.data.popup;
 
-    const nodeArr = getTreeNodeList(minheap.root());
-    // Grab first node with the correct destination.
-    const updatedNode = nodeArr.filter(node =>
-            node.value().charAt(node.value().length - 5) === dstLabel)[0];
+    const nodeToUpdate = minHeapInterface.getNodeByDest(dstLabel);
 
     // If no node with the correct label exists, do nothing.
-    if (!updatedNode) {
+    if (!nodeToUpdate) {
       popup.close();
       window.alert(interpret("av_update_not_possible"));
       return;
@@ -408,7 +367,7 @@
     event.data.edge.addClass("fringe")
     // remove class from the old edge
     // Have old label, find previous source node label
-    const oldLabel = updatedNode.value();
+    const oldLabel = nodeToUpdate.value();
     const oldSrcLabel = oldLabel.charAt(oldLabel.length - 2);
     // Find node objects to grab the egde
     const oldNode = graph.nodes().filter(node =>
@@ -433,20 +392,9 @@
     }
     const oldDist = oldLabel.match(/\d+/)[0];
     const label = newDist + "<br>" + dstLabel + " (" + srcLabel + ")";
-    updatedNode.value(label);
 
-    if (newDist > oldDist) {
-      minHeapify(updatedNode)
-    } else {
-      var node = updatedNode;
-      while (node != minheap.root() &&
-             extractDistance(node) < extractDistance(node.parent())) {
-        const temp = node.parent().value();
-        node.parent().value(node.value());
-        node.value(temp);
-        node = node.parent();
-      }
-    }
+    minHeapInterface.updateNodeWithDest(dstLabel, label);
+
     debugPrint("Exercise gradeable step: update edge " + srcLabel + "-" +
       dstLabel + " distance " + newDist);
     storePqOperationStep('upd', event.data.edge);
@@ -459,7 +407,7 @@
    * Dequeue button click of the priority queue.
    */
   function dequeueClicked() {
-    const deleted = minheapDelete(0);
+    const deleted = minHeapInterface.removeMin();
     if (!deleted) {
       return;
     }
@@ -499,7 +447,6 @@
     }
     debugPrint(s);
 
-    minheap.layout();
     // Call markEdge last, because it will also store the JSAV animation step
     if (!edge.hasClass("spanning")) {
       markEdge(edge);
@@ -686,41 +633,6 @@
   }
 
 
-  /**
-   * minheapDelete function, delete node at index.
-   * @param {number} index index of node to be deleted
-   * @returns value of the deleted node.
-   */
-  function minheapDelete(index) {
-    if (heapsize.value() === 0) {
-      return
-    }
-
-    heapsize.value(heapsize.value() - 1);
-
-    // PLACEHOLDER: be able to remove other than min
-    const ret = (index === 0) ? minheap.root().value() : minheap.root().value();
-
-    // Parent of the last node in the heap
-    const parentLast = findParent(heapsize.value(), minheap);
-
-    // The last node in the heap (the one to be deleted)
-    const lastNode = (heapsize.value() % 2 === 1) ? parentLast.left()
-                                                  : parentLast.right();
-
-    if (lastNode) {
-      // Swap the values of the root and the last node
-      minheap.root().value(lastNode.value());
-      lastNode.value(ret);
-
-      lastNode.remove();
-
-      minHeapify(minheap.root());
-    } else {
-      minheap.root().remove();
-    }
-    return ret
-  }
   
   /***********************************************************************
    * Generic functions
@@ -832,82 +744,8 @@
     }
   }
 
-  /**
-   * Preorder traversal to get node list of the tree
-   * Since there is no function for this in the JSAV library
-   * @param node the root node to start the traversal at
-   * @param arr array to store the nodes in. Optional parameterl
-   * an empty array is initialised if none is supplied.
-   * @returns an array containing the nodes of the tree.
-   */
-  function getTreeNodeList (node, arr) {
-    var nodeArr = arr || [];
 
-    if (node) {
-      nodeArr.push(node);
-      nodeArr = getTreeNodeList(node.left(), nodeArr);
-      nodeArr = getTreeNodeList(node.right(), nodeArr);
-    }
-    return nodeArr;
-  }
 
-  /**
-   * Return the parent node of node at index.
-   * @param {number} index the index of the node whose parent we want.
-   * 
-   * @returns parent of node at index.
-   */
-  function findParent (index, heap) {
-    const chain = [];
-    while (index > 0) {
-      index = Math.floor((index - 1) / 2);
-      chain.unshift(index);
-    }
-    var parent_node = heap.root();
-    for (var i = 1; i < chain.length; i++) {
-      var prev_index = chain[i-1];
-      var curr_index = chain[i];
-      if (prev_index * 2 + 1 === curr_index) {
-        parent_node = parent_node.left();
-      } else {
-        parent_node = parent_node.right();
-      }
-    }
-
-    return parent_node;
-  }
-
-  /**
-   * minHeapify algorithm from a node.
-   * @param {*} root The node from which to min-heapify.
-   */
-  function minHeapify(root) {
-    const left = root.left();
-    const right = root.right();
-    var smallest = root;
-    if (left && extractDistance(left) < extractDistance(smallest)) {
-      smallest = left;
-    }
-    if (right && extractDistance(right) < extractDistance(smallest)) {
-      smallest = right;
-    }
-    if (smallest != root) {
-      const temp = smallest.value();
-      smallest.value(root.value());
-      root.value(temp);
-      minHeapify(smallest);
-    }
-
-  }
-
-  /**
-   * Helper function to extract the distance from the minheap tree.
-   * @param {*} node node whose distance is being extracted
-   * @returns the distance.
-   */
-  function extractDistance (node) {
-    return Number(node.value().match(/\d+/)[0])
-  }
 
   /**
    * Debug printer
@@ -1009,11 +847,10 @@
     createLegend(modeljsav, 550, 400, interpret);
 
     // Create a binary heap
-    const mintree = modeljsav.ds.binarytree({relativeTo: modelGraph,
-      left: -150, top: 291});
-    modeljsav.label(interpret("priority_queue"), {relativeTo: mintree,
-        top: -100});
-    mintree.layout();
+    const modelMinHeapInterface = new MinHeapInterface(modeljsav,
+      {relativeTo: modelGraph, left: -150, top: 291}, false);
+
+    modeljsav.label(interpret("priority_queue"), {relativeTo: modelMinHeapInterface._btree, top: -100});
 
     modeljsav.displayInit();
 
@@ -1022,7 +859,7 @@
     for (let l of labelsAndIndices) {
       indexOfLabel[l[0]] = l[1];
     }
-    dijkstra(modelNodes, distances, modeljsav, indexOfLabel, mintree);
+    dijkstra(modelNodes, distances, modeljsav, indexOfLabel, modelMinHeapInterface);
 
     modeljsav.umsg(interpret("av_ms_shortest"));
 
@@ -1036,14 +873,14 @@
 
     modeljsav.step();
 
-    return [modelGraph, mintree];
+    return [modelGraph, modelMinHeapInterface._btree];
   }
 
   /************************************************************************
    * Model answer functions
    ************************************************************************/
 
-  /*
+  /** 
    * Dijkstra's algorithm which creates the model solution used in grading
    * the exercise or creating an algorithm animation.
    *
@@ -1054,10 +891,11 @@
    * av:        a JSAV algorithm visualization template
    * indexOfLabel: mapping from node labels ("A", "B", "C") to indices of
    *               array `nodex`.
+   * @param {MinHeapInterface} modelMinHeapInterface - min-heap instance for the model solution
+   * Take care to modify modelMinHeapInterface and not minHeapInterface!
    */
-  function dijkstra(nodes, distances, av, indexOfLabel, mintree) {
+  function dijkstra(nodes, distances, av, indexOfLabel, modelMinHeapInterface) {
 
-    var modelheapsize = 0;
     const aNode = nodes[indexOfLabel["A"]];
     av.umsg(interpret("av_ms_select_a"));
     aNode.addClass("focusnode");
@@ -1071,8 +909,8 @@
     // this variable is not an array but just a single JSAV node.)
     var previousFocusedNode = aNode;
 
-    while (modelheapsize > 0) {
-      const rootVal = deleteRoot();
+    while (modelMinHeapInterface.heapSize > 0) {
+      const rootVal = modelMinHeapInterface.removeMin();
       const dist = Number(rootVal.match(/\d+/)[0])
       const label = rootVal.charAt(rootVal.length - 5);
       const dstNode = nodes[indexOfLabel[label]];
@@ -1144,13 +982,8 @@
       distances.addClass(node.value().charCodeAt(0) - "A".charCodeAt(0),
                          true, "compare");
       // Mark current node being visited in the mintree
-      const treeNodeList = getTreeNodeList(mintree.root());
-      const treeNode = treeNodeList.filter(treeNode =>
-          treeNode.value().charAt(treeNode.value().length - 5)
-          === node.value())[0];
-      if (treeNode) {
-        treeNode.addClass("compare")
-      }
+      modelMinHeapInterface.addCssClassToNodeWitDest(node.value(), "compare");
+
     }
 
     function highlightUpdate(edge, node) {
@@ -1159,14 +992,8 @@
       distances.removeClass(tableRow, true, "compare");
       distances.addClass(tableRow, true, "updated");
       // Mark current node being visited in the mintree
-      const treeNodeList = getTreeNodeList(mintree.root());
-      const treeNode = treeNodeList.filter(treeNode =>
-          treeNode.value().charAt(treeNode.value().length - 5)
-          === node.value())[0];
-      if (treeNode) {
-        treeNode.removeClass("compare")
-        treeNode.addClass("updated")
-      }
+      modelMinHeapInterface.removeCssClassFromNodeWithDest(node.value(), "compare");
+      modelMinHeapInterface.addCssClassToNodeWitDest(node.value(), "updated");
     }
 
     function removeHighlight(edge, node) {
@@ -1175,14 +1002,9 @@
       const tableIndex = node.value().charCodeAt(0) - "A".charCodeAt(0);
       distances.removeClass(tableIndex, true, "compare");
       distances.removeClass(tableIndex, true, "updated");      
-      const treeNodeList = getTreeNodeList(mintree.root());
-      const treeNode = treeNodeList.filter(treeNode =>
-        treeNode.value().charAt(treeNode.value().length - 5)
-        === node.value())[0];
-      if (treeNode) {
-        treeNode.removeClass("compare");
-        treeNode.removeClass("updated");
-      }
+      
+      modelMinHeapInterface.removeCssClassFromNodeWithDest(node.value(), "compare");
+      modelMinHeapInterface.removeCssClassFromNodeWithDest(node.value(), "updated");
     }
 
     /**
@@ -1214,46 +1036,6 @@
         dist = Infinity;
       }
       return dist;
-    }
-
-    /**
-     * Helper function that deletes the root node and does a step
-     * to display the text which node is deleted.
-     * @returns the value of the deleted node.
-     */
-    function deleteRoot () {
-      if (!mintree.root() || modelheapsize <= 0) {
-        return;
-      }
-      modelheapsize -= 1;
-
-      const ret = mintree.root().value();
-
-      // Mark table row as "unused" (grey background)
-      // Then set selected message, and step the av.
-      const nodeLabel = ret.charAt(ret.length - 5)
-      distances.addClass(nodeLabel.charCodeAt(0) - "A".charCodeAt(0), true, "unused")
-      av.umsg(interpret("av_ms_select_node"),
-               {fill: {node: nodeLabel}});
-      av.step();
-
-      // Parent node of last node in the heap
-      const parentLast = findParent(modelheapsize, mintree);
-
-      // Last node in the heap
-      const lastNode = ((modelheapsize)%2 === 1) ? parentLast.left()
-                                                 : parentLast.right();
-
-      if (lastNode) {
-        mintree.root().value(lastNode.value());
-        lastNode.value(ret);
-        lastNode.remove();
-        minHeapify(mintree.root());
-      } else {
-        mintree.root().remove();
-      }
-      mintree.layout();
-      return ret
     }
 
     /**
@@ -1343,24 +1125,7 @@
      * @param distance distance to the node
      */
     function addNode (srcLabel, dstLabel, distance) {
-      var i = modelheapsize;
-      modelheapsize += 1;
-      const label = distance + "<br>" + dstLabel + " (" + srcLabel + ")"
-      const newNode = mintree.newNode(label);
-      if (i === 0) {
-        mintree.root(newNode);
-      } else {
-        const parent = findParent(i, mintree);
-        (i % 2 === 1) ? parent.left(newNode) : parent.right(newNode);
-      }
-
-      var node = newNode;
-      while (i > 0 && node.parent() && extractDistance(node.parent()) > distance) {
-        node.value(node.parent().value());
-        i = Math.floor((i-1)/2);
-        node.parent().value(label);
-        node = node.parent();
-      }
+      modelMinHeapInterface.insert(srcLabel, dstLabel, distance);
 
       // Add fringe class to the edge and node to emphasize that they are now
       // in the fringe
@@ -1377,8 +1142,7 @@
 
       const row = true; // Apply for all rows
       const col = dstLabel - "A".charCodeAt(0)    
-       
-      mintree.layout();
+      
     }
 
     /**
@@ -1389,16 +1153,13 @@
      */
     function updateNode(srcLabel, dstLabel, distance) {
       const label = distance + "<br>" + dstLabel + " (" + srcLabel + ")"
-      const nodeArr = getTreeNodeList(mintree.root())
-      // Grab first node with the correct destination.
-      const updatedNode = nodeArr.filter(node =>
-              node.value().charAt(node.value().length - 5) === dstLabel)[0];
+      
+      const oldLabel = modelMinHeapInterface.updateNodeWithDest(dstLabel, label);
 
       // If no node with the correct label exists, do nothing.
-      if (!updatedNode) {
+      if (!oldLabel) {
         return;
       }
-      debugPrint("UPDATE:", updatedNode.value(), "TO:", distance + label);
 
       // Add queued class to the edge
       const srcNode = nodes.filter(node =>
@@ -1409,29 +1170,23 @@
       edge.addClass("fringe")
       // We determine what the old edge is so that we can remove the queued
       // class from it later. 
-      const oldLabel = updatedNode.value();
+      
       const oldSrcLabel = oldLabel.charAt(oldLabel.length - 2);
       const oldSrcNode = nodes.filter(node =>
           node.element[0].getAttribute("data-value") === oldSrcLabel)[0];
       const oldEdge = dstNode.edgeFrom(oldSrcNode) ?? dstNode.edgeTo(oldSrcNode)
-      updatedNode.value(label);
+      return oldEdge;
+   
       // Inline while loop to move the value up if needed.
       // Because if you pass a node along as a parameter, it does not like
       // being asked about its parent... Grading will break in ODSA part.
-      var node = updatedNode;
-      while (node != mintree.root() &&
-             extractDistance(node) < extractDistance(node.parent())) {
-        const temp = node.parent().value();
-        node.parent().value(node.value());
-        node.value(temp);
-        node = node.parent();
-      }
-      mintree.layout();
-      return oldEdge
-    }
+
+      // TODO: make sure that MinHeapInterface solved above problem.
+
     /*****************************************************
      * End of function dijkstra() and its inner functions 
      *****************************************************/
+    }
   }
 
 }(jQuery));

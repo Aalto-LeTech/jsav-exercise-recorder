@@ -4,6 +4,9 @@
  * Provides methods to insert, remove, and update nodes in the min-heap and 
  * takes care of restoring the min-heap property after each operation.
  * Also updates the visualization of the binary tree after each operation.
+ * Assumes that nodes in the binary tree have labels of the form "x<br>D (S)",
+ * where x is the distance, D is the destination node label, and S is the source node label.
+ * Compares nodes based on the distance and optionally the destination label.
  * @class
  */
 class MinHeapInterface {
@@ -11,10 +14,30 @@ class MinHeapInterface {
    * @constructor
    * @param {JSAV_object} jsav - The jsav instance that this min-heap will belong to.
    * @param {Object} jsavProps - The parameters that are passed to jsav binary tree when creating it.
+   * @param {Boolean} compareDest - If true, nodes with equal distances will be compared based on destination label.
+   * 
   */
-  constructor(jsav, jsavProps) {
+  constructor(jsav, jsavProps, compareDest = false) {
     this._btree = jsav.ds.binarytree(jsavProps);
     this._heapSizeJsav = jsav.variable(0); // is JSAV object!
+    // Function that returns true if node1 should be above node2 in the min-heap.
+    this._compFunc = (node1, node2) => {
+      const dist1 = this.extractDistFromNode(node1);
+      const dist2 = this.extractDistFromNode(node2);
+      if (dist1 < dist2) {
+        return true;
+      }
+      if (dist1 > dist2) {
+        return false;
+      }
+      // Equal distances.
+      if (compareDest) {
+        const dest1 = this.extractDestFromNode(node1);
+        const dest2 = this.extractDestFromNode(node2);
+        return dest1 < dest2;
+      }
+      return false; // Equal distances and no destination comparison --> no change.
+    };
   }
 
   /**
@@ -124,18 +147,15 @@ class MinHeapInterface {
    * @param {String} destination - The destination of the current node (single character describing graph node),
    *  which corresponds to the inserted/updated destination before applying upheap.
   */
-  _upheap(currentNode, distance, destination) { 
+  _upheap(currentNode) { 
     const currentParent = currentNode.parent();
     if (!currentParent) {
       return; // reached root
     }
-    const parentDist = this.extractDistFromNode(currentParent);
-    const parentDest = this.extractDestFromNode(currentParent);
-    // Swap also if nodes have equal distances but new node's destination comes first in alphabets.
-    if (parentDist > distance || (parentDist === distance && destination < parentDest)) {
+    if (this._compFunc(currentNode, currentParent)) {
       this._swapNodeValues(currentNode, currentParent);
       // Upheap again so that parent is the currentNode.
-      this._upheap(currentParent, distance, destination);
+      this._upheap(currentParent);
     }
   }
   /**
@@ -144,25 +164,18 @@ class MinHeapInterface {
    */
   _downheap(subtreeRootNode) {
     if (!subtreeRootNode) {
-      return;
+      return; // reached leaf
     }
-    const left = subtreeRootNode.left();
-    const right = subtreeRootNode.right();
+    const leftChild = subtreeRootNode.left();
+    const rightChild = subtreeRootNode.right();
+
     let smallest = subtreeRootNode;
 
-    if (left && this.extractDistFromNode(left) < this.extractDistFromNode(smallest)) { // left is smaller
-      smallest = left;
+    if (leftChild && this._compFunc(leftChild, smallest)) {
+      smallest = leftChild;
     }
-    if (left && this.extractDistFromNode(left) === this.extractDistFromNode(smallest) &&
-      this.extractDestFromNode(left) < this.extractDestFromNode(smallest)) { // equal but left first in alphabets
-      smallest = left;
-    }
-    if (right && this.extractDistFromNode(right) < this.extractDistFromNode(smallest)) {
-      smallest = right;
-    }
-    if (right && this.extractDistFromNode(right) === this.extractDistFromNode(smallest) &&
-      this.extractDestFromNode(right) < this.extractDestFromNode(smallest)) {
-      smallest = right;
+    if (rightChild && this._compFunc(rightChild, smallest)) {
+      smallest = rightChild;
     }
     if (smallest !== subtreeRootNode) {
       this._swapNodeValues(smallest, subtreeRootNode);
@@ -248,7 +261,7 @@ class MinHeapInterface {
       }
     }
     // Restore min-heap property.
-    this._upheap(newNode, distance, dstLabel);
+    this._upheap(newNode);
   
     this._btree.layout();
   }
@@ -341,7 +354,7 @@ class MinHeapInterface {
     if (newDist > oldDist) {
       this._downheap(nodeToUpdate);
     } else {
-      this._upheap(nodeToUpdate, newDist, this.extractDestFromNode(nodeToUpdate));
+      this._upheap(nodeToUpdate);
     }
     this.btree.layout();
     return oldLabel;

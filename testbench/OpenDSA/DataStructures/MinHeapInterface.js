@@ -317,24 +317,6 @@ class MinHeapInterface {
   }
 
   /**
-   * Updates the label of a node with the given old label to the new label.
-   * @param {String} oldLabel 
-   * @param {String} newLabel 
-   * @returns true if the node was found and updated, false otherwise.
-   */
-  updateNodeWithLabel(oldLabel, newLabel) {
-    const allNodesArr = this._getTreeNodeArr();
-    // Grab first node with the correct destination.
-    const nodeToUpdate = allNodesArr.find(node => node.value() === oldLabel);
-
-    if (!nodeToUpdate) {
-      return false;
-    }
-    nodeToUpdate.value(newLabel);
-    return true;
-  }
-
-  /**
    * Updates the label of a node with the given destination label and restores the min-heap property.
    * @param {String} dest - the destination label of the node that will be updated 
    * @param {String} newLabel - the new label for the node
@@ -397,4 +379,5 @@ class MinHeapInterface {
     }
   }
 }
+
 

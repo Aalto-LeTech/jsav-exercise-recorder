@@ -7,7 +7,7 @@
  * 19 October 2023
  */
 
-/* global ODSA, graphUtils */
+/* global ODSA, graphUtils, MinHeapInterface */
 (function ($) {
   "use strict";
 
@@ -174,7 +174,7 @@
     let previouslyExistingMinheap = false;
     if (minHeapInterface) {
       previouslyExistingMinheap = true;
-      minHeapInterface.clear();
+      minHeapInterface.clearHeap();
       $('.flexcontainer').remove();
       $('#dequeueButton').remove();
     }

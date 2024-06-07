@@ -382,6 +382,14 @@
     }});
   }
 
+  function generateNewUniqueValue(currentValues) {
+    let newVal = JSAV.utils.rand.numKey(100, 900);
+    // Randomize new value again if it is already in the array.
+    while (currentValues.includes(newVal)) {
+      newVal = JSAV.utils.rand.numKey(100, 900);
+    }
+    return newVal;
+  }
 
   // generate hash operations
   function generateHashOperations(size) {
@@ -401,14 +409,13 @@
       if (i === ind1 || i === ind2) {
         continue;
       }
-      values[i] = JSAV.utils.rand.numKey(100, 900);
+      values[i] = generateNewUniqueValue(values);
     }
     // collision index
     colInd = values[0] % hashSize;
     // generate colliding values
-    values[ind1] = Math.floor(JSAV.utils.rand.numKey(100, 900) / hashSize) * hashSize + colInd;
-    values[ind2] = Math.floor(JSAV.utils.rand.numKey(100, 900) / hashSize) * hashSize + colInd;
-
+    values[ind1] = Math.floor(generateNewUniqueValue(values) / hashSize) * hashSize + colInd;
+    values[ind2] = Math.floor(generateNewUniqueValue(values) / hashSize) * hashSize + colInd;
 
     // the second quarter contains remove operations
     // attempt to remove non-existing key at ind1
@@ -425,17 +432,16 @@
       values[i] = values[Math.floor(Math.random() * start)];
     }
     // new key
-    values[ind1] = JSAV.utils.rand.numKey(100, 900);
+    values[ind1] = generateNewUniqueValue(values);
     // already removed key
     values[ind2] = values[(ind1 === start ? start + 1: start)];
-
 
     //the third quarter contains more insert operations
     start = end;
     end += Math.floor(size / 4);
     for (i = start; i < end; i++) {
       operations[i] = "insert";
-      values[i] = JSAV.utils.rand.numKey(100, 900);
+      values[i] = generateNewUniqueValue(values);
     }
 
 

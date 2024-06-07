@@ -14,10 +14,8 @@ class MinHeapInterface {
    * @constructor
    * @param {JSAV_object} jsav - The jsav instance that this min-heap will belong to.
    * @param {Object} jsavProps - The parameters that are passed to jsav binary tree when creating it.
-   * @param {Boolean} compareDest - If true, nodes with equal distances will be compared based on destination label.
-   * 
   */
-  constructor(jsav, jsavProps, compareDest = false) {
+  constructor(jsav, jsavProps) {
     this._btree = jsav.ds.binarytree(jsavProps);
     this._heapSizeJsav = jsav.variable(0); // is JSAV object!
     // Function that returns true if node1 should be above node2 in the min-heap.
@@ -27,16 +25,7 @@ class MinHeapInterface {
       if (dist1 < dist2) {
         return true;
       }
-      if (dist1 > dist2) {
-        return false;
-      }
-      // Equal distances.
-      if (compareDest) {
-        const dest1 = this.extractDestFromNode(node1);
-        const dest2 = this.extractDestFromNode(node2);
-        return dest1 < dest2;
-      }
-      return false; // Equal distances and no destination comparison --> no change.
+      return false;
     };
   }
 
@@ -381,7 +370,7 @@ class MinHeapInterface {
       node.addClass(className);
     }
   }
-  
+
   /**
    * Removes a css class from the node with the given destination label if it exists.
    * @param {String} dest - the destination label of the node that will have the css class removed 

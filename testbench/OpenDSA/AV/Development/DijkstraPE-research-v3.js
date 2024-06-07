@@ -182,7 +182,7 @@
 
     $(".jsavcanvas").append("<div class='flexcontainer'></div>");
     
-    minHeapInterface = new MinHeapInterface(jsav, {relativeTo: $(".flexcontainer"), left: -180, top: 140}, false);
+    minHeapInterface = new MinHeapInterface(jsav, {relativeTo: $(".flexcontainer"), left: -180, top: 140});
 
     if (!previouslyExistingMinheap) {
       jsav.label(interpret("priority_queue"), {relativeTo: minHeapInterface._btree,
@@ -845,7 +845,7 @@
 
     // Create a binary heap
     const modelMinHeapInterface = new MinHeapInterface(modeljsav,
-      {relativeTo: modelGraph, left: -150, top: 291}, false);
+      {relativeTo: modelGraph, left: -150, top: 291});
 
     modeljsav.label(interpret("priority_queue"), {relativeTo: modelMinHeapInterface._btree, top: -100});
 

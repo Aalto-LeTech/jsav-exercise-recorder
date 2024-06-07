@@ -310,7 +310,7 @@
     modelNodes[0].addClass("spanning");
 
     // Create model solution min-heap
-    const modelMinHeapInterface = new MinHeapInterface(modeljsav, {}, true);
+    const modelMinHeapInterface = new MinHeapInterface(modeljsav, {});
 
     modeljsav.displayInit();
 
@@ -1130,7 +1130,7 @@
 
     $(".jsavcanvas").append("<div class='flexcontainer'></div>");
       
-    minHeapInterface = new MinHeapInterface(jsav, {relativeTo: $(".flexcontainer"), left: -180, top: 140}, true);
+    minHeapInterface = new MinHeapInterface(jsav, {relativeTo: $(".flexcontainer"), left: -180, top: 140});
   
     if (!previouslyExistingMinheap) {
       jsav.label(interpret("priority_queue"), {relativeTo: minHeapInterface.btree,

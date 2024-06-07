@@ -1169,13 +1169,6 @@
         node.element[0].getAttribute("data-value") === oldSrcLabel)[0];
       const oldEdge = dstNode.edgeFrom(oldSrcNode) ?? dstNode.edgeTo(oldSrcNode);
       return oldEdge;
-   
-      // Inline while loop to move the value up if needed.
-      // Because if you pass a node along as a parameter, it does not like
-      // being asked about its parent... Grading will break in ODSA part.
-
-      // TODO: make sure that MinHeapInterface solved above problem.
-
     /*****************************************************
      * End of function dijkstra() and its inner functions 
      *****************************************************/

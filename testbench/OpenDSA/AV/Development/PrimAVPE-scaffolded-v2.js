@@ -571,23 +571,6 @@
         node.element[0].getAttribute("data-value") === oldSrcLabel)[0];
       const oldEdge = dstNode.edgeFrom(oldSrcNode) ?? dstNode.edgeTo(oldSrcNode);
       oldEdge.removeClass("fringe");
-      /*
-      // Inline while loop to move the value up if needed.
-      // Because if you pass a node along as a parameter, it does not like
-      // being asked about its parent... Grading will break in ODSA part.
-
-      // TODO: Make sure that the issue described above is fixed with MinHeapInterface.
-
-      var node = updatedNode;
-      while (node != mintree.root() &&
-             extractDistance(node) < extractDistance(node.parent())) {
-        const temp = node.parent().value();
-        node.parent().value(node.value());
-        node.value(temp);
-        node = node.parent();
-      }
-      mintree.layout();
-      */
     }
 
     /* Sorts neighbours of a node by alphabetic order of their node values.

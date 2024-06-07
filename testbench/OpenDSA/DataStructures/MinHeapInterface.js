@@ -46,36 +46,42 @@ class MinHeapInterface {
   get btree() {
     return this._btree;
   }
+  
   /**
    * @returns {JSAV_binary_tree_node} The current root node of the binary tree.
   */
   get _rootNode() {
     return this._btree.root();
   }
+
   /**
    * @param {JSAV_binary_tree_node} newRootNode - The new root node of the binary tree.
    */
   set _rootNode(newRootNode) {
     this._btree.root(newRootNode);
   }
+
   /**
    * @returns {number} The current heap size.
    */
   get heapSize() {
     return this._heapSizeJsav.value();
   }
+
   /**
    * Increments the heap size by 1.
    */
   _incrementHeapSize() {
     this._heapSizeJsav.value(this._heapSizeJsav.value() + 1);
   }
+
   /**
    * Decrements the heap size by 1.
    */
   _decrementHeapSize() {
     this._heapSizeJsav.value(this._heapSizeJsav.value() - 1);
   }
+
   /**
    * Swaps the values of two binary tree nodes.
    * @param {JSAV_tree_node} node1 
@@ -87,6 +93,7 @@ class MinHeapInterface {
     node1.value(val2); // Calling value with argument will replace old value.
     node2.value(val1);
   }
+
   /**
    * Clears the binary tree and sets the heap size to 0. 
    * Should only be called when the current min-heap is no longer needed.
@@ -107,6 +114,7 @@ class MinHeapInterface {
   extractDistFromNode(node) {
     return this.extractDistFromLabel(node.value());
   }
+
   /**
    * Helper function to extract the distance from a string of format: "x<br>D (S)", 
    * where x is the distance, D is the destination node label and S is the source node label
@@ -118,6 +126,7 @@ class MinHeapInterface {
     const firstMatch = integerMatches[0];
     return Number(firstMatch);
   }
+
   /**
    * Helper function to extract the destination from a binary tree node that has label 
    * of format: "x<br>D (S)", where x is the distance, D is the destination node label 
@@ -128,6 +137,7 @@ class MinHeapInterface {
   extractDestFromNode(node) {
     return this.extractDestFromLabel(node.value());
   }
+
   /**
    * Helper function to extract the destination from a string of format: "x<br>D (S)", 
    * where x is the distance, D is the destination node label and S is the source node label
@@ -139,6 +149,7 @@ class MinHeapInterface {
     const destination = charMatches[0];
     return destination;
   }
+
   /**
    * Restores min-heap property after node insert or update. Calls itself recursively.
    * @param {JSAV_binary_tree_node} currentNode - The node that is being compared to its parent.
@@ -158,6 +169,7 @@ class MinHeapInterface {
       this._upheap(currentParent);
     }
   }
+
   /**
    * Restores min-heap property after node removal or update. Calls itself recursively.
    * @param {JSAV_binary_tree_node} subtreeRootNode - The node that is being compared to its children.
@@ -183,6 +195,7 @@ class MinHeapInterface {
       this._downheap(smallest);
     }
   }
+
   /**
    * Finds the parent node of the node at the given index.
    * Traverses the binary tree up and down to find the parent node as 
@@ -216,11 +229,11 @@ class MinHeapInterface {
     }
     return parentNode;
   }
+
   /**
    * 
    * @returns {JSAV_binary_tree_node} the last node in the binary tree (bottom rightmost node)
    */
-
   _getLastNode() {
     const lastNodeIdx = this.heapSize - 1;
     if (lastNodeIdx < 0) {
@@ -265,6 +278,7 @@ class MinHeapInterface {
   
     this._btree.layout();
   }
+
   /**
    * Remove the minimum node from the min-heap and restore the min-heap property.
    * @returns the label of the minimum node that was removed or null if the heap is empty.
@@ -367,6 +381,7 @@ class MinHeapInterface {
       node.addClass(className);
     }
   }
+  
   /**
    * Removes a css class from the node with the given destination label if it exists.
    * @param {String} dest - the destination label of the node that will have the css class removed 

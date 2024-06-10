@@ -16,12 +16,10 @@
       $hashLabel,
       $stackLabel,
       pseudo,
-
       // get the configurations from the configuration file
       config = ODSA.UTILS.loadConfig({'av_container': 'jsavcontainer'}),
       interpret = config.interpreter,
       code = config.code,
-
       // Create a JSAV instance
       av = new JSAV($("#jsavcontainer"));
 
@@ -218,6 +216,10 @@
       ind = firstValue % hashSize;
       msClickedIndex.value(ind);
 
+      jsav.umsg(interpret("av_ms_calculate_index"), {fill: {key: firstValue}});
+      printHashFunction(firstValue);
+      jsav.step();
+
       switch (operation) {
       case "insert":
         msList[ind].addLast().layout();
@@ -225,7 +227,6 @@
         jsav.umsg(interpret("av_ms_insert"), {fill: {
           index: ind
         }});
-        printHashFunction(firstValue);
         break;
       case "remove":
         nodeInd = find(firstValue);
@@ -240,7 +241,6 @@
             key: firstValue
           }});
         }
-        printHashFunction(firstValue);
         break;
       case "search":
         nodeInd = find(firstValue);
@@ -253,7 +253,6 @@
             key: firstValue
           }});
         }
-        printHashFunction(firstValue);
       }
       nextOperation();
 

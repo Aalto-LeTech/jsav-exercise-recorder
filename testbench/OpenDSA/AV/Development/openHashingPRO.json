@@ -11,7 +11,8 @@
       "av_ms_remove_failed": "Key {key} not found! There is nothing to remove.",
       "av_ms_search": "Key found at index {index}",
       "av_ms_search_failed": "Key {key} not found!",
-      "av_ms_looking_for": "Looking for key {key}"
+      "av_ms_looking_for": "Looking for key {key}",
+      "av_ms_calculate_index": "Calculate index for key {key}"
     },
     "fi": {
       ".exerciseTitle": "Ketjutettu hajautus",
@@ -24,7 +25,8 @@
       "av_ms_remove_failed": "Avainta {key} ei löytynyt! Mitään ei voida poistaa.",
       "av_ms_search": "Avain löytyi indeksistä {index}",
       "av_ms_search_failed": "Avainta {key} ei löytynyt hajautustaulusta!",
-      "av_ms_looking_for": "Etsitään avainta {key}"
+      "av_ms_looking_for": "Etsitään avainta {key}",
+      "av_ms_calculate_index": "Lasketaan indeksi avaimelle {key}"
     }
   },
   "code" : {}

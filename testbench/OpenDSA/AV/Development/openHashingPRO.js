@@ -2,6 +2,9 @@
 (function ($) {
   "use strict";
 
+  const KEY_LOWER_BOUND = 100; // inclusive
+  const KEY_UPPER_BOUND = 900; // exclusive
+
   // AV variables
   var hashSize = PARAMS.size || 11,
       opSize = 20,
@@ -383,10 +386,10 @@
   }
 
   function generateNewUniqueValue(currentValues) {
-    let newVal = JSAV.utils.rand.numKey(100, 900);
+    let newVal = JSAV.utils.rand.numKey(KEY_LOWER_BOUND, KEY_UPPER_BOUND);
     // Randomize new value again if it is already in the array.
     while (currentValues.includes(newVal)) {
-      newVal = JSAV.utils.rand.numKey(100, 900);
+      newVal = JSAV.utils.rand.numKey(KEY_LOWER_BOUND, KEY_UPPER_BOUND);
     }
     return newVal;
   }

@@ -809,11 +809,9 @@
     // Initially all nodes have infinity distance and no previous node,
     // except that the distance to the initial node is 0.
 
+    // List of nodes by [label, index] sorted by labels. The index is the index
+    // of modelNodes. Example: [['A', 3], ['B', 1], ['C', 3]]
     let labelsAndIndices = []; 
-    // List of nodes by [label, index] sorted by
-    // labels. The index is the index of
-    // modelNodes. Example:
-    // [['A', 3], ['B', 1], ['C', 3]]
     
     for (i = 0; i < graphNodes.length; i++) {
       labelsAndIndices.push([graphNodes[i].value(), i]);

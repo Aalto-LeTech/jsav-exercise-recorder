@@ -4,7 +4,7 @@
       ".avTitle": "Dijkstra's Algorithm Proficiency Exercise",
       "av_Authors": "Mohammed Fawzi, Kasper Hellström, Ari Korhonen, Johanna Sänger, Artturi Tilanterä",
       ".instructLabel": "Instructions:",
-      ".instructions": "Simulate the execution of Dijkstra’s algorithm for the given graph below. Click on an <strong>edge</strong> (u, v) to either enqueue a corresponding element to the priority queue (PQ) or update its priority in the PQ. Click <strong>Dequeue</strong> to remove the highest priority element from the PQ, and to add the corresponding edge to the spanning tree. Begin from the node A. The table at the bottom keeps track of the known shortest distance from A to each node and the parent node through which this shortest distance is achieved.",
+      ".instructions": "Simulate the execution of Dijkstra’s algorithm for the given graph below. Click on an <strong>edge</strong> (u, v) to either enqueue a corresponding element to the priority queue (PQ) or to update its priority in the PQ. Click <strong>Dequeue</strong> to remove the highest priority element from the PQ, and to add the corresponding edge to the spanning tree. Begin from the node A. The table at the bottom keeps track of the known shortest distance from A to each node and the parent node through which this shortest distance is achieved.",
       "av_ms_shortest": "Shortest paths from A.",
       "av_ms_select_a": "Start by selecting node A.",
       "av_ms_select_node": "Select {node}, since it has the shortest distance from A.",

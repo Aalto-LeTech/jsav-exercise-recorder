@@ -156,31 +156,40 @@
         collision: "none",
         within: $(".jsavcanvas")
       });
-      msList[i].first().css("opacity", 0);
+      // msList[i].first().css("opacity", 1);
     }
 
     var msClickedIndex = jsav.variable(-1);
 
     jsav.displayInit();
 
-    function find(key) {
+    function findListIdx(key) {
       jsav.umsg(interpret("av_ms_looking_for"), {fill: {
         key: key
       }});
-      var node = msList[key % hashSize].first().next(),
-          i = 1;
-      while (node) {
-        node.highlight();
-        if (node.value() === key) {
-          return i;
+      const invisibleNode = msList[key % hashSize].first();
+      invisibleNode.highlight();
+      let currentNode = invisibleNode.next(),
+          currentIdx = 1;
+
+      while (currentNode) {
+        currentNode.highlight();
+
+        if (currentNode.value() === key) {
+          // Step to keep index highlighted and early return.
+          jsav.step();
+          return currentIdx;
         }
-        node = node.next();
-        i++;
-        if (node) {
+
+        currentNode = currentNode.next();
+        currentIdx++;
+        if (currentNode) {
           jsav.gradeableStep();
         }
       }
-      return 0;
+      // Did not find the key.
+      jsav.step(); // Keep the last index highlighted.
+      return null;
     }
 
     function nextOperation() {
@@ -229,7 +238,7 @@
         }});
         break;
       case "remove":
-        nodeInd = find(firstValue);
+        nodeInd = findListIdx(firstValue);
         if (nodeInd) {
           msList[ind].remove(nodeInd);
           msList[ind].layout();
@@ -243,7 +252,7 @@
         }
         break;
       case "search":
-        nodeInd = find(firstValue);
+        nodeInd = findListIdx(firstValue);
         if (nodeInd) {
           jsav.umsg(interpret("av_ms_search"), {fill: {
             index: ind

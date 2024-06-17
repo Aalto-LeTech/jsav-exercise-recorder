@@ -1,7 +1,6 @@
 /* global ODSA, PARAMS */
-(function ($) {
+(function($) {
   "use strict";
-
   const KEY_LOWER_BOUND = 100; // inclusive
   const KEY_UPPER_BOUND = 900; // exclusive
 
@@ -17,7 +16,7 @@
       $stackLabel,
       pseudo,
       // get the configurations from the configuration file
-      config = ODSA.UTILS.loadConfig({'av_container': 'jsavcontainer'}),
+      config = ODSA.UTILS.loadConfig({av_container: "jsavcontainer"}),
       interpret = config.interpreter,
       code = config.code,
       // Create a JSAV instance
@@ -262,9 +261,11 @@
             key: firstValue
           }});
         }
+        break;
+      default:
+        // nothing
       }
       nextOperation();
-
     }
 
     var gradeableModelStructures = msList.slice(0);
@@ -273,7 +274,7 @@
   }
 
 
-  var clickHandler = function () {
+  function clickHandler() {
     function nextOperation() {
       unhighlightAllLists();
       if (opStack.size()) {
@@ -361,11 +362,12 @@
         return;
       }
       break;
+    default:
+      // nothing
     }
     this.container.layout();
     nextOperation();
-  };
-
+  }
 
   function getOperationType(node) {
     if (node.hasClass("insert")) {
@@ -374,10 +376,9 @@
       return "remove";
     } else if (node.hasClass("search")) {
       return "search";
-    } else {
-      // unknown operation
-      return undefined;
     }
+    // unknown operation
+    return null;
   }
 
 
@@ -406,7 +407,7 @@
   function generateHashOperations(size) {
     var values = new Array(size),
         operations = new Array(size),
-        result = { values: values, operations: operations },
+        result = {values: values, operations: operations},
         i, start, end, ind1, ind2, ind3, ind4, colInd;
 
     // the first quarter contains insert operations
@@ -445,7 +446,7 @@
     // new key
     values[ind1] = generateNewUniqueValue(values);
     // already removed key
-    values[ind2] = values[(ind1 === start ? start + 1: start)];
+    values[ind2] = values[(ind1 === start ? start + 1 : start)];
 
     //the third quarter contains more insert operations
     start = end;
@@ -488,5 +489,4 @@
     modelDialog: {width: 760}
   });
   exercise.reset();
-
 }(jQuery));

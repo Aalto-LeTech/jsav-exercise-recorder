@@ -1157,7 +1157,7 @@
       style: "table",
       width: width,
       left: 150,
-      top: 780});
+      top: 800});
   }
 
   function debugPrint(...args) {

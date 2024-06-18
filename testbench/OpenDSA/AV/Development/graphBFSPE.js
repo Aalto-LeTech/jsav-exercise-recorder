@@ -10,8 +10,8 @@
 
   jsav.recorded();
 
-  // Add the code block to the exercise. 
-  const code = ODSA.UTILS.loadConfig({'av_container': 'jsavcontainer'}).code; // fetch code
+  // Add the code block to the exercise.
+  const code = ODSA.UTILS.loadConfig({av_container: "jsavcontainer"}).code; // fetch code
 
   if (code) {
     jsav.code($.extend({after: {element: $(".code")}}, code)) // add pseudocode to exercise
@@ -43,14 +43,14 @@
   function init() {
     // Settings for input
     const width = 500, height = 400,  // pixels
-          weighted = false,
-          directed = false,
-          nVertices = [11, 3],
-          nEdges = [14, 2];
+        weighted = false,
+        directed = false,
+        nVertices = [11, 3],
+        nEdges = [14, 2];
 
     // First create a random planar graph instance in neighbour list format
     let nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
-        directed, width, height);
+                                              directed, width, height);
 
     // Assure that the random planar graph has A connected to another node
     // and a sufficiently large spanning tree, i.e. at least 7 edges
@@ -74,8 +74,8 @@
     graph.nodes()[0].addClass("visited"); // mark the 'A' node
     jsav.displayInit();
 
-    // Remove the initially calculated size so that the graph sits next 
-    // to the code. 
+    // Remove the initially calculated size so that the graph sits next
+    // to the code.
     $(".jsavcanvas").css("min-width", "");
     return graph;
   }
@@ -83,8 +83,8 @@
   /**
    * Calculate the spanning tree for the nlGraph. This is used to ensure
    * that the spanning tree is sufficiently large and the exercise is not
-   * trivially easy. 
-   * The spanning tree is calculated using the BFS algorithm. 
+   * trivially easy.
+   * The spanning tree is calculated using the BFS algorithm.
    * @param nlGraph as returned by graphUtils.js
    * @returns spanning tree edge list
    */
@@ -124,7 +124,7 @@
     }
   }
 
-  function model(modeljsav) {
+  function modelSolution(modeljsav) {
     const modelGraph = modeljsav.ds.graph({
       width: 500,
       height: 400,
@@ -134,9 +134,9 @@
       directed: false
     });
     const modelQueue = modeljsav.ds.list({
-      left: 150,
+      left: 150
     });
-    
+
     // copy the graph and its weights
     graphUtils.copy(graph, modelGraph, {weights: true});
     const modelNodes = modelGraph.nodes();
@@ -180,12 +180,12 @@
    * Performs a breadth-first search algorithm on a JSAV graph for the model
    * answer. Adds steps to the JSAV slideshow (JSAV algorithm visualization
    * template).
-   * 
+   *
    * @param {start} JSAVnode start node for the BFS algorithm
    * @param {av} av JSAV algorithm visualization template
    * @param {modelQueue} JSAVlist horizontal linked list which represents a
    *                              queue in the model answer.
-   * 
+   *
    */
   function bfs(start, av, modelQueue) {
     var queue = [start], // queue used to run BFS
@@ -208,7 +208,7 @@
       adjacent = node.neighbors();
       adjacent.sort(nodeSort);
       av.umsg(interpret("av_ms_dequeue"), {fill: {node: node.value()}});
-      
+
       av.step();
 
       // Check if all neighbors have already been visited
@@ -245,13 +245,13 @@
     av.umsg(interpret("av_ms_queue_empty"));
     av.step();
   }
-  
+
   // Process About button: Pop up a message with an Alert
   function about() {
     window.alert(ODSA.AV.aboutstring(interpret(".avTitle"), interpret("av_Authors")));
   }
 
-  exercise = jsav.exercise(model, init, {
+  exercise = jsav.exercise(modelSolution, init, {
     compare: {class: "visited"},
     controls: $(".jsavexercisecontrols"),
     resetButtonTitle: interpret("reset"),

@@ -60,3 +60,34 @@ function createLegend(av, x, y, interpret) {
            {left: xAdjusted + hpos[2], top: yAdjusted + 166})
     .addClass("legendtext");
 }
+
+/**
+ * Function to create and display a neigbour list representation of a graph.
+ * Uses JSAV pseudocode API.
+ * @param {Object} nlGraph - neighbour list representation of a graph as returned by
+ * function generatePlanarGraphNl from file graphUtils.js
+ * @param {JSAV_object} jsav - the JSAV instance to which the neighbour list will be added
+ * @param {Object} options - options that will be passed to JSAV method code that displays
+ * the neighbour list as pseudo code, defaults to blank
+ */
+function createNeigbourList(nlGraph, jsav, options = {}) {
+  const neighbourLists = nlGraph.edges;
+
+  function idxToLetter(idx) {
+    return String.fromCharCode("A".charCodeAt(0) + idx);
+  }
+
+  const codeLinesArr = neighbourLists.map((nlList, idx) => {
+    const vertexLetter = idxToLetter(idx);
+
+    // Neighbours in the list are in the form { v, weight },
+    // where v is index of neighbour.
+    const neighbours = nlList.map(neighbour => idxToLetter(neighbour.v));
+
+    // Pseudo code line to represent neigbours of one vertex
+    const codeLine = `${vertexLetter}: ${neighbours.join(" ")}`;
+    return codeLine;
+  });
+
+  jsav.code(codeLinesArr, options);
+}

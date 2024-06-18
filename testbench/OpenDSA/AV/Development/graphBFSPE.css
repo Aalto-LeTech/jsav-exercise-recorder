@@ -1,6 +1,6 @@
 #container {
     width: 1000px;
-    height: 700px;
+    height: 900px;
 }
 
 .jsavgraph {
@@ -12,7 +12,8 @@
     float: left;
 }
 
-.neighbourlist {
+.neighbourlistblock {
     float: left;
-    clear: left;
+    clear: left; /* to place the block under pseudo code */
+    margin-left: 40px; 
 }

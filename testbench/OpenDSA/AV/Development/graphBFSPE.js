@@ -39,6 +39,11 @@
       nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted, directed, width, height);
     }
 
+    createNeigbourList(nlGraph, jsav, {
+      lineNumbers: false,
+      after: {element: $(".neighbourlist")}
+    });
+
     // Create a JSAV graph instance
     if (graph) {
       graph.clear();

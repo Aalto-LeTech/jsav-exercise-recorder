@@ -69,6 +69,8 @@ function createLegend(av, x, y, interpret) {
  * @param {JSAV_object} jsav - the JSAV instance to which the neighbour list will be added
  * @param {Object} options - options that will be passed to JSAV method code that displays
  * the neighbour list as pseudo code, defaults to blank
+ *
+ *@returns {JSAV_pseudocode_object} the created pseudo code object displaying the neighbour list
  */
 function createNeigbourList(nlGraph, jsav, options = {}) {
   const neighbourLists = nlGraph.edges;
@@ -89,5 +91,5 @@ function createNeigbourList(nlGraph, jsav, options = {}) {
     return codeLine;
   });
 
-  jsav.code(codeLinesArr, options);
+  return jsav.code(codeLinesArr, options);
 }

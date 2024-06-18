@@ -17,27 +17,7 @@
     jsav.code($.extend({after: {element: $(".code")}}, code)) // add pseudocode to exercise
       .highlight(12); // highlight row that marks node visited
   } else {
-    jsav.code(); // pseudo is just blank if code is not defined
-  }
-
-  function init_old() {
-    // create the graph
-    if (graph) {
-      graph.clear();
-    }
-    graph = jsav.ds.graph({
-      width: 400,
-      height: 400,
-      layout: "automatic",
-      directed: false
-    });
-    graphUtils.generate(graph); // Randomly generate the graph without weights
-    graph.layout();
-    // mark the "A" node
-    graph.nodes()[0].addClass("visited");
-
-    jsav.displayInit();
-    return graph;
+    jsav.code(); // what does this actually do??
   }
 
   function init() {
@@ -63,7 +43,7 @@
     if (graph) {
       graph.clear();
     }
-    graph = jsav.ds.graph({//    Condition:
+    graph = jsav.ds.graph({
       width: width,
       height: height,
       layout: "manual",

@@ -11,6 +11,11 @@
 (function() {
   "use strict";
 
+  const EDGE_WEIGHT_UPPER_BOUND = 16; // exclusive
+  // Target score and max number of trials when generating the exercise graph.
+  const TARGET_SCORE = 5;
+  const MAX_TRIALS = 120;
+
   // JSAV Graph instance for the student's solution.
   var graph;
 
@@ -90,7 +95,7 @@
         bestNlGraph,
         bestResult = {score: 0},
         trials = 0;
-    const targetScore = 5, maxTrials = 100;
+
     let sumStats = {
       relaxations: 0,
       singleClosest: 0,
@@ -99,20 +104,26 @@
       unreachable: 0};
 
     let result = {score: 0};
-    while (result.score < targetScore && trials < maxTrials) {
+    while (result.score < TARGET_SCORE && trials < MAX_TRIALS) {
+      trials++;
       nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
-                                            directed, width, height);
-      result = testPrim(nlGraph);
-      if (result.score > bestResult.score) {
-        bestNlGraph = nlGraph;
-        bestResult = result;
-      }
-      for (let k of Object.keys(result.stats)) {
-        if (result.stats[k] > 0) {
-          sumStats[k]++;
+                                            directed, width, height, EDGE_WEIGHT_UPPER_BOUND);
+      // Test that weights of edges of each node are unique.
+      if (nlGraph.edges.some(neighborList => !hasUniqueEdgeWeights(neighborList))) {
+        debugPrint("Graph candidate ", nlGraph, " had node with non-unique edge weights");
+      } else {
+        // Edge weights are unique, test how good the graph is.
+        result = scoreGraphCandidate(nlGraph);
+        if (result.score > bestResult.score) {
+          bestNlGraph = nlGraph;
+          bestResult = result;
+        }
+        for (let k of Object.keys(result.stats)) {
+          if (result.stats[k] > 0) {
+            sumStats[k]++;
+          }
         }
       }
-      trials++;
     }
     nlGraph = bestNlGraph;
 
@@ -679,9 +690,18 @@
      *****************************************************/
   }
 
-  function testPrim(graphToTest) {
-    const nVertices = graphToTest.vertices.length;
-    let stats = {
+  function hasUniqueEdgeWeights(neighborList) {
+    const weights = neighborList.map(neighbor => neighbor.weight);
+    const uniqueWeights = new Set(weights);
+    if (uniqueWeights.size !== weights.length) {
+      return false;
+    }
+    return true;
+  }
+
+  function scoreGraphCandidate(graphToEvaluate) {
+    const nVertices = graphToEvaluate.vertices.length;
+    const stats = {
       relaxations: 0,
       singleClosest: 0,
       multipleClosest: 0,
@@ -702,13 +722,13 @@
     distance[0] = 0;
 
     for (let i = 0; i < nVertices; i++) {
-      var v = primMinVertex(distance, visited, stats);
+      const v = primMinVertex(distance, visited, stats);
       visited[v] = true;
       if (distance[v] === Infinity) {
         stats.unreachable++;
         break;
       }
-      for (let e of graphToTest.edges[v]) {
+      for (let e of graphToEvaluate.edges[v]) {
         let d = distance[e.v];
         if (e.weight < d) {
           // Update distance
@@ -1140,9 +1160,9 @@
       top: 780});
   }
 
-  function debugPrint(x) {
+  function debugPrint(...args) {
     if (debug) {
-      console.log(x);
+      console.log(...args);
     }
   }
 }());

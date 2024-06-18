@@ -138,8 +138,9 @@
     //   I---J
     //
     let totalVertices = 0;
-    for (let v of nVertices)
+    for (let v of nVertices) {
       totalVertices += v;
+    }
 
     const gridWidth = Math.ceil(Math.sqrt(totalVertices));
     const gridHeight = Math.ceil(totalVertices / gridWidth);
@@ -161,8 +162,7 @@
     // Create set of candidate edges
     let candEdges = candidateEdges(nVertices, gridWidth, gridHeight);
 
-    let component = verticesToComponents(nVertices, gridWidth, gridHeight,
-      candEdges);
+    let component = verticesToComponents(nVertices, gridWidth, gridHeight, candEdges);
 
     // Select nEdges[i] from candEdges for each component i.
     candEdges = edgesToComponents(candEdges, component, nEdges);
@@ -202,7 +202,7 @@
 
     // Sort edges by start vertex, end vertex.
     for (let n of g.edges) {
-      n.sort(function(e1, e2) { return e1.v - e2.v });
+      n.sort(function(e1, e2) { return e1.v - e2.v; });
     }
     return g;
   }
@@ -218,7 +218,7 @@
    * Parameters:
    * nVertices [V1, V2, ...]: number of vertices for each connected component
    * gridWidth: width of the grid in nodes
-   * gridHeight: height of the frid in nodes
+   * gridHeight: height of the grid in nodes
    *
    * Returns:
    * [e1, e2, ..., eN], where each entry is of form [u, v], where u < v.

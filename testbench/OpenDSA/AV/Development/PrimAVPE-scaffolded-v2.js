@@ -713,8 +713,8 @@
     // shortest path from the initial vertex to each other vertex.
     // Array 'visited' stores the visitedness of each vertex. A visited vertex
     // has their minimum distance decided permanently.
-    var distance = Array(nVertices);
-    var visited = Array(nVertices);
+    const distance = Array(nVertices);
+    const visited = Array(nVertices);
     for (let i = 0; i < nVertices; i++) {
       distance[i] = Infinity;
       visited[i] = false;

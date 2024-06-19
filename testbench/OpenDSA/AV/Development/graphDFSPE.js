@@ -19,26 +19,6 @@
     jsav.code(); // pseudo is just blank if code is not defined
   }
 
-  function init_old() {
-    // create the graph
-    if (graph) {
-      graph.clear();
-    }
-    graph = jsav.ds.graph({
-      width: 400,
-      height: 400,
-      layout: "automatic",
-      directed: false
-    });
-    graphUtils.generate(graph); // Randomly generate the graph without weights
-    graph.layout();
-    // mark the 'A' node
-    graph.nodes()[0].addClass("visited");
-
-    jsav.displayInit();
-    return graph;
-  }
-
   function init() {
     // Settings for input
     const width = 500, height = 400,  // pixels

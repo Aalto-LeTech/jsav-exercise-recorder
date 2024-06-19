@@ -1,17 +1,17 @@
 /* global ODSA, graphUtils */
-(function ($) {
+(function($) {
   "use strict";
   var exercise,
       graph,
       config = ODSA.UTILS.loadConfig(),
       interpret = config.interpreter,
       settings = config.getSettings(),
-      jsav = new JSAV($('.avcontainer'), {settings: settings});
+      jsav = new JSAV($(".avcontainer"), {settings: settings});
 
   jsav.recorded();
 
-  // Add the code block to the exercise. 
-  const code = ODSA.UTILS.loadConfig({'av_container': 'jsavcontainer'}).code; // fetch code
+  // Add the code block to the exercise.
+  const code = ODSA.UTILS.loadConfig({av_container: "jsavcontainer"}).code; // fetch code
   if (code) {
     jsav.code($.extend({after: {element: $(".code")}}, code)) // // add pseudocode to exercise
       .highlight(2);
@@ -21,15 +21,16 @@
 
   function init() {
     // Settings for input
-    const width = 500, height = 400,  // pixels
-          weighted = false,
-          directed = false,
-          nVertices = [11, 3],
-          nEdges = [14, 2];
+    const width = 500, // pixels
+        height = 400,  // pixels
+        weighted = false,
+        directed = false,
+        nVertices = [11, 3],
+        nEdges = [14, 2];
 
-    // First create a random planar graph instance in neighbour list format  
+    // First create a random planar graph instance in neighbour list format
     let nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
-        directed, width, height);
+                                              directed, width, height);
 
     // Assure that the random planar graph has A connected to another node
     // and a sufficiently large spanning tree, i.e. at least 7 edges
@@ -52,17 +53,17 @@
     graph.layout();
     graph.nodes()[0].addClass("visited"); // mark the 'A' node
     jsav.displayInit();
-    // Remove the initially calculated size so that the graph sits next 
-    // to the code. 
-    $(".jsavcanvas").css("min-width", "")
+    // Remove the initially calculated size so that the graph sits next
+    // to the code.
+    $(".jsavcanvas").css("min-width", "");
     return graph;
   }
 
   /**
    * Calculate the spanning tree for the nlGraph. This is used to ensure
    * that the spanning tree is sufficiently large and the exercise is not
-   * trivially easy. 
-   * The spanning tree is calculated using the BFS algorithm. 
+   * trivially easy.
+   * The spanning tree is calculated using the BFS algorithm.
    * @param nlGraph as returned by graphUtils.js
    * @returns spanning tree edge list
    */
@@ -102,7 +103,7 @@
     }
   }
 
-  function model(modeljsav) {
+  function modelSolution(modeljsav) {
     var i;
     // create the model
     var modelGraph = modeljsav.ds.graph({
@@ -152,7 +153,7 @@
   function dfs(start, av) {
     var adjacent = start.neighbors();
     //Sort the neighbors according to their value
-    adjacent.sort(function (a, b) {
+    adjacent.sort(function(a, b) {
       return a.value().charCodeAt(0) - b.value().charCodeAt(0);
     });
     for (var next = adjacent.next(); next; next = adjacent.next()) {
@@ -179,25 +180,24 @@
     window.alert(ODSA.AV.aboutstring(interpret(".avTitle"), interpret("av_Authors")));
   }
 
-  exercise = jsav.exercise(model, init, {
-    compare: { class: "visited" },
-    controls: $('.jsavexercisecontrols'),
+  exercise = jsav.exercise(modelSolution, init, {
+    compare: {class: "visited"},
+    controls: $(".jsavexercisecontrols"),
     resetButtonTitle: interpret("reset"),
     fix: fixState
   });
   exercise.reset();
 
-  $(".jsavcontainer").on("click", ".jsavedge", function () {
+  $(".jsavcontainer").on("click", ".jsavedge", function() {
     var edge = $(this).data("edge");
     if (!edge.hasClass("visited")) {
       markEdge(edge);
     }
   });
 
-  $(".jsavcontainer").on("click", ".jsavnode", function () {
+  $(".jsavcontainer").on("click", ".jsavnode", function() {
     window.alert("Please, click on the edges, not the nodes.");
   });
 
   $("#about").click(about);
-
 }(jQuery));

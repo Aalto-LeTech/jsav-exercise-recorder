@@ -6,7 +6,8 @@
       config = ODSA.UTILS.loadConfig(),
       interpret = config.interpreter,
       settings = config.getSettings(),
-      jsav = new JSAV($(".avcontainer"), {settings: settings});
+      jsav = new JSAV($(".avcontainer"), {settings: settings}),
+      neighbourList; // type of this is JSAV pseudo code object
 
   jsav.recorded();
 
@@ -39,11 +40,15 @@
       nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted, directed, width, height);
     }
 
+    neighbourList?.clear(); // clear neighbour list if it already exist (when reset is clicked)
+    neighbourList = createNeigbourList(nlGraph, jsav, {
+      lineNumbers: false,
+      after: {element: $(".neighbourlist")}
+    });
+
     // Create a JSAV graph instance
-    if (graph) {
-      graph.clear();
-    }
-    graph = jsav.ds.graph({//    Condition:
+    graph?.clear(); // Clear graph on reset
+    graph = jsav.ds.graph({
       width: width,
       height: height,
       layout: "manual",

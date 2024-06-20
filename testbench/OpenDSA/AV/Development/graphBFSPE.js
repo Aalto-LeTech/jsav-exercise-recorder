@@ -1,4 +1,4 @@
-/* global graphUtils */
+/* global graphUtils createNeighbourList*/
 (function() {
   "use strict";
   var exercise,
@@ -41,7 +41,7 @@
     }
 
     neighbourList?.clear(); // clear neighbour list if it already exist (when reset is clicked)
-    neighbourList = createNeigbourList(nlGraph, jsav, {
+    neighbourList = createNeighbourList(nlGraph, jsav, {
       lineNumbers: false,
       after: {element: $(".neighbourlist")}
     });

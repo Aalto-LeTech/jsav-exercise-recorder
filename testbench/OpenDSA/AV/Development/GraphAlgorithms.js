@@ -62,17 +62,17 @@ function createLegend(av, x, y, interpret) {
 }
 
 /**
- * Function to create and display a neigbour list representation of a graph.
+ * Function to create and display an adjacency list representation of a graph.
  * Uses JSAV pseudocode API.
  * @param {Object} nlGraph - neighbour list representation of a graph as returned by
  * function generatePlanarGraphNl from file graphUtils.js
  * @param {JSAV_object} jsav - the JSAV instance to which the neighbour list will be added
  * @param {Object} options - options that will be passed to JSAV method code that displays
- * the neighbour list as pseudo code, defaults to blank
+ * the adjacency list as pseudo code, defaults to blank
  *
  *@returns {JSAV_pseudocode_object} the created pseudo code object displaying the neighbour list
  */
-function createNeigbourList(nlGraph, jsav, options = {}) {
+function createAdjacencyList(nlGraph, jsav, options = {}) {
   const neighbourLists = nlGraph.edges;
 
   function idxToLetter(idx) {

@@ -1,4 +1,4 @@
-/* global graphUtils createNeighbourList*/
+/* global graphUtils createAdjacencyList*/
 (function() {
   "use strict";
   var exercise,
@@ -7,7 +7,7 @@
       interpret = config.interpreter,
       settings = config.getSettings(),
       jsav = new JSAV($(".avcontainer"), {settings: settings}),
-      neighbourList;
+      neighbourList; // type of this is JSAV pseudo code object
 
   jsav.recorded();
 
@@ -41,7 +41,7 @@
     }
 
     neighbourList?.clear(); // clear neighbour list if it already exist (when reset is clicked)
-    neighbourList = createNeighbourList(nlGraph, jsav, {
+    neighbourList = createAdjacencyList(nlGraph, jsav, {
       lineNumbers: false,
       after: {element: $(".neighbourlist")}
     });

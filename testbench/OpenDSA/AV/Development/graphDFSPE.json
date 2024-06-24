@@ -4,7 +4,7 @@
       ".avTitle": "Depth-First Search Proficiency Exercise",
       "av_Authors": "Mohammed Fawzi, Kasper Hellström, Johanna Sänger, Artturi Tilanterä, Teemu Taivainen",
       ".instructLabel": "Instructions:",
-      ".instructions": "Simulate the execution of the Depth-First Search (DFS) algorithm for the graph below. Click on the <strong>edges</strong> (u, v) in the order that nodes v are visited by the DFS algorithm. Start from the neighbours of node A. To determine the correct order to visit neighbours of each node, use the adjacency list representation of the graph located below pseudo code.",
+      ".instructions": "Simulate the execution of the Depth-First Search (DFS) algorithm for the graph below. Click on the <strong>edges</strong> (u, v) in the order that nodes v are visited by the DFS algorithm. Start from the neighbours of node A. To determine the correct order to visit neighbours of each node, use the adjacency list representation of the graph located below pseudocode.",
       "av_ms_final": "Final DFS graph",
       "av_ms_process_edge": "Process edge ({from}, {to}).",
       "av_ms_already_visited": " Node {node} already visited",

@@ -3,4 +3,3 @@ package-lock.json
 nohup.out
 .env.js
 .~lock*
-eslint*

@@ -7,7 +7,7 @@
  */
 
 // Make sure to include all relevant JavaScript files before this one to have access to global variables.
-/* global graphUtils, MinHeapInterface, PqOperationSequence, PqOperation, createLegend */
+/* global graphUtils, MinHeapInterface, PqOperationSequence, PqOperation, createLegend, createAdjacencyList*/
 (function() {
   "use strict";
 
@@ -26,6 +26,9 @@
   // Implements the priority queue as min-heap and displays it as a binary tree.
   /** @type {MinHeapInterface} */
   let minHeapInterface;
+
+  // JSAV pseudocode object
+  let adjacencyList;
 
   // Legend box in the exercise view;
   var exerciseLegendCreated = false;
@@ -134,11 +137,21 @@
     }
     debugPrint(statsText);
 
+    // Clear adjacency list if it already exist (when reset is clicked).
+    adjacencyList?.clear();
+
+    // NOTE: Adjacency list should be created before the graph!
+    // This automatically makes the graph move to the right == alignment goes well.
+
+    adjacencyList = createAdjacencyList(nlGraph, jsav, {
+      lineNumbers: false,
+      left: 120
+    });
+
+    // Clear graph if it already exist (when reset is clicked).
+    graph?.clear();
     // Create a JSAV graph instance
-    if (graph) {
-      graph.clear();
-    }
-    graph = jsav.ds.graph({//    Condition:
+    graph = jsav.ds.graph({
       width: width,
       height: height,
       layout: "manual",

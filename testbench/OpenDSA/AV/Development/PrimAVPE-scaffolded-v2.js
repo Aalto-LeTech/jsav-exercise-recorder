@@ -41,8 +41,6 @@
   // JSAV Visualization
   var jsav = new JSAV($(".avcontainer"), {settings: settings});
 
-  // Number of elements in the binary heap
-
   // A list of JSAV graph nodes to keeps track of what node has been focused
   // after a dequeue operation. This is make sure that the class can be removed
   // and that after undoing a dequeue operation the previously focused node is
@@ -111,20 +109,16 @@
       trials++;
       nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
                                             directed, width, height, EDGE_WEIGHT_UPPER_BOUND);
-      // Test that weights of edges of each node are unique.
-      if (nlGraph.edges.some(neighborList => !hasUniqueEdgeWeights(neighborList))) {
-        debugPrint("Graph candidate ", nlGraph, " had node with non-unique edge weights");
-      } else {
-        // Edge weights are unique, test how good the graph is.
-        result = scoreGraphCandidate(nlGraph);
-        if (result.score > bestResult.score) {
-          bestNlGraph = nlGraph;
-          bestResult = result;
-        }
-        for (let k of Object.keys(result.stats)) {
-          if (result.stats[k] > 0) {
-            sumStats[k]++;
-          }
+      // Score the graph candidate
+      result = scoreGraphCandidate(nlGraph);
+      debugPrint("Score of the graph candidate: " + result.score);
+      if (result.score > bestResult.score) {
+        bestNlGraph = nlGraph;
+        bestResult = result;
+      }
+      for (let k of Object.keys(result.stats)) {
+        if (result.stats[k] > 0) {
+          sumStats[k]++;
         }
       }
     }
@@ -165,10 +159,11 @@
       vertex.x = vertex.x - 30;
       vertex.y = vertex.y - 30;
     });
+
     graphUtils.nlToJsav(nlGraph, graph);
     addEdgeClickListeners();
 
-    // Creates instance of MinHeapInterface and adds visible priority queue with deque button.
+    // Creates instance of MinHeapInterface and adds visible priority queue with dequeue button.
     addPriorityQueue();
 
     if (!exerciseLegendCreated) {
@@ -677,15 +672,6 @@
     /*****************************************************
      * End of function prim() and its inner functions
      *****************************************************/
-  }
-
-  function hasUniqueEdgeWeights(neighborList) {
-    const weights = neighborList.map(neighbor => neighbor.weight);
-    const uniqueWeights = new Set(weights);
-    if (uniqueWeights.size !== weights.length) {
-      return false;
-    }
-    return true;
   }
 
   function scoreGraphCandidate(graphToEvaluate) {

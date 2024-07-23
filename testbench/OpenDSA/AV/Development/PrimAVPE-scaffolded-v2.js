@@ -1170,7 +1170,7 @@
       style: "table",
       width: width,
       left: 150,
-      top: 800});
+      top: 820});
   }
 
   function debugPrint(...args) {

@@ -64,9 +64,9 @@
     controls: $(".jsavexercisecontrols"),
     resetButtonTitle: interpret("reset"),
     modelDialog: {width: "960px"},
-    grader: scaffoldedGrader,
     fix: fixState
   });
+
   /* Set custom undo and reset function because we also have a custom
    * grader. Save the default prototype functions into separate variables,
    * because we also want to call them. */
@@ -183,30 +183,6 @@
     graph.nodes()[0].addClass("spanning"); // mark the 'A' node
     jsav.displayInit();
     return [graph, minHeapInterface.btree]; // Don't know if btree is really used to grading.
-  }
-
-  /**
-   * Custom grading function for the exercise.
-   */
-  function scaffoldedGrader() {
-    debugPrint("scaffoldedGrader():\n" +
-      "student: " + studentPqOperations.toString() + "\n" +
-      "model  : " + modelPqOperations.toString());
-    let grade = studentPqOperations.gradeAgainst(modelPqOperations);
-
-    let score = {
-      // Number of correct steps in student's solution
-      correct: grade.studentGrade,
-      // Continuous grading mode not used, therefore `fix` is zero
-      fix: 0,
-      // Number of total steps in student's solution
-      student: studentPqOperations.length(),
-      // Number of total steps in model solution
-      total: grade.maxGrade,
-      // Continuous grading mode not used, therefore `undo` is zero
-      undo: 0
-    };
-    this.score = score;
   }
 
   /**

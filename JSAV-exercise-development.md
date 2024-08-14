@@ -26,6 +26,41 @@ start, here is suggested reading in order.
    to develop a new, standalone JSAV exercise, but some information here might
    be useful if you're wondering the meaning of some testbench code.
 
+## Steps to develop exercises in this repository with code linting
+
+This repository uses [ESlint](https://eslint.org/) to lint JavaScript code. ESlint is a tool for identifying and reporting on patterns found in JavaScript code, with the goal of making code more consistent and avoiding bugs. The configuration file `eslint.config.mjs` is adapted from [OpenDSA repository](https://github.com/OpenDSA/OpenDSA). You do not really *need* npm or ESlint to develop JSAV exercises, but it is highly recommended to use them. The following steps are for setting up development environment with ESlint.
+
+1. Ensure that you have the following installed:
+
+   - **Node.js** (ESlint requires version ^18.18.0, ^20.9.0, or >=21.1.0)
+   - **npm** (Node Package Manager, comes with Node.js)
+
+   You can download and install Node.js from the [official website](https://nodejs.org/en/download/package-manager). You will need sudo rights for this. On Aalto Linux machines without sudo rights you can search for available Node.js versions with command `pkcon search name nodejs` and install with `pkcon install <package name>`.
+
+2. Clone this repository (using a SSH key).
+
+   ```bash
+   git clone git@github.com:Aalto-LeTech/jsav-exercise-recorder.git
+
+   cd jsav-exercise-recorder # Move to the repository root
+   ```
+
+3. Install the (development) dependencies.
+
+   ```bash
+   npm install
+   ```
+
+   Most dependencies are for the jsav-exercise-recorder, but ESlint is meant to be used when developing exercises.
+
+4. You should be good to go. JavaScript code can be linted with the following command:
+
+   ```bash
+   npx eslint path/to/your/file.js
+   ```
+
+   For real time linting, set up ESlint in your code editor. For example, in Visual Studio Code, install [ESlint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
 ## Design
 
 The *design* of JSAV exercises is another, advanced aspect involving user

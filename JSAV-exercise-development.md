@@ -45,7 +45,7 @@ This repository uses [ESlint](https://eslint.org/) to lint JavaScript code. ESli
    cd jsav-exercise-recorder # Move to the repository root
    ```
 
-3. Install the (development) dependencies.
+3. Install the (development) dependencies listed in `package.json`.
 
    ```bash
    npm install

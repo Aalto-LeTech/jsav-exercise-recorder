@@ -35,6 +35,8 @@ This repository uses [ESlint](https://eslint.org/) to lint JavaScript code. ESli
    - **Node.js** (ESlint requires version ^18.18.0, ^20.9.0, or >=21.1.0)
    - **npm** (Node Package Manager, comes with Node.js)
 
+   This can be checked with commands `node -v` and `npm -v`.
+
    You can download and install Node.js from the [official website](https://nodejs.org/en/download/package-manager). You will need sudo rights for this. On Aalto Linux machines without sudo rights you can search for available Node.js versions with command `pkcon search name nodejs` and install with `pkcon install <package name>`.
 
 2. Clone this repository (using a SSH key).

@@ -1,12 +1,11 @@
-/* global graphUtils TraversalExerciseBuilder */
+/* global TraversalExerciseBuilder */
 (function() {
   "use strict";
   var exercise,
       config = ODSA.UTILS.loadConfig(),
       interpret = config.interpreter,
       settings = config.getSettings(),
-      jsav = new JSAV($(".avcontainer"), {settings: settings}),
-      neighbourList; // type of this is JSAV pseudo code object
+      jsav = new JSAV($(".avcontainer"), {settings: settings});
 
   jsav.recorded();
 

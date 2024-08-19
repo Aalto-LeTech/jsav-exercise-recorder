@@ -1,5 +1,5 @@
-/* global ODSA, graphUtils TraversalExerciseBuilder*/
-(function($) {
+/* global TraversalExerciseBuilder*/
+(function() {
   "use strict";
   var exercise,
       config = ODSA.UTILS.loadConfig(),

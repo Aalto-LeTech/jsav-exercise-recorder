@@ -1,3 +1,10 @@
+/*
+Contains common code for graph traversal exercises BFS and DFS.
+Implements the TraversalExerciseBuilder class which is used to create
+initialization, model solution, fix state and that can be passed for
+JSAV exercise object.
+*/
+
 /* global graphUtils createAdjacencyList*/
 
 /**
@@ -29,13 +36,26 @@ function spanning_tree(nlGraph) {
 }
 
 
+/**
+ * Builder class that has methods for creating the initialization, model solution,
+ * fix state and about functions for a BFS or DFS exercise. Holds the graph and
+ * adjacency list representation as the graph as instance variables so that they
+ * can be accessed in init, model and fix state functions. Note the declaration of
+ * built functions as arrow functions so that they can access the instance variables.
+ */
 class TraversalExerciseBuilder {
   constructor() {
     this.graph = null;
     this.neighbourList = null; // type of this is JSAV pseudo code object
   }
-  // Note using arrow functions to inherit this from parent scope.
+
+  /**
+   * Builds the initialization function for the exercise.
+   * @param {Object} jsav - The JSAV instance.
+   * @returns {Function} The initialization function.
+  */
   buildInit(jsav) {
+    // This is arrow function so that this is inherited.
     const init = () => {
       // Settings for input
       const width = 500, height = 400,  // pixels
@@ -82,7 +102,15 @@ class TraversalExerciseBuilder {
     return init;
   }
 
+  /**
+   * Builds the model solution function for the exercise.
+   * @param {Function} algorithm - The algorithm to be used (BFS or DFS).
+   * @param {Function} interpret - The interpret function for messages.
+   * @param {boolean} [addQueue=false] - Whether to add a queue for BFS.
+   * @returns {Function} The model solution function.
+   */
   buildModel(algorithm, interpret, addQueue = false) {
+    // This is again arrow function so that this is inherited.
     const modelSolution = (modeljsav) => {
       const modelGraph = modeljsav.ds.graph({
         width: 500,
@@ -125,6 +153,11 @@ class TraversalExerciseBuilder {
     return modelSolution;
   }
 
+  /**
+   * Builds the fix state function for the exercise.
+   * @param {Object} exercise - The exercise instance.
+   * @returns {Function} The fix state function.
+   */
   buildFixState(exercise) {
     // Helper
     function markEdge(edge) {
@@ -152,6 +185,11 @@ class TraversalExerciseBuilder {
     return fixState;
   }
 
+  /**
+   * Builds the about function for the exercise.
+   * @param {Function} interpret - The interpret function for messages.
+   * @returns {Function} The about function.
+   */
   buildAboutAlert(interpret) {
     function about() {
       window.alert(ODSA.AV.aboutstring(interpret(".avTitle"), interpret("av_Authors")));

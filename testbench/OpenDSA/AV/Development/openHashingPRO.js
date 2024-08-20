@@ -230,8 +230,8 @@
 
       switch (operation) {
       case "insert":
-        msList[ind].addLast().layout();
-        jsav.effects.moveValue(first, msList[ind].last());
+        msList[ind].add(1).layout(); // Add new node after the invisible first node.
+        jsav.effects.moveValue(first, msList[ind].get(1));
         jsav.umsg(interpret("av_ms_insert"), {fill: {
           index: ind
         }});
@@ -310,8 +310,9 @@
 
     switch (operation) {
     case "insert":
-      this.container.addLast();
-      av.effects.moveValue(first, this.container.last());
+      this.container.add(1); // Add new node after the invisible first node.
+      // Move the value from the stack to the new node.
+      av.effects.moveValue(first, this.container.get(1));
       break;
     case "remove":
       if (this.container.size() === 1) {

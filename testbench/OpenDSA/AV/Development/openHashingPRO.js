@@ -154,7 +154,6 @@
         collision: "none",
         within: $(".jsavcanvas")
       });
-      // msList[i].first().css("opacity", 1);
     }
 
     var msClickedIndex = jsav.variable(-1);
@@ -165,23 +164,24 @@
       jsav.umsg(interpret("av_ms_looking_for"), {fill: {
         key: key
       }});
-      const invisibleNode = msList[key % hashSize].first();
-      invisibleNode.highlight();
-      let currentNode = invisibleNode.next(),
-          currentIdx = 1;
+      let currentNode = msList[key % hashSize].first(),
+          currentIdx = 0;
 
       while (currentNode) {
         currentNode.highlight();
 
         if (currentNode.value() === key) {
-          // Step to keep index highlighted and early return.
+          // Step to keep index highlighted and return,
+          // actual gradeable step is done when advancing to the next operation.
           jsav.step();
           return currentIdx;
         }
-
+        // Move to the next node.
         currentNode = currentNode.next();
         currentIdx++;
         if (currentNode) {
+          // Only register a gradeable step if we are not at the end of the list,
+          // because gradeable step is registered when advancing to the next operation.
           jsav.gradeableStep();
         }
       }
@@ -229,7 +229,9 @@
 
       switch (operation) {
       case "insert":
-        msList[ind].add(1).layout(); // Add new node after the invisible first node.
+        // Add a new node after the first sentinel node.
+        msList[ind].add(1).layout();
+        // Move the value from the stack to the new node.
         jsav.effects.moveValue(first, msList[ind].get(1));
         jsav.umsg(interpret("av_ms_insert"), {fill: {
           index: ind

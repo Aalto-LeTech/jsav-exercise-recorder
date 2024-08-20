@@ -101,7 +101,6 @@
         collision: "none",
         within: $(".jsavcanvas")
       });
-      list[i].first().css("opacity", 0);
       list[i].click(clickHandler);
     }
 
@@ -273,101 +272,137 @@
     return gradeableModelStructures;
   }
 
+  // Helper functions to handle the click event on the list nodes.
 
+  /**
+   * Process the click event when the top-most element of the stack is an update operation.
+   * @param {Object} clickedNode The node that was clicked.
+   * @param {*} valueToRemove The value that should be removed.
+   * @returns {boolean} True if the operation was finished (i.e., the key was found or the operation was completed),
+   *          false if the operation is still in progress.
+   */
+  function processRemove(clickedNode, valueToRemove) {
+    const nodeList = clickedNode.container;
+
+    if (clickedNode.value() === valueToRemove) {
+      // User clicked the node, which contains the key
+      // that we want to remove.
+      // -> remove the node
+      for (let idx = 0; idx < nodeList.size(); idx++) {
+        if (nodeList.get(idx) === clickedNode) {
+          nodeList.remove(idx);
+          // Indicate that operation is complete and we should continue with the next operation.
+          return true;
+        }
+      }
+    }
+    // User clicked some other node in the list.
+    // -> highlight the clicked node
+    clickedNode.highlight();
+
+    if (clickedNode === nodeList.last()) {
+      // The clicked node is the last node in the list.
+      // Indicate that we should continue with the next operation
+      // as the key was not found in the list.
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Process the click event when the top-most element of the stack is a search operation.
+   * @param {Object} clickedNode The node that was clicked.
+   * @param {*} valueToSearch The value that should be searched.
+   * @returns {boolean} True if the operation was finished (i.e., the key was found or the operation was completed),
+   *         false if the operation is still in progress.
+   */
+  function processSearch(clickedNode, valueToSearch) {
+    const nodeList = clickedNode.container;
+
+    if (clickedNode.value() === valueToSearch) {
+      // Search is complete.
+      return true;
+    }
+    // User clicked some other node in the list.
+    clickedNode.highlight();
+    // Check if we are at the end of the list.
+    if (clickedNode === nodeList.last()) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Apply the operation that is on top of the stack to the clicked node.
+   * @param {Object} clickedNode The node that was clicked.
+   * @param {*} topElement The top element of the stack.
+   * @returns {boolean} True if the operation was finished and we should continue with the next operation,
+   *         false if the operation (remove or search) is still in progress.
+   */
+  function applyOperationToClickedNode(clickedNode, topElement) {
+    const operation = getOperationType(topElement);
+    switch (operation) {
+    case "insert":
+      clickedNode.container.add(1); // Add new node after the invisible first node.
+      // Move the value from the stack to the new node.
+      av.effects.moveValue(topElement, clickedNode.container.get(1));
+      // Insert operation is always finished.
+      return true;
+    case "remove":
+      return processRemove(clickedNode, topElement.value());
+    case "search":
+      return processSearch(clickedNode, topElement.value());
+    default:
+      console.warn("Unknown operation: " + operation);
+      return true;
+    }
+  }
+
+  // Linked list click handler.
   function clickHandler() {
-    function nextOperation() {
-      unhighlightAllLists();
-      if (opStack.size()) {
+    // Helpers to advance the exercise.
+    function popNonEmptyOperationStack() {
+      if (opStack.size() > 0) {
         opStack.removeFirst();
         opStack.layout();
         showModulusOfKey();
       }
-      exercise.gradeableStep();
     }
-
     function unhighlightAllLists() {
-      for (var i = 0; i < hashSize; i++) {
-        var node = list[i].first();
+      for (let idx = 0; idx < hashSize; idx++) {
+        let node = list[idx].first();
         while (node) {
           node.unhighlight();
           node = node.next();
         }
       }
     }
-
+    // Click handling starts.
+    // this refers to the clicked node if the linked list.
     if (!opStack.size()) {
       return;
     }
-    var first = opStack.first(),
-        operation = getOperationType(first);
-
-    for (var i = 0; i < hashSize; i++) {
-      if (this.container === list[i]) {
+    const clickedList = this.container;
+    // Find the index of the clicked list.
+    for (let i = 0; i < hashSize; i++) {
+      if (clickedList === list[i]) {
         clickedIndex.value(i);
         break;
       }
     }
 
-    switch (operation) {
-    case "insert":
-      this.container.add(1); // Add new node after the invisible first node.
-      // Move the value from the stack to the new node.
-      av.effects.moveValue(first, this.container.get(1));
-      break;
-    case "remove":
-      if (this.container.size() === 1) {
-        // no visible nodes in the clicked list
-        // -> next operation
-        $.noop();
-      } else if (this.container.first() === this) {
-        // there are nodes in the list
-        // but the user clicked on the invisible first node
-        // -> do nothing
-        return;
-      } else if (this.value() === first.value()) {
-        // the user clicked on node, which contains the key
-        // that we want to remove.
-        // -> remove the node
-        var size = this.container.size();
-        for (i = 0; i < size; i++) {
-          if (this.container.get(i) === this) {
-            this.container.remove(i);
-            break;
-          }
-        }
-      } else {
-        // mark node
-        this.highlight();
-        // continue with the next operation if this is the last node in the list
-        if (this !== this.container.last()) {
-          exercise.gradeableStep();
-          return;
-        }
-      }
-      break;
-    case "search":
-      if (this.container.size() === 1) {
-        // no visible nodes in the clicked list
-        // -> next operation
-        $.noop();
-      } else if (this.container.first() === this) {
-        // there are nodes in the list
-        // but the user clicked on the invisible first node
-        // -> do nothing
-        return;
-      } else if (this.value() === first.value() || this === this.container.last()) {
-        $.noop();
-      } else {
-        this.highlight();
-        exercise.gradeableStep();
-        return;
-      }
-      break;
-    default:
-      // nothing
+    const topElement = opStack.first(); // top element of the stack
+    const operationFinished = applyOperationToClickedNode(this, topElement);
+
+    // Update the state of the exercise.
+    clickedList.layout();
+    if (operationFinished) {
+      // Operation is finished, continue with the next operation.
+      popNonEmptyOperationStack();
+      unhighlightAllLists();
     }
-    this.container.layout();
-    nextOperation();
+    // Register gradeable step after each click.
+    exercise.gradeableStep();
   }
 
   function getOperationType(node) {

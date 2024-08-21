@@ -160,6 +160,10 @@
 
     jsav.displayInit();
 
+    // Helper function that searches for a key in the linked list,
+    // highlights the nodes that are being checked and registers
+    // the states as gradeable steps. The last step (finding the key
+    // or reaching the end of the list) is not registered as a gradeable step.
     function findListIdx(key) {
       jsav.umsg(interpret("av_ms_looking_for"), {fill: {
         key: key
@@ -171,9 +175,8 @@
         currentNode.highlight();
 
         if (currentNode.value() === key) {
-          // Step to keep index highlighted and return,
-          // actual gradeable step is done when advancing to the next operation.
-          jsav.step();
+          // Found the key.
+          // Actual gradeable step is done when advancing to the next operation.
           return currentIdx;
         }
         // Move to the next node.
@@ -186,7 +189,6 @@
         }
       }
       // Did not find the key.
-      jsav.step(); // Keep the last index highlighted.
       return null;
     }
 
@@ -285,6 +287,7 @@
    */
   function processRemove(clickedNode, valueToRemove) {
     const nodeList = clickedNode.container;
+    clickedNode.highlight();
 
     if (clickedNode.value() === valueToRemove) {
       // User clicked the node, which contains the key
@@ -298,10 +301,6 @@
         }
       }
     }
-    // User clicked some other node in the list.
-    // -> highlight the clicked node
-    clickedNode.highlight();
-
     if (clickedNode === nodeList.last()) {
       // The clicked node is the last node in the list.
       // Indicate that we should continue with the next operation
@@ -320,13 +319,13 @@
    */
   function processSearch(clickedNode, valueToSearch) {
     const nodeList = clickedNode.container;
+    clickedNode.highlight();
 
     if (clickedNode.value() === valueToSearch) {
       // Search is complete.
       return true;
     }
     // User clicked some other node in the list.
-    clickedNode.highlight();
     // Check if we are at the end of the list.
     if (clickedNode === nodeList.last()) {
       return true;

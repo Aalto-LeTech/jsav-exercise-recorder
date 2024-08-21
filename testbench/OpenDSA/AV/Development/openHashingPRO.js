@@ -232,6 +232,8 @@
       switch (operation) {
       case "insert":
         // Add a new node after the first sentinel node.
+        // Highlight the sentinel node.
+        msList[ind].first().highlight();
         msList[ind].add(1).layout();
         // Move the value from the stack to the new node.
         jsav.effects.moveValue(first, msList[ind].get(1));
@@ -347,6 +349,7 @@
       window.alert("Click on the hash table to insert a value.");
       return false;
     }
+    clickedNode.highlight();
     clickedList.add(1); // Add new node after the invisible first node.
     // Move the value from the stack to the new node.
     av.effects.moveValue(topElement, clickedList.get(1));

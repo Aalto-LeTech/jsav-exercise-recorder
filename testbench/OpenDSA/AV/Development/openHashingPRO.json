@@ -3,7 +3,7 @@
     "en": {
       ".exerciseTitle": "Open Hashing",
       ".instructLabel": "Instructions:",
-      ".instructions": "In this exercise your task is to perform the given operations on the hash table. The operations are in the stack, and each item in the stack has a key value and label which tells the type of the operation.<br><br>When looking for a key in the linked list, remember to <strong>mark all nodes before clicking on the index where the operation will actually take place</strong>. The hash function can be seen below.",
+      ".instructions": "In this exercise your task is to perform the given operations on the hash table. The operations are in the stack, and each item in the stack has a key value and label which tells the type of the operation.<br><br>When looking for a key in the linked list, <strong>click all the nodes the algorithm reads in correct order before clicking on the index where the operation will actually take place</strong>. The hash function can be seen below.",
       "av_hash": "Hash Table",
       "av_operations": "Operation stack",
       "av_ms_insert": "Key inserted at index {index}",
@@ -17,7 +17,7 @@
     "fi": {
       ".exerciseTitle": "Ketjutettu hajautus",
       ".instructLabel": "Ohjeet:",
-      ".instructions": "Suorita pinossa annetut operaatiot alla olevaan hajautustauluun. Jokaisessa pinon alkiossa on annettu avain ja operaation tyyppi.<br><br>Avainta haettaessa, muista <strong>klikata kaikkia listan alkioita oikeassa järjestyksessä ennen kuin valitset alkion, jossa operaatio varsinaisesti suoritetaan.</strong> Hajautusfunktio ja siitä saatu arvo näytetään tehtävässä.",
+      ".instructions": "Suorita pinossa annetut operaatiot alla olevaan hajautustauluun. Jokaisessa pinon alkiossa on annettu avain ja operaation tyyppi.<br><br>Avainta haettaessa, <strong>klikkaa oikeassa järjestyksessä kaikkia listan alkioita, jotka algoritmi lukee, ja vasta lopuksi klikkaa alkiota, jossa operaatio varsinaisesti suoritetaan.</strong> Hajautusfunktio ja siitä saatu arvo näytetään tehtävässä.",
       "av_hash": "Hajautustaulukko",
       "av_operations": "Operaatiopino",
       "av_ms_insert": "Avain lisättiin indeksiin {index}",

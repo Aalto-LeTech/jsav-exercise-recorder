@@ -334,28 +334,65 @@
   }
 
   /**
+   * Process the click event when the top-most element of the stack is an insert operation.
+   * NOTE: The return value has different meaning than in the process functions of remove and search.
+   * @param {object} clickedNode The node that was clicked.
+   * @param {object} topElement The top element of the stack.
+   * @returns {boolean} true if the click was valid and insert was performed,
+   *        false if the click was not valid and insert was not performed
+   */
+  function processInsert(clickedNode, topElement) {
+    const clickedList = clickedNode.container;
+    if (clickedNode !== clickedList.first()) {
+      window.alert("Click on the hash table to insert a value.");
+      return false;
+    }
+    clickedList.add(1); // Add new node after the invisible first node.
+    // Move the value from the stack to the new node.
+    av.effects.moveValue(topElement, clickedList.get(1));
+    return true;
+  }
+
+  const OperationResult = Object.freeze({
+    FINISHED: "finished",
+    IN_PROGRESS: "in_progress",
+    INVALID: "invalid"
+  });
+
+  /**
    * Apply the operation that is on top of the stack to the clicked node.
-   * @param {Object} clickedNode The node that was clicked.
-   * @param {*} topElement The top element of the stack.
-   * @returns {boolean} True if the operation was finished and we should continue with the next operation,
-   *         false if the operation (remove or search) is still in progress.
+   * @param {object} clickedNode The node that was clicked.
+   * @param {object} topElement The top element of the stack.
+   * @returns {string} One of the OperationResult values.
    */
   function applyOperationToClickedNode(clickedNode, topElement) {
     const operation = getOperationType(topElement);
     switch (operation) {
-    case "insert":
-      clickedNode.container.add(1); // Add new node after the invisible first node.
-      // Move the value from the stack to the new node.
-      av.effects.moveValue(topElement, clickedNode.container.get(1));
-      // Insert operation is always finished.
-      return true;
-    case "remove":
-      return processRemove(clickedNode, topElement.value());
-    case "search":
-      return processSearch(clickedNode, topElement.value());
+    case "insert": {
+      const validClick = processInsert(clickedNode, topElement, clickedIndex);
+      if (validClick) {
+        // Insert is always finished if the click is valid.
+        return OperationResult.FINISHED;
+      }
+      return OperationResult.INVALID;
+    }
+    case "remove": {
+      const finished = processRemove(clickedNode, topElement.value());
+      if (finished) {
+        return OperationResult.FINISHED;
+      }
+      return OperationResult.IN_PROGRESS;
+    }
+    case "search": {
+      const finished = processSearch(clickedNode, topElement.value());
+      if (finished) {
+        return OperationResult.FINISHED;
+      }
+      return OperationResult.IN_PROGRESS;
+    }
     default:
       console.warn("Unknown operation: " + operation);
-      return true;
+      return OperationResult.FINISHED;
     }
   }
 
@@ -393,16 +430,20 @@
     }
 
     const topElement = opStack.first(); // top element of the stack
-    const operationFinished = applyOperationToClickedNode(this, topElement);
+    const operationResult = applyOperationToClickedNode(this, topElement, clickedIndex.value());
 
-    // Update the state of the exercise.
+    if (operationResult === OperationResult.INVALID) {
+      // Operation was not valid, do not update the state of the exercise.
+      return;
+    }
+    // Operation was valid, update the state of the exercise.
     clickedList.layout();
-    if (operationFinished) {
+    if (operationResult === OperationResult.FINISHED) {
       // Operation is finished, continue with the next operation.
       popNonEmptyOperationStack();
       unhighlightAllLists();
     }
-    // Register gradeable step after each click.
+    // Register gradeable step after each valid click.
     exercise.gradeableStep();
   }
 

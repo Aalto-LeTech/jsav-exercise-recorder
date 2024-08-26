@@ -944,6 +944,14 @@
     updateStudentTable(srcLabel, dstLabel, dist);
     modifyStyleOfStudentTable(dstLabel, "fringe", true);
 
+    // Mark the destination node as fringe. Destination is not in the spanning tree.
+    // This is the same logic as in scaffolded dijkstra enqueue event handler.
+    for (const node of [event.data.edge.startnode, event.data.edge.endnode]) {
+      if (!node.hasClass("spanning")) {
+        node.addClass("fringe");
+      }
+    }
+
     minHeapInterface.insert(srcLabel, dstLabel, dist);
     debugPrint("Exercise gradeable step: enqueue edge " + srcLabel + "-" +
       dstLabel + " distance " + dist);

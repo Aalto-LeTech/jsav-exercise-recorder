@@ -39,24 +39,27 @@ function createLegend(av, x, y, interpret) {
   av.label(interpret("legend"), {left: xAdjusted + 100, top: yAdjusted - 35});
 
   const hpos = [26, 76, 90]; // line start, line end, text start (pixels)
-  const vpos = [30, 80, 130]; // vertical position for each three edge types
+  // Vertical position of the upper left corner of each color sample rectangle
+  const vpos = [30, 80, 130];
   const edgeClass = ["legend-other", "legend-fringe", "legend-spanning"];
-  const edgeText = ["legend_unvisited", "legend_fringe",
+  const edgeText = ["legend_unvisited", "legend_fringe", // other = unvisited
                     "legend_spanning_tree"];
   const textvadjust = -11;
+
   for (let i = 0; i < 3; i++) {
-    av.g.rect(xAdjusted + hpos[0], yAdjusted + vpos[i], hpos[1] - hpos[0], 25).addClass(edgeClass[i]);
+    // Takes upper left corner x, y, width, height.
+    av.g.rect(xAdjusted + hpos[0], yAdjusted + vpos[i], hpos[1] - hpos[0], 25)
+      .addClass(edgeClass[i]);
+
     av.label(interpret(edgeText[i]), {left: xAdjusted + hpos[2],
                                       top: yAdjusted + vpos[i] + textvadjust,
-                                      "text-align": "center"})
-      .addClass("legendtext");
+                                      "text-align": "center"}).addClass("legendtext");
   }
   av.g.circle(xAdjusted + 51, yAdjusted + 201, 22);
   av.label("5<br>C (B)", {left: xAdjusted + 35, top: yAdjusted + 166})
     .addClass("legendtext")
     .addClass("textcentering");
-  av.label(interpret("node_explanation"),
-           {left: xAdjusted + hpos[2], top: yAdjusted + 166})
+  av.label(interpret("node_explanation"), {left: xAdjusted + hpos[2], top: yAdjusted + 166})
     .addClass("legendtext");
 }
 

@@ -40,7 +40,7 @@ function createLegend(av, x, y, interpret) {
 
   const hpos = [26, 76, 90]; // line start, line end, text start (pixels)
   const vpos = [30, 80, 130]; // vertical position for each three edge types
-  const edgeClass = ["legend-edge", "legend-fringe", "legend-spanning"];
+  const edgeClass = ["legend-other", "legend-fringe", "legend-spanning"];
   const edgeText = ["legend_unvisited", "legend_fringe",
                     "legend_spanning_tree"];
   const textvadjust = -22;

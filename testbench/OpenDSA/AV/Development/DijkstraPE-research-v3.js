@@ -689,7 +689,35 @@
       }
     }      
   }
+  /**
+   * Converts the research instance graph to a suitable format for the
+   * createAdjacencyList function.
+   * @param {object} riGraph The research instance graph as returned by
+   *                        DijkstraInstanceGenerator.generateInstance().
+   * @returns {Array<Array<{v: number, weight: number}>>} The adjacency list representation of the graph.
+   */
+  function researchInstanceToAdjList(riGraph) {
+    // Helper that maps index of a vertex in the research instance graph to
+    // an index in the adjacency list so that in the adjacency list A is 0, B is 1, etc.
+    function mapIndex(vertexIdx) {
+      const vertexLabel = riGraph.vertexLabels[vertexIdx];
+      return vertexLabel.charCodeAt(0) - "A".charCodeAt(0);
+    }
+    // Create empty adjacency list where index 0 is A, 1 is B, etc.
+    const adjList = riGraph.vertexLabels.map(() => []);
 
+    // Iterate over the edges of each vertex and add them to the adjacency list.
+    riGraph.edges.forEach((edge, vertexIdx) => {
+      // Add neighbors to the adjacency list.
+      edge.forEach(([neighborIdx, weight]) => {
+        // Ensuring that the neighbors are added exactly in the same
+        // format as in the util function generatePlanarGraphNl.
+        // Remember to map the indices!
+        adjList[mapIndex(vertexIdx)].push({v: mapIndex(neighborIdx), weight: weight});
+      });
+    });
+    return adjList;
+  }
 
   /**
    * 1. Marks an edge as dequeued in the visualization (both student's and

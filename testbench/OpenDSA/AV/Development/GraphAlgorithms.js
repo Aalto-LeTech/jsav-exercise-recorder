@@ -45,8 +45,7 @@ function createLegend(av, x, y, interpret) {
                     "legend_spanning_tree"];
   const textvadjust = -22;
   for (let i = 0; i < 3; i++) {
-    av.g.line(xAdjusted + hpos[0], yAdjusted + vpos[i],
-              xAdjusted + hpos[1], yAdjusted + vpos[i]).addClass(edgeClass[i]);
+    av.g.rect(xAdjusted + hpos[0], yAdjusted + vpos[i], hpos[1] - hpos[0], 25).addClass(edgeClass[i]);
     av.label(interpret(edgeText[i]), {left: xAdjusted + hpos[2],
                                       top: yAdjusted + vpos[i] + textvadjust,
                                       "text-align": "center"})

@@ -41,9 +41,8 @@ function createLegend(av, x, y, interpret) {
   const hpos = [26, 76, 90]; // line start, line end, text start (pixels)
   // Vertical position of the upper left corner of each color sample rectangle
   const vpos = [30, 80, 130];
-  const edgeClass = ["legend-other", "legend-fringe", "legend-spanning"];
-  const edgeText = ["legend_unvisited", "legend_fringe", // other = unvisited
-                    "legend_spanning_tree"];
+  const edgeClass = ["legend-spanning", "legend-fringe", "legend-other"];
+  const edgeText = ["legend_spanning_tree", "legend_fringe", "legend_unvisited"]; // other = unvisited
   const textvadjust = -11;
 
   for (let i = 0; i < 3; i++) {

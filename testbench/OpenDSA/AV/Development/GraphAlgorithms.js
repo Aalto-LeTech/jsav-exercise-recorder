@@ -43,7 +43,7 @@ function createLegend(av, x, y, interpret) {
   const edgeClass = ["legend-other", "legend-fringe", "legend-spanning"];
   const edgeText = ["legend_unvisited", "legend_fringe",
                     "legend_spanning_tree"];
-  const textvadjust = -22;
+  const textvadjust = -11;
   for (let i = 0; i < 3; i++) {
     av.g.rect(xAdjusted + hpos[0], yAdjusted + vpos[i], hpos[1] - hpos[0], 25).addClass(edgeClass[i]);
     av.label(interpret(edgeText[i]), {left: xAdjusted + hpos[2],

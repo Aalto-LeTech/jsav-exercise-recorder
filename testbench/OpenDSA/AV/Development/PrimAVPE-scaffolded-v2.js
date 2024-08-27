@@ -58,7 +58,7 @@
 
   // JSAV Exercise
   var exercise = jsav.exercise(model, init, {
-    compare: [{class: "spanning"}],
+    compare: [{class: ["spanning", "fringe"]}],
     controls: $(".jsavexercisecontrols"),
     resetButtonTitle: interpret("reset"),
     modelDialog: {width: "960px"},
@@ -177,7 +177,11 @@
     graph.layout();
     graph.nodes()[0].addClass("spanning"); // mark the 'A' node
     jsav.displayInit();
-    return [graph, minHeapInterface.btree]; // Don't know if btree is really used to grading.
+    // Return the objects used to grade the exercise.
+    // Including the binary tree for grading is probably the same as
+    // including the class 'fringe' in the compare parameter of the exercise object
+    // as fringe nodes are in the priority queue.
+    return [graph, minHeapInterface.btree];
   }
 
   /**

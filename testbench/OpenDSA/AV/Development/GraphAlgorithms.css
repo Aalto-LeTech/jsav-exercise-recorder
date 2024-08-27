@@ -23,8 +23,29 @@
   z-index: 0;
 }
 
+/*Legend*/
+
 .legendtext {
   z-index: 110;
+}
+
+.legend-other {
+  fill: #e2d5ae;
+}
+
+.legend-spanning {
+  fill: #78c679;
+}
+
+.legend-fringe {
+  fill: #d59f0d;
+}
+
+/* Legend in model answer */
+.jsavmodelanswer .legend {
+  position: absolute;
+  left: 650px;
+  z-index: 5;
 }
 
 .textcentering {
@@ -46,7 +67,7 @@
   background-color: #e2d5ae;
 }
 
-.jsavgraph .jsavedge, .legend-edge {
+.jsavgraph .jsavedge {
   stroke-width: 10;
   stroke: #e2d5ae;
 }
@@ -56,7 +77,7 @@
   background-color: #d59f0d;
 }
 
-.jsavgraph .jsavedge.fringe, .legend-fringe {
+.jsavgraph .jsavedge.fringe{
   stroke-width: 10;
   stroke: #d7a939;
 }
@@ -68,7 +89,7 @@
 }
 
 .jsavgraph .jsavedge.visited,
-.jsavgraph .jsavedge.spanning, .legend-spanning {
+.jsavgraph .jsavedge.spanning {
   stroke-width: 16;
   stroke: #78c679;
 }
@@ -122,13 +143,6 @@ span.action {
 .jsavautoresize .jsavnode {
   min-width: 45px;
   min-height: 45px;
-}
-
-/* Legend in model answer */
-.jsavmodelanswer .legend {
-  position: absolute;
-  left: 650px;
-  z-index: 5;
 }
 
 /* Priority queue (Prim, Dijkstra) */

@@ -64,7 +64,6 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
     controls: $(".jsavexercisecontrols"),
     modelDialog: {width: "960px"},
     resetButtonTitle: interpret("reset"),
-    grader: scaffoldedGrader,
     fix: fixState
   });
   /* Set custom undo and reset function because we also have a custom
@@ -530,32 +529,8 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
   }
   
   /************************************************************
-   * Grading-related functions
+   * Functions to handle the state changes of the priority queue.
    ************************************************************/
-
-  /**
-   * Custom grading function for the exercise.
-   */
-  function scaffoldedGrader() {
-    debugPrint("scaffoldedGrader():\n" +
-      "student: " + studentPqOperations.toString() + "\n" +
-      "model  : " + modelPqOperations.toString());
-    let grade = studentPqOperations.gradeAgainst(modelPqOperations);
-
-    let score = {
-      // Number of correct steps in student's solution
-      correct: grade.studentGrade,
-      // Continuous grading mode not used, therefore `fix` is zero
-      fix: 0,
-      // Number of total steps in student's solution
-      student: studentPqOperations.length(),
-      // Number of total steps in model solution
-      total: grade.maxGrade,
-      // Continuous grading mode not used, therefore `undo` is zero
-      undo: 0
-    };
-    this.score = score;
-  }
 
   /**
    * Custom undo function for the exercise.

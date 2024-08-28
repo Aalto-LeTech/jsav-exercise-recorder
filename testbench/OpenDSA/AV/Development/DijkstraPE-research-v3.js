@@ -132,7 +132,7 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
 
     addPriorityQueue();
     if (!exerciseLegendCreated) {
-      createLegend(jsav, 570, 528, interpret);
+      createLegend(jsav, 570, 548, interpret);
       exerciseLegendCreated = true;
     }
     addTable(exerciseInstance.graph);
@@ -218,7 +218,7 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
    * Parent is '-' for all.
    * @param riGraph the research instance graph.
    */
-  function addTable (riGraph) {
+  function addTable(riGraph) {
     if (table) {
       table.clear();
     }
@@ -232,7 +232,7 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
       {style: "table",
         width: width,
         left: 10,
-        top: 780});
+        top: 800});
   }
 
   /**

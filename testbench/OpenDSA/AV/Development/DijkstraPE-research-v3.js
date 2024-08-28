@@ -733,6 +733,10 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
         adjList[mapIndex(vertexIdx)].push({v: mapIndex(neighborIdx), weight: weight});
       });
     });
+    // Sort the neighbors by the index of the neighbor to have student process neighbors in the
+    // same order as the model solution (alphabetical order).
+    adjList.forEach(neighbors =>
+      neighbors.sort((a, b) => a.v - b.v));
     return adjList;
   }
 

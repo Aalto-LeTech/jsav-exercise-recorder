@@ -146,6 +146,10 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
     // mark the 'A' node
     graph.nodes()[exerciseInstance.startIndex].addClass("spanning");
     jsav.displayInit();
+    // Return the objects used to grade the exercise.
+    // Including the binary tree for grading is probably the same as
+    // including the class 'fringe' in the compare parameter of the exercise object
+    // as fringe nodes are in the priority queue.
     return [graph, minHeapInterface._btree];
   }
 

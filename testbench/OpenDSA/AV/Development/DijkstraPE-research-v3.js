@@ -102,11 +102,19 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
     graph?.clear();
     adjacencyList?.clear();
 
-    // NOTE: Adjacency list should be created before the graph!
-    // This automatically makes the graph move to the right == alignment goes well.
-
-    // Generate a new instance
+    // Generate a new exercise instance
     exerciseInstance = generator.generateInstance();
+
+    // Create a JSAV graph instance for the student's solution.
+    const layoutSettings = {
+      width: 700,      // pixels
+      height: 400,     // pixels
+      layout: "manual",
+      directed: false,
+      left: 150
+    };
+    graph = jsav.ds.graph(layoutSettings);
+    researchInstanceToJsav(exerciseInstance.graph, graph, layoutSettings);
 
     // Convert graph to compatible format for createAdjacencyList.
     const graphAdjList = researchInstanceToAdjList(exerciseInstance.graph);
@@ -118,18 +126,9 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
       left: 10
     });
 
-    const layoutSettings = {
-      width: 700,      // pixels
-      height: 400,     // pixels
-      layout: "manual",
-      directed: false,
-      left: 150
-    };
-    graph = jsav.ds.graph(layoutSettings);
-
+    // Do other initializations.
     studentPqOperations = new PqOperationSequence();
     modelPqOperations = new PqOperationSequence();
-    researchInstanceToJsav(exerciseInstance.graph, graph, layoutSettings);
     addEdgeClickListeners();
 
     addPriorityQueue();
@@ -148,7 +147,7 @@ createAdjacencyList, DijkstraInstanceGenerator, createLegend */
     // mark the 'A' node
     graph.nodes()[exerciseInstance.startIndex].addClass("spanning");
     jsav.displayInit();
-    return [graph, minHeapInterface._btree]; // Don't know if btree is really used to grading.
+    return [graph, minHeapInterface._btree];
   }
 
   // Process About button: Pop up a message with an Alert

@@ -8,7 +8,8 @@
  */
 
 // Make sure to include all relevant JavaScript files before this one to have access to global variables.
-/* global jQuery, JSAV, ODSA, graphUtils, MinHeapInterface, PqOperationSequence, PqOperation, DijkstraInstanceGenerator, createLegend */
+/* global jQuery, JSAV, ODSA, graphUtils, MinHeapInterface, PqOperationSequence, PqOperation,
+createAdjacencyList, DijkstraInstanceGenerator, createLegend */
 
 (function ($) {
   "use strict";
@@ -23,6 +24,9 @@
   // Implements the priority queue as min-heap and displays it as a binary tree.
   /** @type {MinHeapInterface} */
   let minHeapInterface;
+
+  // JSAV pseudocode object
+  let adjacencyList;
 
   // Legend box in the exercise view;
   var exerciseLegendCreated = false;
@@ -94,19 +98,34 @@
     // purpose
     // JSAV.utils.rand.seedrandom("1");
 
-    // Create a JSAV graph instance
-    if (graph) {
-      graph.clear();
-    }
+    // Clear the old elements is reset is clicked.
+    graph?.clear();
+    adjacencyList?.clear();
+
+    // NOTE: Adjacency list should be created before the graph!
+    // This automatically makes the graph move to the right == alignment goes well.
+
+    // Generate a new instance
+    exerciseInstance = generator.generateInstance();
+
+    // Convert graph to compatible format for createAdjacencyList.
+    const graphAdjList = researchInstanceToAdjList(exerciseInstance.graph);
+    // Add visible adjacency list to the exercise.
+    // Pass the graphAdjList as an object with edges property to match the
+    // expected parameter format.
+    adjacencyList = createAdjacencyList({edges: graphAdjList}, jsav, {
+      lineNumbers: false,
+      left: 10
+    });
+
     const layoutSettings = {
       width: 700,      // pixels
       height: 400,     // pixels
       layout: "manual",
-      directed: false
+      directed: false,
+      left: 150
     };
     graph = jsav.ds.graph(layoutSettings);
-    
-    exerciseInstance = generator.generateInstance();
 
     studentPqOperations = new PqOperationSequence();
     modelPqOperations = new PqOperationSequence();
@@ -115,7 +134,7 @@
 
     addPriorityQueue();
     if (!exerciseLegendCreated) {
-      createLegend(jsav, 520, 530, interpret);
+      createLegend(jsav, 570, 528, interpret);
       exerciseLegendCreated = true;
     }
     addTable(exerciseInstance.graph);
@@ -181,8 +200,7 @@
     }
 
     $(".jsavcanvas").append("<div class='flexcontainer'></div>");
-    
-    minHeapInterface = new MinHeapInterface(jsav, {relativeTo: $(".flexcontainer"), left: -180, top: 140});
+    minHeapInterface = new MinHeapInterface(jsav, {relativeTo: $(".flexcontainer"), left: -90, top: 520});
 
     if (!previouslyExistingMinheap) {
       jsav.label(interpret("priority_queue"), {relativeTo: minHeapInterface._btree,
@@ -687,7 +705,7 @@
         options.weight = e[1];
         jsavGraph.addEdge(gNodes[i], gNodes[e[0]], options);
       }
-    }      
+    }
   }
   /**
    * Converts the research instance graph to a suitable format for the

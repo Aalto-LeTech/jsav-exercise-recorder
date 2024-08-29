@@ -105,12 +105,12 @@
   const modelGraphOptions = {
     width: 500,
     height: 400,
-    left: 150,
-    top: 50, // to give space for queue
+    left: 30,
     layout: "automatic",
     directed: false
   };
-  const modelQueueOptions = {left: 150, top: 40};
+  const modelQueueOptions = {left: 560, top: 100};
+  // Model queue label position is defined in the buildModel method.
   const modelSolution = builder.buildModel(bfs, interpret, modelGraphOptions, modelQueueOptions);
 
   const fixState = builder.buildFixState(exercise);

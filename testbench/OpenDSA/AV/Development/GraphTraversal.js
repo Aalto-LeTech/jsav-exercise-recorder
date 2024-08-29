@@ -114,16 +114,21 @@ class TraversalExerciseBuilder {
   buildModel(algorithm, interpret, modelGraphOptions, modelQueueOptions = null) {
     // This is again arrow function so that this is inherited.
     const modelSolution = (modeljsav) => {
+      // Create a model graph instance.
       const modelGraph = modeljsav.ds.graph(modelGraphOptions);
-      const modelQueue = modelQueueOptions ? new LinkedQueue(modeljsav, modelQueueOptions) : null;
-
       // copy the graph and its weights
       graphUtils.copy(this.graph, modelGraph, {weights: true});
       const modelNodes = modelGraph.nodes();
-
       // Mark the "A" node and add it to visible queue.
       modelNodes[0].addClass("visited");
-      modelQueue?.enqueue(modelNodes[0].value());
+
+
+      const modelQueue = modelQueueOptions ? new LinkedQueue(modeljsav, modelQueueOptions) : null;
+      if (modelQueue) {
+        // Code specific to BFS.
+        modelQueue.enqueue(modelNodes[0].value());
+        modeljsav.label(interpret("queue_label"), {left: 560});
+      }
 
       modeljsav.displayInit();
 

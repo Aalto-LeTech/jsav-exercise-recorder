@@ -106,22 +106,15 @@ class TraversalExerciseBuilder {
    * Builds the model solution function for the exercise.
    * @param {function} algorithm - The algorithm to be used (BFS or DFS).
    * @param {function} interpret - The interpret function for messages.
+   * @param {object} modelGraphOptions - The options for the model graph.
    * @param {object} [modelQueueOptions=null] - The options for the model queue.
    * If null, the model queue is not added to the model solution (pass {} if you want queue without options).
    * @returns {function} The model solution function.
    */
-  buildModel(algorithm, interpret, modelQueueOptions = null) {
+  buildModel(algorithm, interpret, modelGraphOptions, modelQueueOptions = null) {
     // This is again arrow function so that this is inherited.
     const modelSolution = (modeljsav) => {
-      const modelGraph = modeljsav.ds.graph({
-        width: 500,
-        height: 400,
-        left: 150,
-        top: 50, // to give space for queue
-        layout: "automatic",
-        directed: false
-      });
-
+      const modelGraph = modeljsav.ds.graph(modelGraphOptions);
       const modelQueue = modelQueueOptions ? new LinkedQueue(modeljsav, modelQueueOptions) : null;
 
       // copy the graph and its weights

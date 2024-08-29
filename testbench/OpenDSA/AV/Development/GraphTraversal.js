@@ -5,7 +5,7 @@ initialization, model solution, fix state and that can be passed for
 JSAV exercise object.
 */
 
-/* global graphUtils createAdjacencyList*/
+/* global graphUtils createAdjacencyList, LinkedQueue*/
 
 /**
  * Calculate the spanning tree for the nlGraph. This is used to ensure
@@ -121,7 +121,7 @@ class TraversalExerciseBuilder {
         directed: false
       });
 
-      const modelQueue = addQueue ? modeljsav.ds.list({left: 150}) : null;
+      const modelQueue = addQueue ? new LinkedQueue(modeljsav, {left: 150, top: 40}) : null;
 
       // copy the graph and its weights
       graphUtils.copy(this.graph, modelGraph, {weights: true});
@@ -129,7 +129,7 @@ class TraversalExerciseBuilder {
 
       // Mark the "A" node and add it to visible queue.
       modelNodes[0].addClass("visited");
-      modelQueue?.addFirst(modelNodes[0].value());
+      modelQueue?.enqueue(modelNodes[0].value());
 
       modeljsav.displayInit();
 

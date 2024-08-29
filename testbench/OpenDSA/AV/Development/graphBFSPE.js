@@ -101,7 +101,8 @@
   const builder = new TraversalExerciseBuilder();
 
   const init = builder.buildInit(jsav);
-  const modelSolution = builder.buildModel(bfs, interpret, true);
+  // Note passing the placement options for the model queue.
+  const modelSolution = builder.buildModel(bfs, interpret, {left: 150, top: 40});
   const fixState = builder.buildFixState(exercise);
   const aboutAlert = builder.buildAboutAlert(interpret);
 

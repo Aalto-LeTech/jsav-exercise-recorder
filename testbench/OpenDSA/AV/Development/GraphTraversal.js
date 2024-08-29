@@ -104,12 +104,13 @@ class TraversalExerciseBuilder {
 
   /**
    * Builds the model solution function for the exercise.
-   * @param {Function} algorithm - The algorithm to be used (BFS or DFS).
-   * @param {Function} interpret - The interpret function for messages.
-   * @param {boolean} [addQueue=false] - Whether to add a queue for BFS.
-   * @returns {Function} The model solution function.
+   * @param {function} algorithm - The algorithm to be used (BFS or DFS).
+   * @param {function} interpret - The interpret function for messages.
+   * @param {object} [modelQueueOptions=null] - The options for the model queue.
+   * If null, the model queue is not added to the model solution (pass {} if you want queue without options).
+   * @returns {function} The model solution function.
    */
-  buildModel(algorithm, interpret, addQueue = false) {
+  buildModel(algorithm, interpret, modelQueueOptions = null) {
     // This is again arrow function so that this is inherited.
     const modelSolution = (modeljsav) => {
       const modelGraph = modeljsav.ds.graph({
@@ -121,7 +122,7 @@ class TraversalExerciseBuilder {
         directed: false
       });
 
-      const modelQueue = addQueue ? new LinkedQueue(modeljsav, {left: 150, top: 40}) : null;
+      const modelQueue = modelQueueOptions ? new LinkedQueue(modeljsav, modelQueueOptions) : null;
 
       // copy the graph and its weights
       graphUtils.copy(this.graph, modelGraph, {weights: true});

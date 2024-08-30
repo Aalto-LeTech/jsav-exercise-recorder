@@ -102,7 +102,17 @@
 
   const builder = new TraversalExerciseBuilder();
 
-  const init = builder.buildInit(jsav, interpret);
+  const adjListOptions = {
+    lineNumbers: false,
+    left: 50,
+    top: 370
+  };
+  const legendX = 500;
+  const legendY = 480;
+  const graphLeftMargin = 400;
+
+  const init = builder.buildInit(jsav, interpret, adjListOptions, legendX, legendY, graphLeftMargin);
+
   const modelSolution = builder.buildModel(bfs, interpret, true);
   const fixState = builder.buildFixState(exercise);
   const aboutAlert = builder.buildAboutAlert(interpret);

@@ -52,10 +52,17 @@ class TraversalExerciseBuilder {
 
   /**
    * Builds the initialization function for the exercise.
-   * @param {Object} jsav - The JSAV instance.
-   * @returns {Function} The initialization function.
+   * @param {object} jsav - The JSAV instance.
+   * @param {function} interpret - The interpret function for messages.
+   * @param {object} adjListOptions - Options for the adjacency list.
+   * (to be passed for jsav pseudo code object)
+   * @param {number} legendX - The x-coordinate for the legend.
+   * @param {number} legendY - The y-coordinate for the legend.
+   * @param {number} graphLeftMargin - The left option to be passed for JSAV graph.
+   * @returns {function} The initialization function.
+   * 
   */
-  buildInit(jsav, interpret) {
+  buildInit(jsav, interpret, adjListOptions, legendX, legendY, graphLeftMargin) {
     // This is arrow function so that this is inherited.
     const init = () => {
       // Settings for input
@@ -77,11 +84,7 @@ class TraversalExerciseBuilder {
       }
 
       this.neighbourList?.clear(); // clear neighbour list if it already exist (when reset is clicked)
-      this.neighbourList = createAdjacencyList(nlGraph, jsav, {
-        lineNumbers: false,
-        left: 50,
-        top: 370
-      });
+      this.neighbourList = createAdjacencyList(nlGraph, jsav, adjListOptions);
       // Create a JSAV graph instance
       this.graph?.clear();
       this.graph = jsav.ds.graph({
@@ -89,7 +92,7 @@ class TraversalExerciseBuilder {
         height: height,
         layout: "manual",
         directed: directed,
-        left: 400
+        left: graphLeftMargin
       });
 
       graphUtils.nlToJsav(nlGraph, this.graph);
@@ -97,7 +100,7 @@ class TraversalExerciseBuilder {
       this.graph.nodes()[0].addClass("visited"); // mark the 'A' node
 
       if (!this.legendCreated) {
-        createLegend(jsav, 500, 480, interpret, false);
+        createLegend(jsav, legendX, legendY, interpret, false);
         this.legendCreated = true;
       }
 

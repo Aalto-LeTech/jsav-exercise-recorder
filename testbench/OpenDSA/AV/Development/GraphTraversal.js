@@ -78,7 +78,8 @@ class TraversalExerciseBuilder {
       this.neighbourList?.clear(); // clear neighbour list if it already exist (when reset is clicked)
       this.neighbourList = createAdjacencyList(nlGraph, jsav, {
         lineNumbers: false,
-        after: {element: $(".neighbourlist")}
+        left: 50,
+        top: 370
       });
       // Create a JSAV graph instance
       this.graph?.clear();
@@ -86,7 +87,8 @@ class TraversalExerciseBuilder {
         width: width,
         height: height,
         layout: "manual",
-        directed: directed
+        directed: directed,
+        left: 400
       });
 
       graphUtils.nlToJsav(nlGraph, this.graph);

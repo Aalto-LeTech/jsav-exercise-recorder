@@ -60,7 +60,6 @@ class TraversalExerciseBuilder {
    * @param {number} legendY - The y-coordinate for the legend.
    * @param {number} graphLeftMargin - The left option to be passed for JSAV graph.
    * @returns {function} The initialization function.
-   * 
   */
   buildInit(jsav, interpret, adjListOptions, legendX, legendY, graphLeftMargin) {
     // This is arrow function so that this is inherited.

@@ -10,7 +10,10 @@
       "av_ms_already_visited": " Node {node} already visited",
       "#help": "Help",
       "#about": "About",
-      "reset": "New Exercise"
+      "reset": "New Exercise",
+      "legend": "Legend",
+      "legend_unvisited": "Unvisited",
+      "legend_spanning_tree": "Spanning tree"
     },
     "fi": {
       ".avTitle": "Syvyyssuuntainen haku",
@@ -23,7 +26,10 @@
       "av_ms_all_neighbors_visited": "Kaikki {node}:n naapurit on käyty läpi.\n",
       "#help": "Ohje",
       "#about": "Lisätietoa",
-      "reset": "Uusi tehtävä"
+      "reset": "Uusi tehtävä",
+      "legend": "Selite",
+      "legend_unvisited": "Tuntematon",
+      "legend_spanning_tree": "Virityspuu"
     }
   },
   "params": {

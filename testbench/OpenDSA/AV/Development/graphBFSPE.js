@@ -13,10 +13,10 @@
   const code = ODSA.UTILS.loadConfig({av_container: "jsavcontainer"}).code; // fetch code
 
   if (code) {
-    jsav.code($.extend({after: {element: $(".code")}}, code)) // add pseudocode to exercise
+    jsav.code($.extend({left: 10}, code)) // add pseudocode to exercise
       .highlight(12); // highlight row that marks node visited
   } else {
-    jsav.code(); // what does this actually do??
+    jsav.code(); // This might be unnecessary, but I don't want to remove it just in case.
   }
 
   function markEdge(edge, av) {
@@ -102,7 +102,17 @@
 
   const builder = new TraversalExerciseBuilder();
 
-  const init = builder.buildInit(jsav);
+  const adjListOptions = {
+    lineNumbers: false,
+    left: 50,
+    top: 370
+  };
+  const legendX = 500;
+  const legendY = 480;
+  const graphLeftMargin = 400;
+
+  const init = builder.buildInit(jsav, interpret, adjListOptions, legendX, legendY, graphLeftMargin);
+
   const modelSolution = builder.buildModel(bfs, interpret, true);
   const fixState = builder.buildFixState(exercise);
   const aboutAlert = builder.buildAboutAlert(interpret);

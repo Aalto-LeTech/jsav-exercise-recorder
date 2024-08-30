@@ -12,7 +12,7 @@
   // Add the code block to the exercise.
   const code = ODSA.UTILS.loadConfig({av_container: "jsavcontainer"}).code; // fetch code
   if (code) {
-    jsav.code($.extend({after: {element: $(".code")}}, code)) // // add pseudocode to exercise
+    jsav.code($.extend({left: 10}, code)) // // add pseudocode to exercise
       .highlight(2);
   } else {
     jsav.code(); // pseudo is just blank if code is not defined
@@ -55,7 +55,16 @@
 
   const builder = new TraversalExerciseBuilder();
 
-  const init = builder.buildInit(jsav);
+  const adjListOptions = {
+    lineNumbers: false,
+    left: 50,
+    top: 150
+  };
+  const legendX = 200;
+  const legendY = 370;
+  const graphLeftMargin = 420; // Leave space for the legend
+
+  const init = builder.buildInit(jsav, interpret, adjListOptions, legendX, legendY, graphLeftMargin);
   const fixState = builder.buildFixState(exercise);
   const modelSolution = builder.buildModel(dfs, interpret, false);
   const aboutAlert = builder.buildAboutAlert(interpret);

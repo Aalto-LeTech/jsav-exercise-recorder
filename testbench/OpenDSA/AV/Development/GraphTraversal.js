@@ -5,7 +5,7 @@ initialization, model solution, fix state and that can be passed for
 JSAV exercise object.
 */
 
-/* global graphUtils createAdjacencyList*/
+/* global graphUtils createAdjacencyList, createLegend*/
 
 /**
  * Calculate the spanning tree for the nlGraph. This is used to ensure
@@ -47,6 +47,7 @@ class TraversalExerciseBuilder {
   constructor() {
     this.graph = null;
     this.neighbourList = null; // type of this is JSAV pseudo code object
+    this.legendCreated = false; // flag to check if legend is already created
   }
 
   /**
@@ -54,7 +55,7 @@ class TraversalExerciseBuilder {
    * @param {Object} jsav - The JSAV instance.
    * @returns {Function} The initialization function.
   */
-  buildInit(jsav) {
+  buildInit(jsav, interpret) {
     // This is arrow function so that this is inherited.
     const init = () => {
       // Settings for input
@@ -94,6 +95,12 @@ class TraversalExerciseBuilder {
       graphUtils.nlToJsav(nlGraph, this.graph);
       this.graph.layout();
       this.graph.nodes()[0].addClass("visited"); // mark the 'A' node
+
+      if (!this.legendCreated) {
+        createLegend(jsav, 500, 480, interpret, false);
+        this.legendCreated = true;
+      }
+
       jsav.displayInit();
 
       // Remove the initially calculated size so that the graph sits next

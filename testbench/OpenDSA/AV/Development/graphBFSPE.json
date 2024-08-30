@@ -13,7 +13,10 @@
       "av_ms_queue_empty": "The queue is empty and there are no unvisited neighbors. The algorithm finishes execution.",
       "#help": "Help",
       "#about": "About",
-      "reset": "New Exercise"
+      "reset": "New Exercise",
+      "legend": "Legend",
+      "legend_unvisited": "Unvisited",
+      "legend_spanning_tree": "Spanning tree"
     },
     "fi": {
       ".avTitle": "Leveyssuuntainen haku",
@@ -28,7 +31,10 @@
       "av_ms_queue_empty": "Jono on tyhjä ja kaikki naapurit on käyty läpi. Algoritmin suoritus päättyy.",
       "#help": "Ohje",
       "#about": "Lisätietoa",
-      "reset": "Uusi tehtävä"
+      "reset": "Uusi tehtävä",
+      "legend": "Selite",
+      "legend_unvisited": "Tuntematon",
+      "legend_spanning_tree": "Virityspuu"
     }
   },
   "params": {

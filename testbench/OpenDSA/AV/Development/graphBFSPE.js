@@ -102,7 +102,7 @@
 
   const builder = new TraversalExerciseBuilder();
 
-  const init = builder.buildInit(jsav);
+  const init = builder.buildInit(jsav, interpret);
   const modelSolution = builder.buildModel(bfs, interpret, true);
   const fixState = builder.buildFixState(exercise);
   const aboutAlert = builder.buildAboutAlert(interpret);

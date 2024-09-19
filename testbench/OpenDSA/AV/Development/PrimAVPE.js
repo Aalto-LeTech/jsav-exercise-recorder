@@ -26,26 +26,6 @@
   //Add the legend to the exercise
   createLegend(jsav, 275, 350, interpret, false);
 
-  function init_old() {
-    // create the graph
-    if (graph) {
-      graph.clear();
-    }
-    graph = jsav.ds.graph({
-      width: 400,
-      height: 400,
-      layout: "automatic",
-      directed: false
-    });
-    graphUtils.generate(graph, {weighted: true}); // Randomly generate the graph with weights
-    graph.layout();
-    // mark the 'A' node
-    graph.nodes()[0].addClass("spanning");
-
-    jsav.displayInit();
-    return graph;
-  }
-
   function init() {
     // Settings for input
     const width = 500, height = 400,  // pixels

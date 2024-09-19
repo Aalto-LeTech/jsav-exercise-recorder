@@ -127,7 +127,8 @@ class TraversalExerciseBuilder {
       if (modelQueue) {
         // Code specific to BFS.
         modelQueue.enqueue(modelNodes[0].value());
-        modeljsav.label(interpret("queue_label"), {left: 560});
+        const queueLabelLeft = modelQueueOptions.left || 80;
+        modeljsav.label(interpret("queue_label"), {left: queueLabelLeft});
       }
 
       modeljsav.displayInit();

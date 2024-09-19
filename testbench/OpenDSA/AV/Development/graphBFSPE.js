@@ -106,10 +106,11 @@
     width: 500,
     height: 400,
     left: 30,
+    top: 150,
     layout: "automatic",
     directed: false
   };
-  const modelQueueOptions = {left: 560, top: 100};
+  const modelQueueOptions = {left: 100, top: 100};
   // Model queue label position is defined in the buildModel method.
   const modelSolution = builder.buildModel(bfs, interpret, modelGraphOptions, modelQueueOptions);
 

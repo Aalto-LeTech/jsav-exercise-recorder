@@ -17,14 +17,14 @@
   //Add the code block to the exercise. 
 
   if (code) {
-    pseudo = jsav.code($.extend({after: {element: $(".code")}}, code));
-    pseudo.highlight(8)
+    pseudo = jsav.code($.extend({left: 10}, code));
+    pseudo.highlight(8);
   } else {
     pseudo = jsav.code();
   }
 
   //Add the legend to the exercise
-  createLegend(jsav, 0, 400, interpret, false);
+  createLegend(jsav, 275, 350, interpret, false);
 
   function init_old() {
     // create the graph
@@ -100,13 +100,13 @@
       width: width,
       height: height,
       layout: "manual",
-      directed: directed
+      directed: directed,
+      left: 500
     });
     graphUtils.nlToJsav(nlGraph, graph);
     graph.layout();
     graph.nodes()[0].addClass("spanning"); // mark the 'A' node
     jsav.displayInit();
-    $(".jsavcanvas").css("min-width", "")
     return graph;
   }
 

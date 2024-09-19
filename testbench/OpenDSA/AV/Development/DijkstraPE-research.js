@@ -24,14 +24,14 @@
   jsav.recorded();
 
   if (code) {
-    pseudo = jsav.code($.extend({after: {element: $(".code")}}, code));
-    pseudo.highlight(8)
+    pseudo = jsav.code($.extend({left: 10}, code))
+    pseudo.highlight(8);
   } else {
     pseudo = jsav.code();
   }
 
   //Add the legend to the exercise
-  createLegend(jsav, 0, 400, interpret, false);
+  createLegend(jsav, 375, 350, interpret, false);
 
   function init() {
     // Create a JSAV graph instance
@@ -42,8 +42,9 @@
       width: 500,      // pixels
       height: 400,     // pixels
       layout: "manual",
-      directed: false
-    }
+      directed: false,
+      left: 700
+    };
     graph = jsav.ds.graph(layoutSettings);
     
     exerciseInstance = generator.generateInstance();
@@ -53,9 +54,6 @@
     graph.layout();
     graph.nodes()[exerciseInstance.startIndex].addClass("spanning"); // mark the 'A' node
     jsav.displayInit();
-    // Remove the initially calculated min-width to ensure that the graph is 
-    // to the right of the code block. 
-    $(".jsavcanvas").css("min-width", "")
     return graph;
   }
 

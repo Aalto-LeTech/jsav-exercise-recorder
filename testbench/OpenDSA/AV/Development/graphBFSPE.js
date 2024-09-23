@@ -121,6 +121,10 @@
     compare: {class: "visited"},
     controls: $(".jsavexercisecontrols"),
     resetButtonTitle: interpret("reset"),
+    modelDialog: {
+      width: 700,
+      height: 900
+    },
     fix: fixState
   });
   exercise.reset();

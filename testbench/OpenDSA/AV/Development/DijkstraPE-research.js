@@ -32,7 +32,7 @@
   }
 
   //Add the legend to the exercise
-  createLegend(jsav, 375, 350, interpret, false);
+  createLegend(jsav, 395, 350, interpret, false);
 
   function init() {
     // Clear the old elements is reset is clicked.

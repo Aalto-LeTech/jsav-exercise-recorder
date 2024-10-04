@@ -5,7 +5,7 @@
  * 5 November 2021
  */
 
-/* global graphUtils createLegend, DijkstraInstanceGenerator*/
+/* global graphUtils createLegend, DijkstraInstanceGenerator, createAdjacencyList */
 (function() {
   "use strict";
   var exercise,
@@ -18,7 +18,8 @@
       jsav = new JSAV($(".avcontainer"), {settings: settings}),
       exerciseInstance,
       generator,
-      debug = false; // produces debug prints to console
+      debug = false, // produces debug prints to console
+      adjacencyList; // jsav pseudocode object
 
   generator = new DijkstraInstanceGenerator(debug);
   jsav.recorded();
@@ -34,10 +35,10 @@
   createLegend(jsav, 375, 350, interpret, false);
 
   function init() {
-    // Create a JSAV graph instance
-    if (graph) {
-      graph.clear();
-    }
+    // Clear the old elements is reset is clicked.
+    graph?.clear();
+    adjacencyList?.clear();
+
     const layoutSettings = {
       width: 500,      // pixels
       height: 400,     // pixels
@@ -50,6 +51,18 @@
     exerciseInstance = generator.generateInstance();
     researchInstanceToJsav(exerciseInstance.graph, graph, layoutSettings);
     // window.JSAVrecorder.addMetadata('roleMap', exerciseInstance['roleMap']);
+
+    // Convert graph to compatible format for createAdjacencyList.
+    const graphAdjList = graphUtils.researchInstanceToAdjList(exerciseInstance.graph);
+    // Add visible adjacency list to the exercise.
+    // Pass the graphAdjList as an object with edges property to match the
+    // expected parameter format.
+
+    adjacencyList = createAdjacencyList({edges: graphAdjList}, jsav, {
+      lineNumbers: false,
+      left: 50,
+      top: 325
+    });
 
     graph.layout();
     graph.nodes()[exerciseInstance.startIndex].addClass("spanning"); // mark the 'A' node

@@ -5,8 +5,8 @@
  * 5 November 2021
  */
 
-/* global ODSA, graphUtils createLegend*/
-(function ($) {
+/* global graphUtils createLegend, DijkstraInstanceGenerator*/
+(function() {
   "use strict";
   var exercise,
       graph,
@@ -15,7 +15,7 @@
       settings = config.getSettings(),
       code = config.code,
       pseudo,
-      jsav = new JSAV($('.avcontainer'), {settings: settings}),
+      jsav = new JSAV($(".avcontainer"), {settings: settings}),
       exerciseInstance,
       generator,
       debug = false; // produces debug prints to console
@@ -24,7 +24,7 @@
   jsav.recorded();
 
   if (code) {
-    pseudo = jsav.code($.extend({left: 10}, code))
+    pseudo = jsav.code($.extend({left: 10}, code));
     pseudo.highlight(8);
   } else {
     pseudo = jsav.code();
@@ -46,7 +46,7 @@
       left: 700
     };
     graph = jsav.ds.graph(layoutSettings);
-    
+
     exerciseInstance = generator.generateInstance();
     researchInstanceToJsav(exerciseInstance.graph, graph, layoutSettings);
     // window.JSAVrecorder.addMetadata('roleMap', exerciseInstance['roleMap']);
@@ -95,8 +95,8 @@
     }
     // Add the vertices as JSAV objects
     for (let i = 0; i < riGraph.edges.length; i++) {
-      let label = riGraph.vertexLabels[i];
-      jsavGraph.addNode(riGraph.vertexLabels[i], vertexCoordinates[i]);
+      const label = riGraph.vertexLabels[i];
+      jsavGraph.addNode(label, vertexCoordinates[i]);
     }
     // Add the edges as JSAV objects
     const gNodes  = jsavGraph.nodes();
@@ -110,7 +110,7 @@
         jsavGraph.addEdge(gNodes[i], gNodes[e[0]], options);
       }
     }
-  }  
+  }
 
   function fixState(modelGraph) {
     var graphEdges = graph.edges(),
@@ -136,7 +136,7 @@
    * modeljsav: a JSAV algorithm visualization template
    *            (created like: let modeljsav = new JSAV("container"))
    */
-  function model(modeljsav) {
+  function modelSolution(modeljsav) {
     var i,
         graphNodes = graph.nodes();
     // create the model
@@ -157,10 +157,11 @@
     // Initially all nodes have infinity distance and no previous node,
     // except that the distance to the initial node is 0.
 
-    let labelsAndIndices = []; // List of nodes by [label, index] sorted by
-                               // labels. The index is the index of
-                               // modelNodes. Example:
-                               // [['A', 3], ['B', 1], ['C', 3]]
+    // List of nodes by [label, index] sorted by labels.
+    // The index is the index of modelNodes.
+    // Example: [['A', 3], ['B', 1], ['C', 3]]
+    let labelsAndIndices = [];
+
     for (i = 0; i < graphNodes.length; i++) {
       labelsAndIndices.push([graphNodes[i].value(), i]);
     }
@@ -234,11 +235,10 @@
    *               array `nodex`.
    */
   function dijkstra(nodes, distances, av, indexOfLabel) {
-
     // Helper function: returns the distance for the given index in the
     // JSAV distance matrix.
     function getDistance(index) {
-      var dist = parseInt(distances.value(index, 1), 10);
+      let dist = parseInt(distances.value(index, 1), 10);
       if (isNaN(dist)) {
         dist = Infinity;
       }
@@ -251,31 +251,31 @@
     // one which is not yet visited and has minimal distance.
     for (let counter = 0; counter < 30; counter++) { // prevent infinite loop
       // find node closest to the minimum spanning tree
-      var min = Infinity,        // distance of the closest node not yet visited
-          nodeIndex = -1;        // index of the closest node not yet visited
-                                 // in the distance matrix
+      let min = Infinity,        // distance of the closest node not yet visited
+          minIndex = -1;        // index of the closest node not yet visited
+      // in the distance matrix
       logDistanceMatrix(distances);
       for (var i = 0; i < nodes.length; i++) {
         if (!distances.hasClass(i, true, "unused")) {
-          var dist = getDistance(i);
+          const dist = getDistance(i);
           if (dist < min) {
             min = dist;
-            nodeIndex = i;
+            minIndex = i;
           }
         }
       }
-      if (min === Infinity || nodeIndex === -1) {
+      if (min === Infinity || minIndex === -1) {
         // No reachable nodes left, finish the algorithm.
         av.umsg(interpret("av_ms_unreachable"));
         av.step();
         break;
       }
-      let node = nodes[indexOfLabel[String.fromCharCode(65 + nodeIndex)]];
+      let node = nodes[indexOfLabel[String.fromCharCode(65 + minIndex)]];
       if (!node) { break; } // failsafe?
-      distances.addClass(nodeIndex, true, "unused");
+      distances.addClass(minIndex, true, "unused");
       debugPrint("Dijkstra: select node " + node.value());
 
-      if (nodeIndex === 0) {
+      if (minIndex === 0) {
         av.umsg(interpret("av_ms_select_a"));
       } else {
         av.umsg(interpret("av_ms_select_node"), {fill: {node: node.value()}});
@@ -283,11 +283,11 @@
       av.step();
 
       // get previous node if any
-      let prevLabel = distances.value(nodeIndex, 2);
+      let prevLabel = distances.value(minIndex, 2);
       if (prevLabel !== "-") {
-        let prevNode = nodes[indexOfLabel[prevLabel]]
+        let prevNode = nodes[indexOfLabel[prevLabel]];
         av.umsg(interpret("av_ms_add_edge"),
-          { fill: {from: prevNode.value(), to: node.value()}});
+                {fill: {from: prevNode.value(), to: node.value()}});
         markEdge(prevNode.edgeTo(node), av);
         debugPrint("Add edge: " + prevNode.value() + "-" + node.value());
       }
@@ -316,7 +316,6 @@
       }
       av.umsg(interpret("av_ms_update_distances"), {fill: {node: node.value()}});
       av.step();
-
     }
   }
 
@@ -336,7 +335,7 @@
     debugPrint("Label distance previous unused");
     for (let i = 0; i < distances._arrays.length; i++) {
       let row = [...distances._arrays[i]._values];
-      row.push(distances.hasClass(i, true, "unused"))
+      row.push(distances.hasClass(i, true, "unused"));
       debugPrint(row.join("  "));
     }
   }
@@ -346,33 +345,32 @@
     window.alert(ODSA.AV.aboutstring(interpret(".avTitle"), interpret("av_Authors")));
   }
 
-  exercise = jsav.exercise(model, init, {
-    compare: { class: "spanning" },
-    controls: $('.jsavexercisecontrols'),
+  exercise = jsav.exercise(modelSolution, init, {
+    compare: {class: "spanning"},
+    controls: $(".jsavexercisecontrols"),
     modelDialog: {width: "800px"},
     resetButtonTitle: interpret("reset"),
     fix: fixState
   });
   exercise.reset();
 
-  $(".jsavcontainer").on("click", ".jsavedge", function () {
+  $(".jsavcontainer").on("click", ".jsavedge", function() {
     var edge = $(this).data("edge");
     if (!edge.hasClass("spanning")) {
       markEdge(edge);
     }
   });
 
-  $(".jsavcontainer").on("click", ".jsavnode", function () {
+  $(".jsavcontainer").on("click", ".jsavnode", function() {
     window.alert("Please, click on the edges, not the nodes.");
   });
 
   $("#about").click(about);
-  
+
 
   function debugPrint(x) {
     if (debug) {
-       console.log(x);
+      console.log(x);
     }
   }
-
 }(jQuery));

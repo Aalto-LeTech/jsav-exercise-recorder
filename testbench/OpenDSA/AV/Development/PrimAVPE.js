@@ -1,20 +1,20 @@
-/* global ODSA, graphUtils createLegend*/
-(function ($) {
+/* global graphUtils createLegend*/
+(function() {
   "use strict";
   var exercise,
       graph,
       config = ODSA.UTILS.loadConfig(),
-      code = config.code, 
+      code = config.code,
       pseudo,
       interpret = config.interpreter,
       settings = config.getSettings(),
-      jsav = new JSAV($('.avcontainer'), {settings: settings});
+      jsav = new JSAV($(".avcontainer"), {settings: settings});
 
   var debug = false; // produces debug prints to console
 
   jsav.recorded();
 
-  //Add the code block to the exercise. 
+  //Add the code block to the exercise.
 
   if (code) {
     pseudo = jsav.code($.extend({left: 10}, code));
@@ -29,14 +29,14 @@
   function init() {
     // Settings for input
     const width = 500, height = 400,  // pixels
-          weighted = true,
-          directed = false,
-          nVertices = [11, 3],
-          nEdges = [14, 2];
+        weighted = true,
+        directed = false,
+        nVertices = [11, 3],
+        nEdges = [14, 2];
 
     // First create a random planar graph instance in neighbour list format
-    let nlGraph = undefined,
-        bestNlGraph = undefined,
+    let nlGraph,
+        bestNlGraph,
         bestResult = {score: 0},
         trials = 0;
     const targetScore = 5, maxTrials = 100;
@@ -45,12 +45,12 @@
       singleClosest: 0,
       multipleClosest: 0,
       longerPath: 0,
-      unreachable: 0 };
+      unreachable: 0};
 
     let result = {score: 0};
     while (result.score < targetScore && trials < maxTrials) {
       nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
-        directed, width, height);
+                                            directed, width, height);
       result = testPrim(nlGraph);
       if (result.score > bestResult.score) {
         bestNlGraph = nlGraph;
@@ -106,7 +106,7 @@
     }
   }
 
-  function model(modeljsav) {
+  function modelSolution(modeljsav) {
     var i,
         graphNodes = graph.nodes();
     // create the model
@@ -173,7 +173,7 @@
   function prim(nodes, distances, av) {
     // returns the distance given a node index
     function getDistance(index) {
-      var dist = parseInt(distances.value(index, 1), 10);
+      let dist = parseInt(distances.value(index, 1), 10);
       if (isNaN(dist)) {
         // dist = 99999;
         dist = Infinity;
@@ -195,14 +195,14 @@
       // find node closest to the minimum spanning tree
       for (var i = 0; i < nodes.length; i++) {
         if (!distances.hasClass(i, true, "unused")) {
-          var dist = getDistance(i);
+          const dist = getDistance(i);
           if (dist < min) {
             min = dist;
             nodeIndex = i;
           }
         }
       }
-      if (min === Infinity || nodeIndex === -1) {
+      if (min === Infinity || nodeIndex === -1) {
         av.umsg(interpret("av_ms_unreachable"));
         av.step();
         break;
@@ -238,12 +238,11 @@
       }
       av.umsg(interpret("av_ms_update_distances"), {fill: {node: node.value()}});
       av.step();
-
     }
   }
 
-  function testPrim(graph) {
-    const nVertices = graph.vertices.length;
+  function testPrim(graphToTest) {
+    const nVertices = graphToTest.vertices.length;
     let stats = {
       relaxations: 0,
       singleClosest: 0,
@@ -271,9 +270,8 @@
         stats.unreachable++;
         break;
       }
-      for (let e of graph.edges[v]) {
+      for (let e of graphToTest.edges[v]) {
         let d = distance[e.v];
-        let dNew = e.weight;
         if (e.weight < d) {
           // Update distance
           if (d < Infinity) {
@@ -311,7 +309,7 @@
     //    is not updated to a shorter value during the algorithm.
     score += (stats.longerPath > 0) ? 1 : 0;
 
-    return { score: score, stats: stats }
+    return {score: score, stats: stats};
   }
 
   /*
@@ -369,25 +367,24 @@
     }
   }
 
-  exercise = jsav.exercise(model, init, {
-    compare: { class: "spanning" },
-    controls: $('.jsavexercisecontrols'),
+  exercise = jsav.exercise(modelSolution, init, {
+    compare: {class: "spanning"},
+    controls: $(".jsavexercisecontrols"),
     resetButtonTitle: interpret("reset"),
     fix: fixState
   });
   exercise.reset();
 
-  $(".jsavcontainer").on("click", ".jsavedge", function () {
+  $(".jsavcontainer").on("click", ".jsavedge", function() {
     var edge = $(this).data("edge");
     if (!edge.hasClass("spanning")) {
       markEdge(edge);
     }
   });
 
-  $(".jsavcontainer").on("click", ".jsavnode", function () {
+  $(".jsavcontainer").on("click", ".jsavnode", function() {
     window.alert("Please, click on the edges, not the nodes.");
   });
 
   $("#about").click(about);
-
 }(jQuery));

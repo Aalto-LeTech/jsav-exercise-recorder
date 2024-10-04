@@ -1,4 +1,4 @@
-/* global graphUtils createLegend*/
+/* global graphUtils createLegend, createAdjacencyList */
 (function() {
   "use strict";
   var exercise,
@@ -8,7 +8,9 @@
       pseudo,
       interpret = config.interpreter,
       settings = config.getSettings(),
-      jsav = new JSAV($(".avcontainer"), {settings: settings});
+      jsav = new JSAV($(".avcontainer"), {settings: settings}),
+      adjacencyList; // jsav pseudocode object
+
 
   var debug = false; // produces debug prints to console
 
@@ -72,11 +74,12 @@
     }
     debugPrint(statsText);
 
-    // Create a JSAV graph instance
-    if (graph) {
-      graph.clear();
-    }
-    graph = jsav.ds.graph({//    Condition:
+    // Clear the old graph and adjacency list when reset is clicked.
+    graph?.clear();
+    adjacencyList?.clear();
+
+    // Create the graph and adjacency list
+    graph = jsav.ds.graph({
       width: width,
       height: height,
       layout: "manual",
@@ -84,6 +87,13 @@
       left: 500
     });
     graphUtils.nlToJsav(nlGraph, graph);
+
+    adjacencyList = createAdjacencyList(nlGraph, jsav, {
+      lineNumbers: false,
+      left: 50,
+      top: 325
+    });
+
     graph.layout();
     graph.nodes()[0].addClass("spanning"); // mark the 'A' node
     jsav.displayInit();

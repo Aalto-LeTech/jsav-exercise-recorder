@@ -11,7 +11,7 @@
         index2,
         i, j;
 
-    // Utility funciton to check whether the edge already exists
+    // Utility function to check whether the edge already exists
     function isEligibleEdge(startIndex, endIndex) {
       if ((startIndex === endIndex) ||
           (adjacencyMatrix[startIndex][endIndex] === 1) ||
@@ -597,6 +597,7 @@
       const vertexLabel = riGraph.vertexLabels[vertexIdx];
       return vertexLabel.charCodeAt(0) - "A".charCodeAt(0);
     }
+
     // Create empty adjacency list where index 0 is A, 1 is B, etc.
     const adjList = riGraph.vertexLabels.map(() => []);
 
@@ -610,11 +611,50 @@
         adjList[mapIndex(vertexIdx)].push({v: mapIndex(neighborIdx), weight: weight});
       });
     });
+
     // Sort the neighbors by the index of the neighbor to have student process neighbors in the
     // same order as the model solution (alphabetical order).
     adjList.forEach(neighbors =>
       neighbors.sort((a, b) => a.v - b.v));
+
     return adjList;
+  }
+
+  /**
+   * Checks whether all edge weights in the graph are unique.
+   * @param {Array<Array<{v: number, w: number}>>} adjList
+   * - adjacency list representation of a graph as returned by function generatePlanarGraphNl
+   * @param {boolean} directedGraph - true if the graph is directed, false otherwise
+   * @returns {boolean} true if all edge weights are unique, false otherwise
+   */
+  function hasUniqueEdgeWeights(adjList, directedGraph) {
+    const edgeWeights = new Set();
+    const visitedEdges = new Set();
+
+    // Note that the idx of a vertex in the adjList functions as an unique id for the vertex.
+    for (let vertexIdx = 0; vertexIdx < adjList.length; vertexIdx++) {
+      const edges = adjList[vertexIdx];
+      for (const edge of edges) {
+        const neighborIdx = edge.v;
+        const weight = edge.weight;
+
+        // Form a unique key for the edge based on the indices of the vertices.
+        const edgeKeyArr = [vertexIdx, neighborIdx];
+        if (!directedGraph) {
+          // If the graph is undirected, the order of the vertices in the edge does not matter.
+          edgeKeyArr.sort();
+        }
+        const edgeKey = edgeKeyArr.join("");
+
+        if (!visitedEdges.has(edgeKey) && edgeWeights.has(weight)) {
+          // If edge is unvisited and the weight is already in the set, edge weight is not unique.
+          return false;
+        }
+        visitedEdges.add(edgeKey);
+        edgeWeights.add(weight);
+      }
+    }
+    return true;
   }
 
   // Map public functions to graphUtils object with the following public names
@@ -623,6 +663,7 @@
     generatePlanarNl: generatePlanarGraphNl,
     nlToJsav: nlToJsav,
     copy: copyGraph,
-    researchInstanceToAdjList: researchInstanceToAdjList
+    researchInstanceToAdjList: researchInstanceToAdjList,
+    hasUniqueEdgeWeights: hasUniqueEdgeWeights
   };
 })();

@@ -2,6 +2,7 @@
   "use strict";
 
   const DEFAULT_MAX_EDGE_WEIGHT = 10; // exclusive
+  const DEFAULT_MIN_EDGE_WEIGHT = 1; // inclusive
 
   function generateRandomEdges(nNodes, nEdges, weighted) {
     var edges = new Array(nEdges),
@@ -129,7 +130,7 @@
    * e[i][j] === e[j][i].
    */
   function generatePlanarGraphNl(nVertices, nEdges, weighted, directed, width,
-    height, maxEdgeWeight = DEFAULT_MAX_EDGE_WEIGHT) {
+    height, minEdgeWeight = DEFAULT_MIN_EDGE_WEIGHT, maxEdgeWeight = DEFAULT_MAX_EDGE_WEIGHT) {
     // Place nodes in a square grid:
     //   A---B---C---D
     //   |   |   |   |
@@ -154,7 +155,8 @@
       for (let x = 0; x < gridWidth && i < totalVertices; x++, i++) {
         g.vertices[i] = {
           x: Math.floor((x + 0.5) * gridStepX + rnd(10)),
-          y: Math.floor((y + 0.5) * gridStepY + rnd(10)) };
+          y: Math.floor((y + 0.5) * gridStepY + rnd(10))
+        };
       }
     }
     const nConnectedComponents = nVertices.length;
@@ -191,7 +193,7 @@
       let v1 = e[0];
       let v2 = e[1];
       if (weighted) {
-        weight = JSAV.utils.rand.numKey(1, maxEdgeWeight);
+        weight = JSAV.utils.rand.numKey(minEdgeWeight, maxEdgeWeight);
       }
       // JSAV implementation
       g.edges[v1].push({v: v2, weight: weight});

@@ -43,7 +43,12 @@
         bestNlGraph,
         bestResult = {score: 0},
         trials = 0;
-    const targetScore = 5, maxTrials = 100;
+
+    // Now evaluate the goodness of the generated graph
+
+    // The target score was set from 5 to 4 as the multiple closest vertices
+    // is no more possible to achieve because of the uniqueness of edge weights.
+    const targetScore = 4, maxTrials = 150;
     let sumStats = {
       relaxations: 0,
       singleClosest: 0,
@@ -55,7 +60,15 @@
     while (result.score < targetScore && trials < maxTrials) {
       nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
                                             directed, width, height, MIN_EDGE_WEIGHT, MAX_EDGE_WEIGHT);
+      // Score the generated graph
       result = testPrim(nlGraph);
+
+      // If the graph has non-unique edge weights, lower the score.
+      if (!graphUtils.hasUniqueEdgeWeights(nlGraph.edges, false)) {
+        debugPrint("Graph has non-unique edge weights. Retrying.");
+        result.score = 1;
+      }
+
       if (result.score > bestResult.score) {
         bestNlGraph = nlGraph;
         bestResult = result;
@@ -75,6 +88,7 @@
       statsText += k + ": " + sumStats[k] + "\n";
     }
     debugPrint(statsText);
+    debugPrint("Best score: " + bestResult.score);
 
     // Create a JSAV graph instance
     if (graph) {

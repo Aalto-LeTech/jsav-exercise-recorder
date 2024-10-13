@@ -193,7 +193,6 @@
     function getDistance(index) {
       let dist = parseInt(distances.value(index, 1), 10);
       if (isNaN(dist)) {
-        // dist = 99999;
         dist = Infinity;
       }
       return dist;
@@ -204,7 +203,6 @@
     }
 
     while (true) {
-      //var min = 100000,
       var min = Infinity,
           node,
           prev,

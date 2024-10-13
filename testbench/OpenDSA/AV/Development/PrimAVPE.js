@@ -1,6 +1,10 @@
 /* global graphUtils createLegend*/
 (function() {
   "use strict";
+
+  const MIN_EDGE_WEIGHT = 10;
+  const MAX_EDGE_WEIGHT = 90;
+
   var exercise,
       graph,
       config = ODSA.UTILS.loadConfig(),
@@ -50,7 +54,7 @@
     let result = {score: 0};
     while (result.score < targetScore && trials < maxTrials) {
       nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
-                                            directed, width, height);
+                                            directed, width, height, MIN_EDGE_WEIGHT, MAX_EDGE_WEIGHT);
       result = testPrim(nlGraph);
       if (result.score > bestResult.score) {
         bestNlGraph = nlGraph;

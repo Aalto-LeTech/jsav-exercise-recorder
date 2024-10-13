@@ -22,13 +22,13 @@
 
   if (code) {
     pseudo = jsav.code($.extend({left: 10}, code));
-    pseudo.highlight(8);
+    pseudo.highlight(9);
   } else {
     pseudo = jsav.code();
   }
 
   //Add the legend to the exercise
-  createLegend(jsav, 275, 350, interpret, false);
+  createLegend(jsav, 270, 410, interpret, false);
 
   function init() {
     // Settings for input

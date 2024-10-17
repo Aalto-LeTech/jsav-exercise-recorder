@@ -63,7 +63,7 @@
     if (graph) {
       graph.clear();
     }
-    graph = jsav.ds.graph({//    Condition:
+    graph = jsav.ds.graph({
       width: width,
       height: height,
       layout: "manual",
@@ -96,7 +96,6 @@
    * Creates step-by-step visualisation of the model solution.
    */
   function model(modeljsav) {
-    var i;
     // create the model
     var modelGraph = modeljsav.ds.graph({
       width: 500,
@@ -110,24 +109,15 @@
     var modelNodes = modelGraph.nodes();
 
     var modelEdges = modelGraph.edges();
-    // sort the edges alphabetically
-    modelEdges.sort(function(a, b) {
-      var nameA = edgeName(a),
-          nameB = edgeName(b);
-      return [nameA, nameB].sort()[0] === nameA ? -1 : 1;
-    });
 
-    var edgeMatrixValues = [];
-    modelEdges.forEach(function(edge) {
-      var eName = "(" + edgeName(edge, ", ") + ")";
-      edgeMatrixValues.push([eName, edge.weight()]);
-    });
+    const edgeMatrixValues = createEdgeMatrix(modelEdges);
 
-    var edgeMatrix = modeljsav.ds.matrix(edgeMatrixValues, {
+    const edgeMatrix = modeljsav.ds.matrix(edgeMatrixValues, {
       style: "table",
       center: false,
       autoresize: false
     });
+
     edgeMatrix.element.css({
       position: "absolute",
       top: 0,
@@ -141,7 +131,7 @@
 
     modeljsav.umsg(interpret("av_ms_mst"));
     // hide all edges that are not part of the spanning tree
-    for (i = 0; i < modelGraph.edges().length; i++) {
+    for (let i = 0; i < modelGraph.edges().length; i++) {
       if (!modelEdges[i].hasClass("spanning")) {
         modelEdges[i].hide();
       }
@@ -221,6 +211,28 @@
         modeljsav.step();
       }
     });
+  }
+
+  /**
+ * Creates a 2D array of string representation of the edges and their weights.
+ * The edges are sorted alphabetically.
+ * @param {Array} edges - Array of JSAV edges of the graph
+ * @returns {Array} - 2D array of string representation of the edges and their weights
+ */
+  function createEdgeMatrix(edges) {
+    // sort the edges alphabetically
+    const edgesAlphabetical = edges.toSorted(function(a, b) {
+      const nameA = edgeName(a);
+      const nameB = edgeName(b);
+      return nameA < nameB ? -1 : 1;
+    });
+
+    const edgeMatrix = edgesAlphabetical.map(function(edge) {
+      const eName = "(" + edgeName(edge, ", ") + ")";
+      return [eName, edge.weight()];
+    });
+
+    return edgeMatrix;
   }
 
   function markEdge(edge, av) {

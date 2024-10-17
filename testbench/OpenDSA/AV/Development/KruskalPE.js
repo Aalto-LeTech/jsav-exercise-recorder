@@ -43,21 +43,21 @@
     // It is safest to generate one connected component that has more edges
     // than vertices. This is always a valid input.
     const width = 500, height = 400,  // pixels
-          weighted = true,
-          directed = false,
-          nVertices = [11],
-          nEdges = [14];
-          // nVertices = [11, 4],
-          // nEdges = [15, 3];
+        weighted = true,
+        directed = false,
+        nVertices = [11],
+        nEdges = [14];
+    // nVertices = [11, 4],
+    // nEdges = [15, 3];
 
     // First create a random planar graph instance in neighbour list format
-    let nlGraph = undefined,
-        bestNlGraph = undefined,
+    let nlGraph,
+        bestNlGraph,
         bestResult = {score: 0},
         trials = 0;
 
     nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
-      directed, width, height);
+                                          directed, width, height);
 
     // Create a JSAV graph instance
     if (graph) {

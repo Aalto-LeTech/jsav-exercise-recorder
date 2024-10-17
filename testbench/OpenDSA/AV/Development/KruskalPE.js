@@ -3,6 +3,7 @@
   "use strict";
   var exercise,
       graph,
+      edgeList,
       config = ODSA.UTILS.loadConfig(),
       interpret = config.interpreter,
       settings = config.getSettings(),
@@ -39,6 +40,10 @@
    * placed in a fixed grid, two connected components.
    */
   function init() {
+    // Clear old elements if reset is clicked.
+    graph?.clear();
+    edgeList?.clear();
+
     // Settings for input.
     // It is safest to generate one connected component that has more edges
     // than vertices. This is always a valid input.
@@ -60,9 +65,6 @@
                                           directed, width, height);
 
     // Create a JSAV graph instance
-    if (graph) {
-      graph.clear();
-    }
     graph = jsav.ds.graph({
       width: width,
       height: height,
@@ -71,6 +73,14 @@
     });
     graphUtils.nlToJsav(nlGraph, graph);
     graph.layout();
+
+    const edgeMatrixValues = createEdgeMatrix(graph.edges());
+    edgeList = jsav.ds.matrix(edgeMatrixValues, {
+      style: "table",
+      autoresize: false,
+      left: 30,
+      top: 80
+    });
 
     jsav.displayInit();
     return graph;

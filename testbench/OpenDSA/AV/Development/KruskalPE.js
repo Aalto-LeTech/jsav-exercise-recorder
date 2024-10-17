@@ -1,6 +1,13 @@
 /*global graphUtils */
 (function() {
   "use strict";
+
+  // Required number of discarded edges before the MST is complete.
+  // The graph will be regenerated until this number is reached.
+  const MINIMUM_DISCARDS = 2;
+  // Whether to print debug messages to the console.
+  const debug = false;
+
   var exercise,
       graph,
       edgeList,
@@ -104,23 +111,34 @@
 
     // Settings for input.
     // It is safest to generate one connected component that has more edges
-    // than vertices. This is always a valid input.
+    // than vertices.
     const width = 500, height = 400,  // pixels
         weighted = true,
         directed = false,
         nVertices = [11],
         nEdges = [14];
-    // nVertices = [11, 4],
-    // nEdges = [15, 3];
 
-    // First create a random planar graph instance in neighbour list format
-    let nlGraph,
-        bestNlGraph,
-        bestResult = {score: 0},
+    // Generate a random planar graph with the given parameters and check that
+    // while executing Kruskal's algorithm, the number of discarded edges before
+    // the MST is complete is at least MINIMUM_DISCARDS.
+
+    let bestNlGraph,
+        highestDiscards = -1,
         trials = 0;
 
-    nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
-                                          directed, width, height);
+    while (highestDiscards < MINIMUM_DISCARDS && trials < 100) {
+      trials++;
+      const nlGraph = graphUtils.generatePlanarNl(nVertices, nEdges, weighted,
+                                                  directed, width, height);
+      const discardCount = countKruskalDiscards(nlGraph, trials);
+      debugPrint(`Trial ${trials}: discardCount: ${discardCount}`);
+
+      if (discardCount > highestDiscards) {
+        highestDiscards = discardCount;
+        bestNlGraph = nlGraph;
+      }
+    }
+    debugPrint(`Total trials when generating the graph: ${trials}`);
 
     // Create a JSAV graph instance
     graph = jsav.ds.graph({
@@ -129,7 +147,7 @@
       layout: "manual",
       directed: directed
     });
-    graphUtils.nlToJsav(nlGraph, graph);
+    graphUtils.nlToJsav(bestNlGraph, graph);
     graph.layout();
 
     const edgeMatrixValues = createEdgeMatrix(graph.edges());
@@ -299,6 +317,71 @@
     return edgeMatrix;
   }
 
+  function countKruskalDiscards(nlGraph, trials) {
+    // Helper function that takes an array of operations as strings and counts
+    // the number of discard operations before the last union operation.
+    function countDiscards(operationsArr) {
+      // First find the index of the last union operation.
+      let lastUnionIndex = 0;
+      operationsArr.forEach((operation, index) => {
+        if (operation.startsWith("union")) {
+          lastUnionIndex = index;
+        }
+      });
+      debugPrint(`Trial ${trials}: lastUnionIndex: ${lastUnionIndex}`);
+
+      // Now count discards.
+      let discardCount = 0;
+      for (let i = 0; i < lastUnionIndex; i++) {
+        if (operationsArr[i].startsWith("discard")) {
+          discardCount++;
+        }
+      }
+
+      return discardCount;
+    }
+    // Convert the graph to an array of edges.
+    const edgeArr = graphUtils.nlToEdgeArr(nlGraph, false);
+
+    // Execute Kruskal's algorithm and count the number of discarded edges before
+    // the MST is complete.
+
+    // Sort the edges by weight and then by alphabetical order (as in the model solution).
+    edgeArr.sort((a, b) => {
+      const weightDiff = a.w - b.w;
+      if (weightDiff !== 0) {
+        return weightDiff;
+      }
+      // Weights are equal, sort alphabetically.
+      const nameA = [nodeIndexToLabel(a.u), nodeIndexToLabel(a.v)].sort().join("");
+      const nameB = [nodeIndexToLabel(b.u), nodeIndexToLabel(b.v)].sort().join("");
+      return nameA < nameB ? -1 : 1;
+    });
+
+    const sets = new UnionFind();
+    // Add all the nodes to the Union-Find data structure.
+    nlGraph.vertices.forEach((vertexObj, index) => {
+      sets.makeSet(index); // identify each vertex with its index
+    });
+
+    // Create array that stores the operations to count the discarded edges.
+    const operations = [];
+
+    // Kruskal main loop
+    edgeArr.forEach((edge) => {
+      if (sets.find(edge.u) !== sets.find(edge.v)) {
+        sets.union(edge.u, edge.v);
+        operations.push(`union ${nodeIndexToLabel(edge.u)}-${nodeIndexToLabel(edge.v)}`);
+      } else {
+        // The edge is discarded as adding it would create a cycle.
+        operations.push(`discard ${nodeIndexToLabel(edge.u)}-${nodeIndexToLabel(edge.v)}`);
+      }
+    });
+
+    // Count the number of discard operations before the last union operation.
+    return countDiscards(operations);
+  }
+
   function markEdge(edge, av) {
     edge.addClass("spanning");
     edge.start().addClass("spanning");
@@ -329,6 +412,21 @@
     const nameA = edgeName(a);
     const nameB = edgeName(b);
     return nameA < nameB ? -1 : 1;
+  }
+
+  /**
+   * Converts the index of a node in the graph to a label for the node.
+   * @param {number} index - index of the node in the graph
+   * @returns {string} - label for the node
+   */
+  function nodeIndexToLabel(index) {
+    return String.fromCharCode("A".charCodeAt(0) + index);
+  }
+
+  function debugPrint(...args) {
+    if (debug) {
+      console.log(...args);
+    }
   }
 
   // Process About button: Pop up a message with an Alert

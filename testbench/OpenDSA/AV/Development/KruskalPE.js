@@ -222,13 +222,16 @@
   }
 
   /**
- * Creates a 2D array of string representation of the edges and their weights.
- * The edges are sorted alphabetically.
+ * Creates a 2D array of string representations of the edges and their weights.
+ * The edges are sorted alphabetically and the first row is a header row.
+ * If one sorts the edges of the matrix by weight (stable sort that preservers
+ * alphabetic order of equal weights), the order of the edges will be the same
+ * as processing order in the model solution.
  * @param {Array} edges - Array of JSAV edges of the graph
  * @returns {Array} - 2D array of string representation of the edges and their weights
  */
   function createEdgeMatrix(edges) {
-    // sort the edges alphabetically
+    // Sort the edges alphabetically.
     const edgesAlphabetical = edges.toSorted(function(a, b) {
       const nameA = edgeName(a);
       const nameB = edgeName(b);

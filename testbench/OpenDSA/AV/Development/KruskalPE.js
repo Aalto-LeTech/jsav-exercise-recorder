@@ -9,6 +9,64 @@
       settings = config.getSettings(),
       jsav = new JSAV($(".avcontainer"), {settings: settings});
 
+  /**
+   * Simple implementation of the Union-Find data structure with path compression.
+   * Used for model solution Kruskal's algorithm and for checking the goodness of
+   * the randomly generated graph.
+  */
+  class UnionFind {
+    constructor() {
+      // Stores the parent of each node. If the node is a root, the parent is the node itself.
+      this.parent = {};
+    }
+    /**
+     * Makes a new set with one element.
+     * @param {*} x - the element to make a set of
+     */
+    makeSet(x) {
+      this.parent[x] = x;
+    }
+
+    /**
+     * Finds the representative of the set that x belongs to.
+     * Does path compression.
+     * @param {*} x - the element to find the set of
+     * @returns {*} - the representative of the set that x belongs to
+     */
+    find(x) {
+      // Find the root (representative) of x.
+      let root = x;
+      while (this.parent[root] !== root) {
+        root = this.parent[root];
+      }
+
+      // Do path compression by traversing the path from x to the root
+      // and updating the parent of each node to be the root.
+      let current = x;
+      while (current !== root) {
+        const nextNode = this.parent[current];
+        // Update the parent of the current node to to be the root.
+        this.parent[current] = root;
+        // Move to the next node in the path.
+        current = nextNode;
+      }
+
+      // Return the representative of the set.
+      return root;
+    }
+
+    /**
+     * Unions the sets that contain x and y.
+     * @param {*} x - element in the first set
+     * @param {*} y - element in the second set
+     */
+    union(x, y) {
+      const xRoot = this.find(x);
+      const yRoot = this.find(y);
+      this.parent[xRoot] = yRoot;
+    }
+  }
+
   /*
    * Old exercise initialiser. Creates a random graph which has messy output
    * at 50% probability.
@@ -148,44 +206,33 @@
 
   /*
    * Kruskal's algorithm implementation for the correct (model) solution.
-   */
+  */
   function kruskal(modelNodes, modelEdges, edgeMatrix, modeljsav) {
-    // Array of strings for book keeping of connected parts of the graph
-    // Initially equal to ["A", "B", "C" ...]
-    var connections = [];
+    // Add all the nodes to the Union-Find data structure.
+    const sets = new UnionFind();
     modelNodes.forEach(function(node) {
-      connections.push(node.value());
+      sets.makeSet(node.value());
     });
+
+    // Helper functions that use the Union-Find data structure.
 
     // Checks if adding the edge would create a cycle in the spanning tree
     function createsCycle(edge) {
-      var start = edge.start().value(),
-          end = edge.end().value();
-      // check if there is a connection that contains both values
-      return connections.some(function(set) {
-        return set.indexOf(start) !== -1 && set.indexOf(end) !== -1;
-      });
-    }
-
-    // Returns the index of the set where the node belongs to
-    function findSet(node) {
-      var value = node.value();
-      return connections.reduce(function(current, set, index) {
-        if (set.indexOf(value) !== -1) {
-          return index;
-        }
-        return current;
-      }, -1);
+      const start = edge.start().value();
+      const end = edge.end().value();
+      // Check if the start and end nodes are in the same connected component.
+      return sets.find(start) === sets.find(end);
     }
 
     // Connect two sets of vertices with an edge (the UNION operation).
     function addEdge(edge) {
-      var startSetIndex = findSet(edge.start()),
-          endSetIndex = findSet(edge.end());
-      connections[startSetIndex] += connections[endSetIndex];
-      connections[endSetIndex] = "";
+      const start = edge.start().value();
+      const end = edge.end().value();
+      // Union the two sets
+      sets.union(start, end);
     }
 
+    // Helper that finds the index of the edge in the edge matrix for marking purposes.
     function edgeIndex(edge) {
       var eName = "(" + edgeName(edge, ", ") + ")";
       // Edge matrix has one extra row for the header
@@ -197,25 +244,28 @@
       return -1;
     }
 
+    // Main algorithm
+
     // sort edges according to weight and alphabetical order
-    modelEdges.sort(sortEdges);
+    modelEdges.sort(compareEdges);
 
     modelEdges.forEach(function(currentEdge) {
-      //msg = "<b><u>Processing Edge (" + start().value() + "," + endNode.value() + "):</b></u>";
       modeljsav.umsg(interpret("av_ms_processing"), {fill: {edge: edgeName(currentEdge, ", ")}});
-      var index = edgeIndex(currentEdge);
+      const matrixIndex = edgeIndex(currentEdge);
+
       if (!createsCycle(currentEdge)) {
-        //Add to MST
+        // Add to MST
         modeljsav.umsg(interpret("av_ms_adding"), {preserve: true});
         addEdge(currentEdge);
-        edgeMatrix.addClass(index, 0, "spanning");
-        edgeMatrix.addClass(index, 1, "spanning");
+        edgeMatrix.addClass(matrixIndex, 0, "spanning");
+        edgeMatrix.addClass(matrixIndex, 1, "spanning");
         markEdge(currentEdge, modeljsav);
       } else {
+        // Discard the edge
         modeljsav.umsg(interpret("av_ms_dismiss"), {preserve: true});
         currentEdge.addClass("discarded");
-        edgeMatrix.addClass(index, 0, "discarded");
-        edgeMatrix.addClass(index, 1, "discarded");
+        edgeMatrix.addClass(matrixIndex, 0, "discarded");
+        edgeMatrix.addClass(matrixIndex, 1, "discarded");
         modeljsav.step();
       }
     });
@@ -270,16 +320,15 @@
   /*
    * Comparator function for two weighted edges in a JSAV graph.
    */
-  function sortEdges(a, b) {
-    var weightA = a.weight(),
-        weightB = b.weight();
-    if (weightA === weightB) {
-      var nameA = edgeName(a),
-          nameB = edgeName(b),
-          names = [nameA, nameB].sort();
-      return names[0] === nameA ? -1 : 1;
+  function compareEdges(a, b) {
+    const weightDiff = a.weight() - b.weight();
+    if (weightDiff !== 0) {
+      return weightDiff;
     }
-    return weightA - weightB;
+    // Weights are equal, sort alphabetically.
+    const nameA = edgeName(a);
+    const nameB = edgeName(b);
+    return nameA < nameB ? -1 : 1;
   }
 
   // Process About button: Pop up a message with an Alert

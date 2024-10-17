@@ -124,12 +124,7 @@
 
     const edgeMatrix = modeljsav.ds.matrix(edgeMatrixValues, {
       style: "table",
-      center: false,
-      autoresize: false
-    });
-
-    edgeMatrix.element.css({
-      position: "absolute",
+      autoresize: false,
       top: 0,
       left: 10
     });

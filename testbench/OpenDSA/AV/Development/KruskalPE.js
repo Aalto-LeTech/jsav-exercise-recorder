@@ -75,32 +75,6 @@
   }
 
   /*
-   * Old exercise initialiser. Creates a random graph which has messy output
-   * at 50% probability.
-   */
-  function init_old() {
-    // create the graph
-    if (graph) {
-      graph.clear();
-    }
-    graph = jsav.ds.graph({
-      width: 400,
-      height: 400,
-      layout: "automatic",
-      directed: false
-    });
-    graphUtils.generate(graph, {
-      weighted: true,
-      nodes: 6,
-      edges: 12
-    }); // Randomly generate the graph with weights
-    graph.layout();
-
-    jsav.displayInit();
-    return graph;
-  }
-
-  /*
    * New exercise initializer. Creates a random graph with nodes and edges
    * placed in a fixed grid, two connected components.
    */

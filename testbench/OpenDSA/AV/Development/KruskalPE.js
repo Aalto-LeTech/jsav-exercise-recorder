@@ -137,7 +137,7 @@
       style: "table",
       autoresize: false,
       left: 30,
-      top: 80
+      top: 90
     });
 
     jsav.displayInit();

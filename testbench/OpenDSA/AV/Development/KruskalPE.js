@@ -184,7 +184,7 @@
       style: "table",
       autoresize: false,
       top: 0,
-      left: 10
+      left: 20
     });
 
     modeljsav.displayInit();

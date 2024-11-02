@@ -137,10 +137,9 @@
    *            (created like: let modeljsav = new JSAV("container"))
    */
   function modelSolution(modeljsav) {
-    var i,
-        graphNodes = graph.nodes();
+    const graphNodes = graph.nodes();
     // create the model
-    var modelGraph = modeljsav.ds.graph({
+    const modelGraph = modeljsav.ds.graph({
       width: 500,
       height: 400,
       layout: "automatic",
@@ -149,7 +148,7 @@
 
     // copy the graph and its weights
     graphUtils.copy(graph, modelGraph, {weights: true});
-    var modelNodes = modelGraph.nodes();
+    const modelNodes = modelGraph.nodes();
 
     // Create a distance matrix for the visualization.
     // - Each row is a node.
@@ -160,26 +159,24 @@
     // List of nodes by [label, index] sorted by labels.
     // The index is the index of modelNodes.
     // Example: [['A', 3], ['B', 1], ['C', 3]]
-    let labelsAndIndices = [];
+    const labelsAndIndices = [];
 
-    for (i = 0; i < graphNodes.length; i++) {
+    for (let i = 0; i < graphNodes.length; i++) {
       labelsAndIndices.push([graphNodes[i].value(), i]);
     }
     labelsAndIndices.sort();
-    var distanceMatrixValues = [];
-    for (i = 0; i < graphNodes.length; i++) {
+
+    const distanceMatrixValues = [];
+    for (let i = 0; i < graphNodes.length; i++) {
       distanceMatrixValues.push([labelsAndIndices[i][0], "∞", "-"]);
     }
     // Initial node is A which is at index 1. Set its distance to 0.
     distanceMatrixValues[0][1] = 0;
 
     // Set layout of the distance matrix
-    var distances = modeljsav.ds.matrix(distanceMatrixValues, {
+    const distances = modeljsav.ds.matrix(distanceMatrixValues, {
       style: "table",
-      center: false
-    });
-    distances.element.css({
-      position: "absolute",
+      center: false,
       top: 0,
       left: 10
     });
@@ -190,7 +187,7 @@
     modeljsav.displayInit();
 
     // start the algorithm
-    let indexOfLabel = {};
+    const indexOfLabel = {};
     for (let l of labelsAndIndices) {
       indexOfLabel[l[0]] = l[1];
     }
@@ -199,8 +196,8 @@
     modeljsav.umsg(interpret("av_ms_shortest"));
 
     // hide all edges that are not part of the spanning tree
-    var modelEdges = modelGraph.edges();
-    for (i = 0; i < modelGraph.edges().length; i++) {
+    const modelEdges = modelGraph.edges();
+    for (let i = 0; i < modelGraph.edges().length; i++) {
       if (!modelEdges[i].hasClass("spanning")) {
         modelEdges[i].hide();
       }

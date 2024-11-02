@@ -99,7 +99,7 @@
       height: height,
       layout: "manual",
       directed: directed,
-      left: 500
+      left: 550
     });
     graphUtils.nlToJsav(nlGraph, graph);
     graph.layout();

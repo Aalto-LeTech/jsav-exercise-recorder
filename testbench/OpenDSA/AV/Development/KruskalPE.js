@@ -1,4 +1,4 @@
-/*global graphUtils */
+/*global graphUtils createLegend*/
 (function() {
   "use strict";
 
@@ -74,10 +74,9 @@
     }
   }
 
-  /*
-   * New exercise initializer. Creates a random graph with nodes and edges
-   * placed in a fixed grid, two connected components.
-   */
+  // Add legend to the exercise.
+  createLegend(jsav, 450, 500, interpret, false);
+
   function init() {
     // Clear old elements if reset is clicked.
     graph?.clear();
@@ -127,7 +126,9 @@
       width: width,
       height: height,
       layout: "manual",
-      directed: directed
+      directed: directed,
+      left: 140,
+      top: 60
     });
     graphUtils.nlToJsav(nlGraph, graph);
     graph.layout();

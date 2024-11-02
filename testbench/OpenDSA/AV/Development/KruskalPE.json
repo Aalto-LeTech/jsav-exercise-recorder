@@ -11,7 +11,10 @@
       "av_ms_dismiss": "Dismiss edge",
       "#help": "Help",
       "#about": "About",
-      "reset": "New Exercise"
+      "reset": "New Exercise",
+      "legend": "Legend",
+      "legend_unvisited": "Other",
+      "legend_spanning_tree": "Spanning tree"
     },
     "fi": {
       ".avTitle": "Kruskalin algoritmi",
@@ -24,7 +27,10 @@
       "av_ms_dismiss": "Hylätään särmä",
       "#help": "Ohje",
       "#about": "Lisätietoa",
-      "reset": "Uusi Tehtävä"
+      "reset": "Uusi Tehtävä",
+      "legend" : "Selite",
+      "legend_unvisited": "Muu",
+      "legend_spanning_tree": "Virityspuu"
     }
   },
   "params": {

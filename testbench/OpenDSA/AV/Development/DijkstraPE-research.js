@@ -143,12 +143,17 @@
       width: 500,
       height: 400,
       layout: "automatic",
-      directed: false
+      directed: false,
+      top: 0,
+      left: 140
     });
 
     // copy the graph and its weights
     graphUtils.copy(graph, modelGraph, {weights: true});
     const modelNodes = modelGraph.nodes();
+
+    // Add the legend to the model.
+    createLegend(modeljsav, 600, 350, interpret, false);
 
     // Create a distance matrix for the visualization.
     // - Each row is a node.
@@ -345,7 +350,7 @@
   exercise = jsav.exercise(modelSolution, init, {
     compare: {class: "spanning"},
     controls: $(".jsavexercisecontrols"),
-    modelDialog: {width: "800px"},
+    modelDialog: {width: "900px"},
     resetButtonTitle: interpret("reset"),
     fix: fixState
   });

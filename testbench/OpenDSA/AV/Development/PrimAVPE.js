@@ -27,7 +27,7 @@
     pseudo = jsav.code();
   }
 
-  //Add the legend to the exercise
+  // Add legend to the exercise.
   createLegend(jsav, 270, 410, interpret, false);
 
   function init() {
@@ -125,10 +125,9 @@
   }
 
   function modelSolution(modeljsav) {
-    var i,
-        graphNodes = graph.nodes();
+    const graphNodes = graph.nodes();
     // create the model
-    var modelGraph = modeljsav.ds.graph({
+    const modelGraph = modeljsav.ds.graph({
       width: 500,
       height: 400,
       layout: "automatic",
@@ -137,22 +136,19 @@
 
     // copy the graph and its weights
     graphUtils.copy(graph, modelGraph, {weights: true});
-    var modelNodes = modelGraph.nodes();
+    const modelNodes = modelGraph.nodes();
 
-    var distanceMatrixValues = [];
-    for (i = 0; i < graphNodes.length; i++) {
+    const distanceMatrixValues = [];
+    for (let i = 0; i < graphNodes.length; i++) {
       distanceMatrixValues.push([graphNodes[i].value(), "∞", "-"]);
     }
     distanceMatrixValues[0][1] = 0;
 
-    var distances = modeljsav.ds.matrix(distanceMatrixValues, {
+    const distances = modeljsav.ds.matrix(distanceMatrixValues, {
       style: "table",
-      center: false
-    });
-    distances.element.css({
-      position: "absolute",
-      top: 0,
-      left: 10
+      center: false,
+      left: 20,
+      top: 0
     });
 
     // Mark the 'A' node
@@ -165,8 +161,8 @@
 
     modeljsav.umsg(interpret("av_ms_mst"));
     // hide all edges that are not part of the spanning tree
-    var modelEdges = modelGraph.edges();
-    for (i = 0; i < modelGraph.edges().length; i++) {
+    const modelEdges = modelGraph.edges();
+    for (let i = 0; i < modelGraph.edges().length; i++) {
       if (!modelEdges[i].hasClass("spanning")) {
         modelEdges[i].hide();
       }

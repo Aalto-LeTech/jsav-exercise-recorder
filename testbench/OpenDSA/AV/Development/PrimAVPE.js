@@ -393,6 +393,7 @@
     compare: {class: "spanning"},
     controls: $(".jsavexercisecontrols"),
     resetButtonTitle: interpret("reset"),
+    modelDialog: {width: "850px"},
     fix: fixState
   });
   exercise.reset();

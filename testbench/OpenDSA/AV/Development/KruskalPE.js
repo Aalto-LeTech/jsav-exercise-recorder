@@ -166,18 +166,21 @@
    */
   function model(modeljsav) {
     // create the model
-    var modelGraph = modeljsav.ds.graph({
+    const modelGraph = modeljsav.ds.graph({
       width: 500,
       height: 400,
       layout: "automatic",
-      directed: false
+      directed: false,
+      top: 0,
+      left: 100
     });
 
     // copy the graph and its weights
     graphUtils.copy(graph, modelGraph, {weights: true});
-    var modelNodes = modelGraph.nodes();
+    const modelNodes = modelGraph.nodes();
+    const modelEdges = modelGraph.edges();
 
-    var modelEdges = modelGraph.edges();
+    createLegend(modeljsav, 520, 400, interpret, false);
 
     const edgeMatrixValues = createEdgeMatrix(modelEdges);
 
@@ -428,6 +431,7 @@
     compare: {class: "spanning"},
     controls: $(".jsavexercisecontrols"),
     resetButtonTitle: interpret("reset"),
+    modelDialog: {width: "800px"},
     fix: fixState
   });
   exercise.reset();

@@ -131,8 +131,13 @@
       width: 500,
       height: 400,
       layout: "automatic",
-      directed: false
+      directed: false,
+      top: 0,
+      left: 90
     });
+
+    // Add the legend to the model.
+    createLegend(modeljsav, 550, 350, interpret, false);
 
     // copy the graph and its weights
     graphUtils.copy(graph, modelGraph, {weights: true});

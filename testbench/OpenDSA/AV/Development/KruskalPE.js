@@ -288,9 +288,7 @@
       return nameA < nameB ? -1 : 1;
     });
     // Header row for the edge list
-    // "Weight" would probably be better than "w" but I do not
-    // know how to make the table column wide enough for it.
-    const edgeMatrix = [["Edge", "w"]];
+    const edgeMatrix = [["E", "w"]];
     edgesAlphabetical.forEach(function(edge) {
       const eName = "(" + edgeName(edge, ", ") + ")";
       edgeMatrix.push([eName, edge.weight()]);

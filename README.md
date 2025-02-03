@@ -20,26 +20,10 @@ For an easy introduction to the exercises and the Recorder, see the section
 
 This repository has the following branches.
 
-`jaal2.0` is the 2022 development branch based on
+`main` is the development branch based on
 [JAAL 2.0 rc2 specification](https://github.com/Aalto-LeTech/JAAL/releases/tag/2.0rc1).
 
-`master` is the old development branch.
-
-`traky` is integration work for Data Structures and Algorithms Y (DSA Y) course.
-This version of JSAV Exercise recorder does not handle communication with the
-A+ LMS. The communication with the LMS is done in the function `n.showGrade()`
-in the file
-*tools/extras/OpenDSA/lib/odsaAV-min.js* at [DSA Y course repository]
-(https://version.aalto.fi/gitlab/course/traky/blob/jaal/tools/extras/OpenDSA/lib/odsaAV-min-commented.js#L759).
-The main differences in the JSAV Exercise Recorder between the `master` and
-`traky` branches are in the main file *exerciseRecorder.js*:
-
-1. `rest-services/services.js` is not used.
-2. `setSubmissionAndPostUrl()` is not used.
-3. Exercise recording is accessible globally:
-   `global.JSAVrecorder.getRecording()`
-
-## Introduction with testbench
+## Introduction for the Testbench
 
 To test the exercises and the Recorder manually, you will need
 [https://www.python.org](Python 3) and a web browser. Once you have those,
@@ -296,5 +280,11 @@ The initial version of the software ("JAAL 1.0") was introduced in
 
 For shorter reading, there is a conference article which describes the
 
+## Studies on reproducibility of existing JSAV/OpenDSA exercises
 
+The subdirectory
+[`doc/exercise_design/reproducibility`](doc/exercise_design/reproducibility/)
+contains information on which JSAV exercises are "reproducible" without JSAV
+Exercise Recorder, i.e. both their initial state and student's steps can be
+reconstructed from the JSON data.
 

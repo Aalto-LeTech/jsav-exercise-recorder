@@ -16,12 +16,15 @@ develop the exercises and the JSAV Exercise Recorder.
 For an easy introduction to the exercises and the Recorder, see the section
 *Introduction with testbench*.
 
-## git branches
+## git branches and tags
 
 This repository has the following branches.
 
 `main` is the development branch based on
 [JAAL 2.0 rc2 specification](https://github.com/Aalto-LeTech/JAAL/releases/tag/2.0rc1).
+
+`jaal1.0` is the historical prototype version related to
+[Giacomo Mariani's M.Sc. thesis](https://urn.fi/URN:NBN:fi:aalto-202005313418).
 
 ## Introduction for the Testbench
 
@@ -176,6 +179,7 @@ The design documentation of the exercises is at `doc/exercise_design`.
 
 The testbench is this repository is useful for developing JSAV exercises
 standalone. For more information, see the [exercise development document](JSAV-exercise-development.md).
+
 
 ## Developing JSAV Exercise Recorder 
 

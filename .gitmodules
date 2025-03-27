@@ -1,3 +1,6 @@
 [submodule "validation/JAAL"]
 	path = validation/JAAL
 	url = https://github.com/Aalto-LeTech/JAAL
+[submodule "testbench/JSAV-exercises"]
+	path = testbench/JSAV-exercises
+	url = https://github.com/Aalto-LeTech/JSAV-exercises

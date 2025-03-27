@@ -16,7 +16,7 @@ npm install -g watchify
 1. Open a UNIX terminal and start the script:
 
 ```
-./start-server.py
+./start-server.sh
 ```
 
 This starts a Python-based web server on your machine.

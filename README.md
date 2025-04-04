@@ -1,4 +1,4 @@
-# JSAV Exercise Recorder with New Exercises
+# JSAV Exercise Recorder
 
 ## Summary
 
@@ -7,11 +7,11 @@
 algorithm visualization exercises. The data format for recording the exercises
 is [JSON-based Algorithm Animation Language](https://github.com/Aalto-LeTech/JAAL/).
 
-This repository also contains **New JSAV Exercises** which were developed for
-teaching and research on Aalto University course *CS-A1141/-43 Data Structures
-and Algorithm Y*. This repository has a testbench which allows running each
-exercise independently, without OpenDSA or any learning management system, to
-develop the exercises and the JSAV Exercise Recorder.
+This repository has also been used to develop new JSAV exercises for teaching and research
+on Aalto University course *CS-A1141/-43 Data Structures and Algorithm Y*. The exercises
+have been moved to a separate [JSAV-exercises repository](https://github.com/Aalto-LeTech/JSAV-exercises),
+but are still available in this repository as a git submodule to allow easy testing of the
+exercise recorder.
 
 For an easy introduction to the exercises and the Recorder, see the section
 *Introduction with testbench*.
@@ -29,21 +29,21 @@ This repository has the following branches.
 ## Introduction for the Testbench
 
 To test the exercises and the Recorder manually, you will need
-[https://www.python.org](Python 3) and a web browser. Once you have those,
+[Python 3](https://www.python.org) and a web browser. Once you have those,
 start the *test bench server* in the directory `testbench`. E.g. in a UNIX
 environment:
 
 ```bash
 cd testbench
-./start-server.py
+./start-server.sh
 ```
 
-Next, open [http://localhost:8000/OpenDSA/AV/Development/](http://localhost:8000/OpenDSA/AV/Development/) at your web browser.
+Next, open [http://localhost:8000/AV/Development/](http://localhost:8000/AV/Development/) at your web browser.
 (If needed, you can specify another HTTP port as a parameter, e.g.
-`./start-server.py 8001`.) You should see a web page with title
-*Directory listing for /OpenDSA/AV/Development/*.
+`./start-server.sh 8001`.) You should see a web page with title
+*Directory listing for /AV/Development/*.
 
-This directory contains the exercise files. Try clicking [PrimAVPE-scaffolded.html](http://localhost:8000/OpenDSA/AV/Development/PrimAVPE-scaffolded.html).
+This directory contains the exercise files. Try clicking [PrimAVPE-scaffolded.html](http://localhost:8000/AV/Development/PrimAVPE-scaffolded.html).
 That should show a web page like this:
 
 ![Screenshot of a Prim's algorithm exercise](figures/PrimAVPE-scaffolded-gui.png)
@@ -61,11 +61,10 @@ The components in the exercise interface from top to bottom are the following:
 2. Exercise instructions: "Reproduce the behavior..."
 3. Node-link diagram: nodes (vertices) are circles and edges are lines.
 4. Priority Queue view. It displays a
-   [https://en.wikipedia.org/wiki/Binary_heap](Binary heap) and a *Dequeue*
+   [binary heap](https://en.wikipedia.org/wiki/Binary_heap) and a *Dequeue*
    button.
-   
 
-Try a few steps of the exercise. Click any edge, then select *Enqueue* 
+Try a few steps of the exercise. Click any edge, then select *Enqueue*
 in the pop-up dialog, repeat. You should see the edges changing their color to
 orange-brown and also appearing in the Priority Queue view. Example:
 
@@ -73,8 +72,9 @@ orange-brown and also appearing in the Priority Queue view. Example:
 
 As with regular JSAV/OpenDSA exercises, the control buttons have the following
 purposes:
+
 - *Undo* button undoes your recent action.
-- *New Exercise* button gives a new exercise insOpen [the  ]tance.
+- *New Exercise* button gives a new exercise instance.
 - *Model Answer* button opens a dialog which shows the model answer as
   a series of pictures and text.
 - *Grade* button grades your solution.
@@ -175,23 +175,17 @@ See `testbench/README.md` for how to start the test bench.
 
 The design documentation of the exercises is at `doc/exercise_design`.
 
-## Developing JSAV Exercises
 
-The testbench is this repository is useful for developing JSAV exercises
-standalone. For more information, see the [exercise development document](JSAV-exercise-development.md).
-
-
-## Developing JSAV Exercise Recorder 
+## Developing JSAV Exercise Recorder
 
 To compile the software, you will need:
 
 - [Node.js](https://nodejs.org/en/)
 - [Python 3](https://www.python.org/)
 
-
 After you have cloned this git repository:
 
-```
+```bash
 git submodule init
 git submodule update
 npm install
@@ -202,7 +196,6 @@ npm run build
 
 See `testbench/README.md`.
 
-
 ## JAAL
 
 The export data format of the Exercise Recorder is *JSON-based Algorithm
@@ -211,17 +204,17 @@ Each JAAL recording (file) contains a student's answer to a JSAV-based
 visual algorithm simulation exercise. The main structure of a JAAL recording
 is the following.
 
-    {
-        "metadata": {} ,
-        "definitions": {},
-        "initialState": {},
-        "animation": [],
-    }
+```json
+{
+    "metadata": {} ,
+    "definitions": {},
+    "initialState": {},
+    "animation": [],
+}
+```
 
 JAAL specification and documentation is included as a git submodule in the
 directory `validation/JAAL`.
-
-
 
 ## Source code organisation
 
@@ -232,7 +225,6 @@ used with a JSAV-based exercise. The following figure represents the source
 code modules and the build process.
 
 ![](./Exercise_Recorder_modules.png)
-
 
 ## How the Exercise Recorder works
 
@@ -263,16 +255,22 @@ the grade button.
 See doc/aplus_integration/aplus_integration.md.
 
 ### Running the tests
+
 The tests are written with Jest. To run the tests do t/JSAV-exerciseshis the
 `jsav-exercise-recorder` directory:
 
+```bash
     npm run test
+```
 
 ### Building the bundle file
+
 To bundle all the required modules in one file use [Browserify](http://browserify.org/).
 
+```bash
     npm install -g browserify
     npm run build
+```
 
 The DSA Y course repository, branch `traky`, should have a script called
 `compile-jaal.sh` which does the rest.
@@ -291,4 +289,3 @@ The subdirectory
 contains information on which JSAV exercises are "reproducible" without JSAV
 Exercise Recorder, i.e. both their initial state and student's steps can be
 reconstructed from the JSON data.
-

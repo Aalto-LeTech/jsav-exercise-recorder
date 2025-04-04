@@ -13,7 +13,8 @@ submodule, this directory contains the following files:
 
 You will need to install a Node.js program
 [watchify](https://www.npmjs.com/package/watchify). E.g.
-```
+
+```bash
 npm install -g watchify
 ```
 
@@ -21,24 +22,24 @@ npm install -g watchify
 
 1. Open a UNIX terminal and start the script:
 
-```
-./start-server.sh
-```
+   ```bash
+   ./start-server.sh
+   ```
 
-This starts a Python-based web server on your machine.
+   This starts a Python-based web server on your machine.
 
 2. In another terminal:
 
-```
-./update-recorder.sh
-```
+   ```bash
+   ./update-recorder.sh
+   ```
 
-This starts a Node.js program [watchify](https://www.npmjs.com/package/watchify)
-which will update the JSAV Exercise recorder on the local Python-based web
-server. This happens automatically and continuously every time the source code
-file of JSAV Exercise Recorder is edited and saved.
+   This starts a Node.js program [watchify](https://www.npmjs.com/package/watchify)
+   which will update the JSAV Exercise recorder on the local Python-based web
+   server. This happens automatically and continuously every time the source code
+   file of JSAV Exercise Recorder is edited and saved.
 
-3. Open http://localhost:8000/AV/Development/ with your web browser.
+3. Open <http://localhost:8000/AV/Development/> with your web browser.
 
 4. Open developer tools on your browser.
    (Firefox: Press F12)

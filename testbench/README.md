@@ -56,19 +56,6 @@ npm install -g watchify
 
 8. Finally shutdown the scripts start at steps 1 and 2 with Ctrl+C.
 
-## Description of files
-
-The JSAV-based visual algorithm simulation exercises are bound to the
-[OpenDSA electronic textbook](https://opendsa-server.cs.vt.edu/).
-
-- `OpenDSA/AV/Development` contains the actual exercises.
-- `OpenDSA/DataStructures` contains implementations for visualizable data
-  structures based on JSAV.
-- `OpenDSA/JSAV` contains browser-ready JSAV library, including JS libraries
-   jquery.transit and raphael.
-- `OpenDSA/lib` contains JS libraries common to OpenDSA, and JS libraries
-   jQuery and jQuery-UI.
-
 ## Testing Finnish translations
 
 One can test the Finnish translation of a JSAV exercise by adding the following

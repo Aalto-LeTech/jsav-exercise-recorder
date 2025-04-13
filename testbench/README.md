@@ -1,13 +1,19 @@
 # Test bench
 
-This is a local configuration to test a JSAV-based visual algorithm simulation
-exercise with JSAV Exercise Recorder in local development.
+This is a local configuration to test JSAV Exercise Recorder along with JSAV-based visual algorithm simulation
+exercises. Everything required to run the exercises are inside the submodule `JSAV-exercises`. In addition to the
+submodule, this directory contains the following files:
+
+- `start-server.sh`: A script to start the Python based server that serves the exercises. Utilizes the `start_testbench.py`
+  script from the submodule.
+- `update-recorder.sh`: A script that automatically updates the JSAV Exercise Recorder when the source code is changed.
 
 ## Installation
 
 You will need to install a Node.js program
 [watchify](https://www.npmjs.com/package/watchify). E.g.
-```
+
+```bash
 npm install -g watchify
 ```
 
@@ -15,24 +21,24 @@ npm install -g watchify
 
 1. Open a UNIX terminal and start the script:
 
-```
-./start-server.py
-```
+   ```bash
+   ./start-server.sh
+   ```
 
-This starts a Python-based web server on your machine.
+   This starts a Python-based web server on your machine.
 
 2. In another terminal:
 
-```
-./update-recorder.sh
-```
+   ```bash
+   ./update-recorder.sh
+   ```
 
-This starts a Node.js program [watchify](https://www.npmjs.com/package/watchify)
-which will update the JSAV Exercise recorder on the local Python-based web
-server. This happens automatically and continuously every time the source code
-file of JSAV Exercise Recorder is edited and saved.
+   This starts a Node.js program [watchify](https://www.npmjs.com/package/watchify)
+   which will update the JSAV Exercise recorder on the local Python-based web
+   server. This happens automatically and continuously every time the source code
+   file of JSAV Exercise Recorder is edited and saved.
 
-3. Open http://localhost:8000/OpenDSA/AV/Development/ with your web browser.
+3. Open <http://localhost:8000/AV/Development/> with your web browser.
 
 4. Open developer tools on your browser.
    (Firefox: Press F12)
@@ -49,19 +55,6 @@ file of JSAV Exercise Recorder is edited and saved.
 
 8. Finally shutdown the scripts start at steps 1 and 2 with Ctrl+C.
 
-## Description of files
-
-The JSAV-based visual algorithm simulation exercises are bound to the
-[OpenDSA electronic textbook](https://opendsa-server.cs.vt.edu/).
-
-- `OpenDSA/AV/Development` contains the actual exercises.
-- `OpenDSA/DataStructures` contains implementations for visualizable data
-  structures based on JSAV.
-- `OpenDSA/JSAV` contains browser-ready JSAV library, including JS libraries
-   jquery.transit and raphael.
-- `OpenDSA/lib` contains JS libraries common to OpenDSA, and JS libraries
-   jQuery and jQuery-UI.
-
 ## Testing Finnish translations
 
 One can test the Finnish translation of a JSAV exercise by adding the following
@@ -69,8 +62,8 @@ string at the end of the exercise URL: `?JOP-lang=fi&JXOP-code=finnish`
 
 Example:
 
-- [English Red-black tree](http://localhost:8000/OpenDSA/AV/Development/redBlackTreePRO.html)
-- [Finnish Red-black tree](http://localhost:8000/OpenDSA/AV/Development/redBlackTreePRO.html?JOP-lang=fi&JXOP-code=finnish)
+- [English Red-black tree](http://localhost:8000/AV/Development/redBlackTreePRO.html)
+- [Finnish Red-black tree](http://localhost:8000/AV/Development/redBlackTreePRO.html?JOP-lang=fi&JXOP-code=finnish)
 
 The URL parameter `JOP-lang` controls the language of the exercise interface.
 Its value should correspond to a key under key `translations` in the exercise

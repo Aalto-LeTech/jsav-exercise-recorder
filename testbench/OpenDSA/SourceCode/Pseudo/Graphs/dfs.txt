@@ -1,5 +1,0 @@
-DFS-VISIT(G, u)
-    visited[u] ← true
-    for each v ∈ Adj[u] do
-        if visited[v] = false then
-            DFS-VISIT(G, v)

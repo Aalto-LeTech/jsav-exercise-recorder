@@ -7,7 +7,6 @@ submodule, this directory contains the following files:
 - `start-server.sh`: A script to start the Python based server that serves the exercises. Utilizes the `start_testbench.py`
   script from the submodule.
 - `update-recorder.sh`: A script that automatically updates the JSAV Exercise Recorder when the source code is changed.
-- `recorder-player-communication.md`: ??
 
 ## Installation
 
